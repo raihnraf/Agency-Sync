@@ -2,8 +2,8 @@
 phase: 01
 slug: foundation
 status: draft
-nyquist_compliant: false
-wave_0_complete: false
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-03-13
 ---
 
@@ -38,14 +38,15 @@ created: 2026-03-13
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 01-01-01 | 01 | 1 | INFRA-01 | container | `docker compose ps` | ❌ W0 | ⬜ pending |
-| 01-01-02 | 01 | 1 | INFRA-02 | container | `docker compose ps nginx` | ❌ W0 | ⬜ pending |
-| 01-01-03 | 01 | 1 | INFRA-03 | container | `docker compose ps mysql` | ❌ W0 | ⬜ pending |
-| 01-01-04 | 01 | 1 | INFRA-04 | integration | `docker compose exec app php -v` | ❌ W0 | ⬜ pending |
-| 01-01-05 | 01 | 1 | INFRA-05 | container | `docker compose ps elasticsearch` | ❌ W0 | ⬜ pending |
-| 01-01-06 | 01 | 1 | INFRA-06 | container | `docker compose ps redis` | ❌ W0 | ⬜ pending |
-| 01-01-07 | 01 | 1 | INFRA-07 | integration | `docker compose exec nginx curl -s http://app:9000 | head -1` | ❌ W0 | ⬜ pending |
-| 01-01-08 | 01 | 1 | INFRA-08 | integration | `ls -la .env .env.docker 2>/dev/null` | ❌ W0 | ⬜ pending |
+| 01-01-W0 | 01 | 0 | INFRA-01-08 | test_infra | `docker compose exec app php artisan test --filter DockerComposeTest` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
+| 01-01-01 | 01 | 1 | INFRA-01 | container | `docker compose config > /dev/null` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
+| 01-01-02 | 01 | 1 | INFRA-02 | container | `docker compose build app && docker compose ps nginx` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
+| 01-01-03 | 01 | 1 | INFRA-03 | container | `docker compose ps mysql` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
+| 01-01-04 | 01 | 1 | INFRA-04 | integration | `docker compose exec app php -v` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
+| 01-01-05 | 01 | 1 | INFRA-05 | container | `docker compose ps elasticsearch` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
+| 01-01-06 | 01 | 1 | INFRA-06 | container | `docker compose ps redis` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
+| 01-01-07 | 01 | 1 | INFRA-07 | integration | `docker compose exec nginx curl -s http://app:9000 | head -1` | ✅ tests/Integration/NginxProxyTest.php | ⬜ pending |
+| 01-01-08 | 01 | 1 | INFRA-08 | integration | `ls -la .env .env.docker 2>/dev/null` | ✅ tests/Integration/EnvironmentConfigTest.php | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -53,10 +54,10 @@ created: 2026-03-13
 
 ## Wave 0 Requirements
 
-- [ ] `tests/Infrastructure/DockerComposeTest.php` — container health checks for INFRA-01 through INFRA-06
-- [ ] `tests/Integration/NginxProxyTest.php` — Nginx → PHP-FPM proxy test for INFRA-07
-- [ ] `tests/Integration/EnvironmentConfigTest.php` — .env file validation for INFRA-08
-- [ ] `phpunit.xml` — exists (Laravel default)
+- [x] `tests/Infrastructure/DockerComposeTest.php` — container health checks for INFRA-01 through INFRA-06
+- [x] `tests/Integration/NginxProxyTest.php` — Nginx → PHP-FPM proxy test for INFRA-07
+- [x] `tests/Integration/EnvironmentConfigTest.php` — .env file validation for INFRA-08
+- [x] `phpunit.xml` — exists (Laravel default)
 
 ---
 
@@ -71,11 +72,11 @@ created: 2026-03-13
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 60s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references
+- [x] No watch-mode flags
+- [x] Feedback latency < 60s
+- [x] `nyquist_compliant: true` set in frontmatter
 
 **Approval:** pending
