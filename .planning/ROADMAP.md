@@ -62,7 +62,12 @@ AgencySync is a multi-tenant API-first backend system for e-commerce agencies to
 7. API endpoints are versioned (/api/v1/) and use RESTful design principles
 8. API implements rate limiting per authenticated user
 
-**Plans:** TBD
+**Plans:** 4 plans
+
+- [ ] 02-01-PLAN.md — Laravel Sanctum authentication with registration, login, logout, protected endpoints, and test coverage
+- [ ] 02-02-PLAN.md — Consistent JSON response structure and validation error formatting with API Resources and Form Requests
+- [ ] 02-03-PLAN.md — API versioning with /api/v1/ prefix and proper HTTP status codes following RESTful principles
+- [ ] 02-04-PLAN.md — Rate limiting per authenticated user and 4-hour token inactivity expiration
 
 ---
 
