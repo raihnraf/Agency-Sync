@@ -72,14 +72,14 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Infrastructure
 
-- [ ] **INFRA-01**: System uses Docker Compose to run all services
-- [ ] **INFRA-02**: MySQL 8.0 container for relational database
-- [ ] **INFRA-03**: Elasticsearch container for product search indexing
-- [ ] **INFRA-04**: Redis container for queue storage
-- [ ] **INFRA-05**: Nginx container as reverse proxy to PHP-FPM
-- [ ] **INFRA-06**: Laravel Sail extended with custom services (Elasticsearch, Redis)
-- [ ] **INFRA-07**: Environment configuration via .env files for all containers
-- [ ] **INFRA-08**: System can start with single command (docker-compose up)
+- [x] **INFRA-01**: System uses Docker Compose to run all services
+- [x] **INFRA-02**: MySQL 8.0 container for relational database
+- [x] **INFRA-03**: Elasticsearch container for product search indexing
+- [x] **INFRA-04**: Redis container for queue storage
+- [x] **INFRA-05**: Nginx container as reverse proxy to PHP-FPM
+- [x] **INFRA-06**: Laravel Sail extended with custom services (Elasticsearch, Redis)
+- [x] **INFRA-07**: Environment configuration via .env files for all containers
+- [x] **INFRA-08**: System can start with single command (docker-compose up)
 
 ### API Design
 
@@ -199,14 +199,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-09 | Phase 7 | Pending |
 | UI-10 | Phase 7 | Pending |
 | UI-11 | Phase 7 | Pending |
-| INFRA-01 | Phase 1 | Pending |
-| INFRA-02 | Phase 1 | Pending |
-| INFRA-03 | Phase 1 | Pending |
-| INFRA-04 | Phase 1 | Pending |
-| INFRA-05 | Phase 1 | Pending |
-| INFRA-06 | Phase 1 | Pending |
-| INFRA-07 | Phase 1 | Pending |
-| INFRA-08 | Phase 1 | Pending |
+| INFRA-01 | Phase 1 | Complete |
+| INFRA-02 | Phase 1 | Complete |
+| INFRA-03 | Phase 1 | Complete |
+| INFRA-04 | Phase 1 | Complete |
+| INFRA-05 | Phase 1 | Complete |
+| INFRA-06 | Phase 1 | Complete |
+| INFRA-07 | Phase 1 | Complete |
+| INFRA-08 | Phase 1 | Complete |
 | API-01 | Phase 2 | Pending |
 | API-02 | Phase 2 | Pending |
 | API-03 | Phase 2 | Pending |
