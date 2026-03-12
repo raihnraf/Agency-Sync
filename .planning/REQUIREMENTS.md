@@ -1,0 +1,237 @@
+# Requirements: AgencySync
+
+**Defined:** 2026-03-13
+**Core Value:** E-commerce agencies can reliably manage and synchronize product catalogs across multiple client stores with sub-second search performance and non-blocking background processing.
+
+## v1 Requirements
+
+Requirements for initial release. Each maps to roadmap phases.
+
+### Authentication
+
+- [ ] **AUTH-01**: Agency admin can create account with email and password
+- [ ] **AUTH-02**: Agency admin can log in and session persists across requests
+- [ ] **AUTH-03**: Agency admin can log out from any page
+- [ ] **AUTH-04**: API endpoints are protected with authentication middleware
+
+### Client/Tenant Management
+
+- [ ] **TENANT-01**: Agency admin can create new client store with name and platform type (Shopify/Shopware)
+- [ ] **TENANT-02**: Agency admin can view list of all client stores
+- [ ] **TENANT-03**: Agency admin can update client store details (name, status, platform URL)
+- [ ] **TENANT-04**: Agency admin can delete client store
+- [ ] **TENANT-05**: System stores API credentials encrypted in database (Shopify API key, Shopware credentials)
+- [ ] **TENANT-06**: Database uses tenant_id discriminator for multi-tenant data isolation
+- [ ] **TENANT-07**: Queries automatically scope to current tenant via global scopes
+
+### Catalog Synchronization
+
+- [ ] **SYNC-01**: Agency admin can trigger manual catalog sync for a specific client store
+- [ ] **SYNC-02**: Sync operation runs asynchronously in background queue (non-blocking HTTP request)
+- [ ] **SYNC-03**: System validates product data before storing (required fields, data types)
+- [ ] **SYNC-04**: System implements retry logic with exponential backoff for failed API calls
+- [ ] **SYNC-05**: System logs all sync operations (start time, end time, status, error messages)
+- [ ] **SYNC-06**: Agency admin can view sync status for each client store (pending, running, completed, failed)
+- [ ] **SYNC-07**: System fetches product data from Shopify API (products, variants, inventory)
+- [ ] **SYNC-08**: System fetches product data from Shopware API (products, variants, inventory)
+- [ ] **SYNC-09**: System stores product data in MySQL with tenant_id association
+
+### Product Search
+
+- [ ] **SEARCH-01**: Agency admin can search products within a single client's catalog
+- [ ] **SEARCH-02**: Search returns results in sub-second time (< 500ms for typical queries)
+- [ ] **SEARCH-03**: Search supports fuzzy matching (tolerates typos, partial matches)
+- [ ] **SEARCH-04**: Search results are paginated (20 products per page)
+- [ ] **SEARCH-05**: System indexes product data in Elasticsearch for fast search
+- [ ] **SEARCH-06**: Elasticsearch index is scoped per tenant (tenant_id filter)
+- [ ] **SEARCH-07**: Search results only include products from selected client store (tenant isolation)
+
+### Background Jobs
+
+- [ ] **QUEUE-01**: System uses Redis for queue storage
+- [ ] **QUEUE-02**: Supervisor monitors and restarts queue workers
+- [ ] **QUEUE-03**: Queue jobs include tenant_id in payload for tenant context
+- [ ] **QUEUE-04**: System tracks job status (pending, running, completed, failed)
+- [ ] **QUEUE-05**: Failed jobs automatically retry with exponential backoff (3 attempts max)
+- [ ] **QUEUE-06**: System logs all job failures with error details
+- [ ] **QUEUE-07**: Agency admin can view queue job status in admin dashboard
+
+### Admin Dashboard
+
+- [ ] **UI-01**: Agency admin can view client store list with status indicators
+- [ ] **UI-02**: Agency admin can create new client store via form (name, platform, API credentials)
+- [ ] **UI-03**: Agency admin can edit client store details
+- [ ] **UI-04**: Agency admin can delete client store with confirmation
+- [ ] **UI-05**: Agency admin can trigger sync operation for each client store
+- [ ] **UI-06**: Agency admin can view last sync status for each client store (time, status, product count)
+- [ ] **UI-07**: Agency admin can search products within a client's catalog
+- [ ] **UI-08**: Agency admin can view error log with filtering by client store and date
+- [ ] **UI-09**: Dashboard uses Blade templates with Alpine.js for interactivity
+- [ ] **UI-10**: Dashboard uses TailwindCSS for styling
+- [ ] **UI-11**: Dashboard is responsive for mobile and tablet viewing
+
+### Infrastructure
+
+- [ ] **INFRA-01**: System uses Docker Compose to run all services
+- [ ] **INFRA-02**: MySQL 8.0 container for relational database
+- [ ] **INFRA-03**: Elasticsearch container for product search indexing
+- [ ] **INFRA-04**: Redis container for queue storage
+- [ ] **INFRA-05**: Nginx container as reverse proxy to PHP-FPM
+- [ ] **INFRA-06**: Laravel Sail extended with custom services (Elasticsearch, Redis)
+- [ ] **INFRA-07**: Environment configuration via .env files for all containers
+- [ ] **INFRA-08**: System can start with single command (docker-compose up)
+
+### API Design
+
+- [ ] **API-01**: API uses RESTful design principles
+- [ ] **API-02**: API endpoints are versioned (/api/v1/)
+- [ ] **API-03**: API returns JSON responses with consistent structure
+- [ ] **API-04**: API uses appropriate HTTP status codes (200, 201, 400, 401, 404, 500)
+- [ ] **API-05**: API implements rate limiting per authenticated user
+- [ ] **API-06**: API validates request data before processing
+- [ ] **API-07**: API returns error messages with actionable details
+
+### CI/CD & Deployment
+
+- [ ] **CICD-01**: GitHub Actions workflow runs automated tests on push to main branch
+- [ ] **CICD-02**: GitHub Actions workflow executes PHPUnit tests
+- [ ] **CICD-03**: GitHub Actions workflow deploys to server via SSH on successful tests
+- [ ] **CICD-04**: Deployment script runs git pull on remote server
+- [ ] **CICD-05**: Deployment script restarts Docker containers after code update
+- [ ] **CICD-06**: Deployment script clears Laravel cache (config, routes, views)
+- [ ] **CICD-07**: Deployment script runs database migrations
+
+### Testing
+
+- [ ] **TEST-01**: System has unit tests for core business logic (tenant scoping, validation)
+- [ ] **TEST-02**: System has feature tests for API endpoints
+- [ ] **TEST-03**: System has integration tests for queue jobs
+- [ ] **TEST-04**: Tests achieve minimum 70% code coverage
+- [ ] **TEST-05**: Tests run in CI/CD pipeline before deployment
+
+## v2 Requirements
+
+Deferred to future release. Tracked but not in current roadmap.
+
+### Cross-Client Search
+
+- **SEARCH-50**: Agency admin can search products across all client catalogs
+- **SEARCH-51**: Unified Elasticsearch index for cross-client search
+- **SEARCH-52**: Search results show which client store each product belongs to
+
+### Automation
+
+- **SYNC-50**: Agency admin can schedule automated sync (hourly, daily, weekly)
+- **SYNC-51**: System processes webhooks from Shopify/Shopware for real-time sync
+- **SYNC-52**: System implements delta sync (only changed products)
+
+### Advanced Features
+
+- **TENANT-50**: Bulk client operations (import, status updates)
+- **SEARCH-50**: Advanced search filters (price range, stock status, category)
+- **UI-50**: Performance metrics dashboard (sync speed, API usage)
+
+## Out of Scope
+
+Explicitly excluded. Documented to prevent scope creep.
+
+| Feature | Reason |
+|---------|--------|
+| Real-time sync via WebSocket | Adds massive complexity, polling/periodic sync sufficient for v1 |
+| Client-facing UI | Dilutes agency focus, clients use native platform UI |
+| Full order management | Bloated scope, orders stay in native e-commerce platforms |
+| Multi-user roles | Single admin user sufficient for v1 |
+| OAuth login | Email/password authentication sufficient for v1 |
+| Multi-currency support | Not relevant for agency backend tool |
+| Predictive inventory | Requires historical data, ML infrastructure |
+| Payment processing | PCI compliance nightmare, payments in native platforms |
+| Marketing automation | Entirely different domain, integrate via webhooks |
+| Mobile applications | Web-first, mobile-responsive dashboard sufficient |
+
+## Traceability
+
+Which phases cover which requirements. Updated during roadmap creation.
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| AUTH-01 | Phase 1 | Pending |
+| AUTH-02 | Phase 1 | Pending |
+| AUTH-03 | Phase 1 | Pending |
+| AUTH-04 | Phase 1 | Pending |
+| TENANT-01 | Phase 2 | Pending |
+| TENANT-02 | Phase 2 | Pending |
+| TENANT-03 | Phase 2 | Pending |
+| TENANT-04 | Phase 2 | Pending |
+| TENANT-05 | Phase 2 | Pending |
+| TENANT-06 | Phase 2 | Pending |
+| TENANT-07 | Phase 2 | Pending |
+| SYNC-01 | Phase 5 | Pending |
+| SYNC-02 | Phase 3 | Pending |
+| SYNC-03 | Phase 5 | Pending |
+| SYNC-04 | Phase 3 | Pending |
+| SYNC-05 | Phase 5 | Pending |
+| SYNC-06 | Phase 6 | Pending |
+| SYNC-07 | Phase 5 | Pending |
+| SYNC-08 | Phase 5 | Pending |
+| SYNC-09 | Phase 5 | Pending |
+| SEARCH-01 | Phase 6 | Pending |
+| SEARCH-02 | Phase 4 | Pending |
+| SEARCH-03 | Phase 4 | Pending |
+| SEARCH-04 | Phase 6 | Pending |
+| SEARCH-05 | Phase 4 | Pending |
+| SEARCH-06 | Phase 4 | Pending |
+| SEARCH-07 | Phase 6 | Pending |
+| QUEUE-01 | Phase 3 | Pending |
+| QUEUE-02 | Phase 3 | Pending |
+| QUEUE-03 | Phase 3 | Pending |
+| QUEUE-04 | Phase 3 | Pending |
+| QUEUE-05 | Phase 3 | Pending |
+| QUEUE-06 | Phase 3 | Pending |
+| QUEUE-07 | Phase 6 | Pending |
+| UI-01 | Phase 6 | Pending |
+| UI-02 | Phase 6 | Pending |
+| UI-03 | Phase 6 | Pending |
+| UI-04 | Phase 6 | Pending |
+| UI-05 | Phase 6 | Pending |
+| UI-06 | Phase 6 | Pending |
+| UI-07 | Phase 6 | Pending |
+| UI-08 | Phase 6 | Pending |
+| UI-09 | Phase 6 | Pending |
+| UI-10 | Phase 6 | Pending |
+| UI-11 | Phase 6 | Pending |
+| INFRA-01 | Phase 1 | Pending |
+| INFRA-02 | Phase 1 | Pending |
+| INFRA-03 | Phase 1 | Pending |
+| INFRA-04 | Phase 1 | Pending |
+| INFRA-05 | Phase 1 | Pending |
+| INFRA-06 | Phase 1 | Pending |
+| INFRA-07 | Phase 1 | Pending |
+| INFRA-08 | Phase 1 | Pending |
+| API-01 | Phase 2 | Pending |
+| API-02 | Phase 2 | Pending |
+| API-03 | Phase 2 | Pending |
+| API-04 | Phase 2 | Pending |
+| API-05 | Phase 2 | Pending |
+| API-06 | Phase 2 | Pending |
+| API-07 | Phase 2 | Pending |
+| CICD-01 | Phase 7 | Pending |
+| CICD-02 | Phase 7 | Pending |
+| CICD-03 | Phase 7 | Pending |
+| CICD-04 | Phase 7 | Pending |
+| CICD-05 | Phase 7 | Pending |
+| CICD-06 | Phase 7 | Pending |
+| CICD-07 | Phase 7 | Pending |
+| TEST-01 | Phase 2 | Pending |
+| TEST-02 | Phase 2 | Pending |
+| TEST-03 | Phase 3 | Pending |
+| TEST-04 | Phase 7 | Pending |
+| TEST-05 | Phase 7 | Pending |
+
+**Coverage:**
+- v1 requirements: 60 total
+- Mapped to phases: 60
+- Unmapped: 0 ✓
+
+---
+*Requirements defined: 2026-03-13*
+*Last updated: 2026-03-13 after initial definition*
