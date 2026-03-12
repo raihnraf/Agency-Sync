@@ -19,8 +19,8 @@ created: 2026-03-13
 |----------|-------|
 | **Framework** | PHPUnit 10.x (Laravel 11 default) |
 | **Config file** | phpunit.xml |
-| **Quick run command** | `docker compose exec app php artisan test --parallel` |
-| **Full suite command** | `docker compose exec app php artisan test` |
+| **Quick run command** | `docker compose exec app php artisan test --parallel` (requires containers) |
+| **Full suite command** | `docker compose exec app php artisan test` (requires containers) |
 | **Estimated runtime** | ~30 seconds |
 
 ---
@@ -38,7 +38,7 @@ created: 2026-03-13
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 01-03-W0 | 03 | 0 | INFRA-01-08 | test_infra | `docker compose exec app php artisan test --filter DockerComposeTest` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
+| 01-03-W0 | 03 | 0 | INFRA-01-08 | test_infra | `ls -la tests/Infrastructure/DockerComposeTest.php tests/Integration/NginxProxyTest.php tests/Integration/EnvironmentConfigTest.php && grep -q 'class DockerComposeTest' tests/Infrastructure/DockerComposeTest.php && grep -q 'class NginxProxyTest' tests/Integration/NginxProxyTest.php && grep -q 'class EnvironmentConfigTest' tests/Integration/EnvironmentConfigTest.php && echo "All test stubs created with valid class structure"` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
 | 01-01-01 | 01 | 1 | INFRA-01 | container | `docker compose config > /dev/null` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
 | 01-01-02 | 01 | 1 | INFRA-02 | container | `docker compose build app && docker compose ps nginx` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
 | 01-01-03 | 01 | 1 | INFRA-03 | container | `docker compose ps mysql` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
@@ -59,6 +59,7 @@ created: 2026-03-13
 - [x] `tests/Integration/NginxProxyTest.php` — Nginx → PHP-FPM proxy test for INFRA-07
 - [x] `tests/Integration/EnvironmentConfigTest.php` — .env file validation for INFRA-08
 - [x] `phpunit.xml` — exists (Laravel default)
+- [x] **Wave 0 verification uses file existence checks** (does not require running containers)
 
 ---
 
@@ -80,5 +81,6 @@ created: 2026-03-13
 - [x] Feedback latency < 60s
 - [x] `nyquist_compliant: true` set in frontmatter
 - [x] Plan split into 3 focused plans (01-01, 01-02, 01-03)
+- [x] **Wave 0 verification uses file existence checks** (Nyquist compliant: no circular dependency on infrastructure)
 
 **Approval:** pending
