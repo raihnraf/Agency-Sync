@@ -154,51 +154,51 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
-| AUTH-04 | Phase 1 | Pending |
-| TENANT-01 | Phase 2 | Pending |
-| TENANT-02 | Phase 2 | Pending |
-| TENANT-03 | Phase 2 | Pending |
-| TENANT-04 | Phase 2 | Pending |
-| TENANT-05 | Phase 2 | Pending |
-| TENANT-06 | Phase 2 | Pending |
-| TENANT-07 | Phase 2 | Pending |
-| SYNC-01 | Phase 5 | Pending |
-| SYNC-02 | Phase 3 | Pending |
-| SYNC-03 | Phase 5 | Pending |
-| SYNC-04 | Phase 3 | Pending |
-| SYNC-05 | Phase 5 | Pending |
+| AUTH-01 | Phase 2 | Pending |
+| AUTH-02 | Phase 2 | Pending |
+| AUTH-03 | Phase 2 | Pending |
+| AUTH-04 | Phase 2 | Pending |
+| TENANT-01 | Phase 3 | Pending |
+| TENANT-02 | Phase 3 | Pending |
+| TENANT-03 | Phase 3 | Pending |
+| TENANT-04 | Phase 3 | Pending |
+| TENANT-05 | Phase 3 | Pending |
+| TENANT-06 | Phase 3 | Pending |
+| TENANT-07 | Phase 3 | Pending |
+| SYNC-01 | Phase 6 | Pending |
+| SYNC-02 | Phase 4 | Pending |
+| SYNC-03 | Phase 6 | Pending |
+| SYNC-04 | Phase 4 | Pending |
+| SYNC-05 | Phase 6 | Pending |
 | SYNC-06 | Phase 6 | Pending |
-| SYNC-07 | Phase 5 | Pending |
-| SYNC-08 | Phase 5 | Pending |
-| SYNC-09 | Phase 5 | Pending |
-| SEARCH-01 | Phase 6 | Pending |
-| SEARCH-02 | Phase 4 | Pending |
-| SEARCH-03 | Phase 4 | Pending |
-| SEARCH-04 | Phase 6 | Pending |
-| SEARCH-05 | Phase 4 | Pending |
-| SEARCH-06 | Phase 4 | Pending |
-| SEARCH-07 | Phase 6 | Pending |
-| QUEUE-01 | Phase 3 | Pending |
-| QUEUE-02 | Phase 3 | Pending |
-| QUEUE-03 | Phase 3 | Pending |
-| QUEUE-04 | Phase 3 | Pending |
-| QUEUE-05 | Phase 3 | Pending |
-| QUEUE-06 | Phase 3 | Pending |
-| QUEUE-07 | Phase 6 | Pending |
-| UI-01 | Phase 6 | Pending |
-| UI-02 | Phase 6 | Pending |
-| UI-03 | Phase 6 | Pending |
-| UI-04 | Phase 6 | Pending |
-| UI-05 | Phase 6 | Pending |
-| UI-06 | Phase 6 | Pending |
-| UI-07 | Phase 6 | Pending |
-| UI-08 | Phase 6 | Pending |
-| UI-09 | Phase 6 | Pending |
-| UI-10 | Phase 6 | Pending |
-| UI-11 | Phase 6 | Pending |
+| SYNC-07 | Phase 6 | Pending |
+| SYNC-08 | Phase 6 | Pending |
+| SYNC-09 | Phase 6 | Pending |
+| SEARCH-01 | Phase 5 | Pending |
+| SEARCH-02 | Phase 5 | Pending |
+| SEARCH-03 | Phase 5 | Pending |
+| SEARCH-04 | Phase 5 | Pending |
+| SEARCH-05 | Phase 5 | Pending |
+| SEARCH-06 | Phase 5 | Pending |
+| SEARCH-07 | Phase 5 | Pending |
+| QUEUE-01 | Phase 4 | Pending |
+| QUEUE-02 | Phase 4 | Pending |
+| QUEUE-03 | Phase 4 | Pending |
+| QUEUE-04 | Phase 4 | Pending |
+| QUEUE-05 | Phase 4 | Pending |
+| QUEUE-06 | Phase 4 | Pending |
+| QUEUE-07 | Phase 5 | Pending |
+| UI-01 | Phase 7 | Pending |
+| UI-02 | Phase 7 | Pending |
+| UI-03 | Phase 7 | Pending |
+| UI-04 | Phase 7 | Pending |
+| UI-05 | Phase 7 | Pending |
+| UI-06 | Phase 7 | Pending |
+| UI-07 | Phase 7 | Pending |
+| UI-08 | Phase 7 | Pending |
+| UI-09 | Phase 7 | Pending |
+| UI-10 | Phase 7 | Pending |
+| UI-11 | Phase 7 | Pending |
 | INFRA-01 | Phase 1 | Pending |
 | INFRA-02 | Phase 1 | Pending |
 | INFRA-03 | Phase 1 | Pending |
@@ -214,18 +214,18 @@ Which phases cover which requirements. Updated during roadmap creation.
 | API-05 | Phase 2 | Pending |
 | API-06 | Phase 2 | Pending |
 | API-07 | Phase 2 | Pending |
-| CICD-01 | Phase 7 | Pending |
-| CICD-02 | Phase 7 | Pending |
-| CICD-03 | Phase 7 | Pending |
-| CICD-04 | Phase 7 | Pending |
-| CICD-05 | Phase 7 | Pending |
-| CICD-06 | Phase 7 | Pending |
-| CICD-07 | Phase 7 | Pending |
-| TEST-01 | Phase 2 | Pending |
-| TEST-02 | Phase 2 | Pending |
-| TEST-03 | Phase 3 | Pending |
-| TEST-04 | Phase 7 | Pending |
-| TEST-05 | Phase 7 | Pending |
+| CICD-01 | Phase 8 | Pending |
+| CICD-02 | Phase 8 | Pending |
+| CICD-03 | Phase 8 | Pending |
+| CICD-04 | Phase 8 | Pending |
+| CICD-05 | Phase 8 | Pending |
+| CICD-06 | Phase 8 | Pending |
+| CICD-07 | Phase 8 | Pending |
+| TEST-01 | Phase 3 | Pending |
+| TEST-02 | Phase 3 | Pending |
+| TEST-03 | Phase 4 | Pending |
+| TEST-04 | Phase 8 | Pending |
+| TEST-05 | Phase 8 | Pending |
 
 **Coverage:**
 - v1 requirements: 60 total
@@ -234,4 +234,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-13*
-*Last updated: 2026-03-13 after initial definition*
+*Last updated: 2026-03-13 after roadmap creation*
