@@ -38,7 +38,7 @@ created: 2026-03-13
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 01-01-W0 | 01 | 0 | INFRA-01-08 | test_infra | `docker compose exec app php artisan test --filter DockerComposeTest` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
+| 01-03-W0 | 03 | 0 | INFRA-01-08 | test_infra | `docker compose exec app php artisan test --filter DockerComposeTest` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
 | 01-01-01 | 01 | 1 | INFRA-01 | container | `docker compose config > /dev/null` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
 | 01-01-02 | 01 | 1 | INFRA-02 | container | `docker compose build app && docker compose ps nginx` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
 | 01-01-03 | 01 | 1 | INFRA-03 | container | `docker compose ps mysql` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
@@ -46,7 +46,8 @@ created: 2026-03-13
 | 01-01-05 | 01 | 1 | INFRA-05 | container | `docker compose ps elasticsearch` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
 | 01-01-06 | 01 | 1 | INFRA-06 | container | `docker compose ps redis` | ✅ tests/Infrastructure/DockerComposeTest.php | ⬜ pending |
 | 01-01-07 | 01 | 1 | INFRA-07 | integration | `docker compose exec nginx curl -s http://app:9000 | head -1` | ✅ tests/Integration/NginxProxyTest.php | ⬜ pending |
-| 01-01-08 | 01 | 1 | INFRA-08 | integration | `ls -la .env .env.docker 2>/dev/null` | ✅ tests/Integration/EnvironmentConfigTest.php | ⬜ pending |
+| 01-02-01 | 02 | 1 | INFRA-08 | integration | `ls -la .env .env.docker 2>/dev/null` | ✅ tests/Integration/EnvironmentConfigTest.php | ⬜ pending |
+| 01-02-02 | 02 | 1 | INFRA-08 | integration | `make -n up && make -n down` | ✅ tests/Integration/EnvironmentConfigTest.php | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -78,5 +79,6 @@ created: 2026-03-13
 - [x] No watch-mode flags
 - [x] Feedback latency < 60s
 - [x] `nyquist_compliant: true` set in frontmatter
+- [x] Plan split into 3 focused plans (01-01, 01-02, 01-03)
 
 **Approval:** pending
