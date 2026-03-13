@@ -30,7 +30,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Override failed validation to return consistent error format.
+     * Override failed validation to return consistent JSON format.
      */
     protected function failedValidation(Validator $validator)
     {
@@ -44,7 +44,9 @@ class LoginRequest extends FormRequest
             ->values();
 
         throw new HttpResponseException(
-            response()->json(['errors' => $errors], 422)
+            response()->json([
+                'errors' => $errors
+            ], 422)
         );
     }
 }
