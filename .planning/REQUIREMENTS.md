@@ -87,7 +87,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **API-02**: API endpoints are versioned (/api/v1/)
 - [ ] **API-03**: API returns JSON responses with consistent structure
 - [x] **API-04**: API uses appropriate HTTP status codes (200, 201, 400, 401, 404, 500)
-- [ ] **API-05**: API implements rate limiting per authenticated user
+- [x] **API-05**: API implements rate limiting per authenticated user
 - [x] **API-06**: API validates request data before processing
 - [x] **API-07**: API returns error messages with actionable details
 
@@ -211,7 +211,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | API-02 | Phase 2 | Complete |
 | API-03 | Phase 2 | Pending |
 | API-04 | Phase 2 | Complete |
-| API-05 | Phase 2 | Pending |
+| API-05 | Phase 2 | Complete |
 | API-06 | Phase 2 | Complete |
 | API-07 | Phase 2 | Complete |
 | CICD-01 | Phase 8 | Pending |

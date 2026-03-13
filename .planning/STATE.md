@@ -47,7 +47,7 @@ E-commerce agencies can reliably manage and synchronize product catalogs across 
 Implement agency admin authentication with Laravel Sanctum
 
 **Latest Accomplishment:**
-Completed plan 02-03: Verified API versioning structure with /api/v1/ prefix and RESTful HTTP status codes (200, 201, 204, 401, 422, 404). All 11 tests passing (4 versioning tests + 7 status code tests). Implementation was already complete from plans 02-01 and 02-02.
+Completed plan 02-04: Per-user rate limiting (60/min read, 10/min write, 5/min auth) and 4-hour token inactivity expiration with automatic deletion. Custom CheckTokenExpiration middleware created and applied to all protected routes. Comprehensive test coverage with 10 tests passing (5 rate limiting tests + 5 token expiration tests).
 
 ## Performance Metrics
 
@@ -107,6 +107,16 @@ Completed plan 02-03: Verified API versioning structure with /api/v1/ prefix and
 - Comprehensive test coverage: 11 tests (4 versioning + 7 status codes)
 - All functionality verified from prior plans, no code changes needed
 
+**Rate Limiting and Token Expiration (02-04):**
+- Per-user rate limiting: 60/min read, 10/min write, 5/min auth endpoints
+- IP-based fallback for unauthenticated requests
+- 4-hour token inactivity expiration with automatic deletion
+- Custom CheckTokenExpiration middleware updates last_used_at on each request
+- Rate limit exceeded returns 429 with retry_after value
+- Multiple tokens per user supported with independent expiration
+- Comprehensive test coverage: 10 tests (5 rate limiting + 5 token expiration)
+- All rate limiters configured in bootstrap/app.php using RateLimiter::for()
+
 **Consolidated Phase 02 Decisions:**
 - [Phase 02]: Laravel Sanctum for token-based auth (simpler than JWT for SPA/API)
 - [Phase 02]: 4-hour token expiration for security balance
@@ -114,6 +124,8 @@ Completed plan 02-03: Verified API versioning structure with /api/v1/ prefix and
 - [Phase 02]: Field-based validation errors with {errors: [{field, message}]} structure
 - [Phase 02]: Token invalidation on logout via currentAccessToken()->delete()
 - [Phase 02]: RESTful HTTP status semantics (200, 201, 204, 401, 422, 404)
+- [Phase 02]: Per-user rate limiting with IP fallback (60/min read, 10/min write, 5/min auth)
+- [Phase 02]: Token inactivity expiration using last_used_at timestamp with created_at fallback
 
 ### Active Todos
 
@@ -162,8 +174,8 @@ None currently.
 ## Session Continuity
 
 **Last Session:** 2026-03-13T01:05:11Z
-**Current Session:** 2026-03-13T01:05:11Z
-**Next Action:** Execute plan 02-04 or continue with next phase task
+**Current Session:** 2026-03-13T01:06:00Z
+**Next Action:** Execute plan 03-01 or continue with next phase task
 
 **Context Handoff:**
 - Docker Compose infrastructure complete and verified (01-01)
@@ -172,6 +184,7 @@ None currently.
 - Authentication system complete (02-01) - Sanctum tokens, API versioning, 16 tests passing
 - API response structure implemented (02-02) - Base ApiController with helper methods
 - API versioning and status codes verified (02-03) - 11 tests passing, all requirements met
+- Rate limiting and token expiration implemented (02-04) - 10 tests passing, all security features complete
 - Roadmap structure defined with 8 phases
 - All 60 v1 requirements mapped to phases
 - Research summary available in `.planning/research/SUMMARY.md`
