@@ -9,10 +9,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Authentication
 
-- [ ] **AUTH-01**: Agency admin can create account with email and password
-- [ ] **AUTH-02**: Agency admin can log in and session persists across requests
-- [ ] **AUTH-03**: Agency admin can log out from any page
-- [ ] **AUTH-04**: API endpoints are protected with authentication middleware
+- [x] **AUTH-01**: Agency admin can create account with email and password
+- [x] **AUTH-02**: Agency admin can log in and session persists across requests
+- [x] **AUTH-03**: Agency admin can log out from any page
+- [x] **AUTH-04**: API endpoints are protected with authentication middleware
 
 ### Client/Tenant Management
 
@@ -88,8 +88,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **API-03**: API returns JSON responses with consistent structure
 - [ ] **API-04**: API uses appropriate HTTP status codes (200, 201, 400, 401, 404, 500)
 - [ ] **API-05**: API implements rate limiting per authenticated user
-- [ ] **API-06**: API validates request data before processing
-- [ ] **API-07**: API returns error messages with actionable details
+- [x] **API-06**: API validates request data before processing
+- [x] **API-07**: API returns error messages with actionable details
 
 ### CI/CD & Deployment
 
@@ -154,10 +154,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 2 | Pending |
-| AUTH-02 | Phase 2 | Pending |
-| AUTH-03 | Phase 2 | Pending |
-| AUTH-04 | Phase 2 | Pending |
+| AUTH-01 | Phase 2 | Complete |
+| AUTH-02 | Phase 2 | Complete |
+| AUTH-03 | Phase 2 | Complete |
+| AUTH-04 | Phase 2 | Complete |
 | TENANT-01 | Phase 3 | Pending |
 | TENANT-02 | Phase 3 | Pending |
 | TENANT-03 | Phase 3 | Pending |
@@ -212,8 +212,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | API-03 | Phase 2 | Pending |
 | API-04 | Phase 2 | Pending |
 | API-05 | Phase 2 | Pending |
-| API-06 | Phase 2 | Pending |
-| API-07 | Phase 2 | Pending |
+| API-06 | Phase 2 | Complete |
+| API-07 | Phase 2 | Complete |
 | CICD-01 | Phase 8 | Pending |
 | CICD-02 | Phase 8 | Pending |
 | CICD-03 | Phase 8 | Pending |
