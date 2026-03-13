@@ -64,6 +64,13 @@ class Tenant extends Model
     {
         parent::boot();
 
+        // Add global scope for tenant filtering
+        static::addGlobalScope('tenant', function ($builder) {
+            if (auth()->check() && ($tenantId = auth()->user()->currentTenantId())) {
+                $builder->where('id', $tenantId);
+            }
+        });
+
         static::creating(function (Tenant $tenant) {
             if (empty($tenant->slug)) {
                 $tenant->slug = Str::slug($tenant->name);
