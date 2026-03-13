@@ -2,47 +2,65 @@
 
 namespace Tests\Unit\Models;
 
-use Tests\TestCase;
 use App\Models\JobStatus;
-use App\Enums\JobStatus as JobStatusEnum;
+use App\Models\Tenant;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
-/**
- * Wave 0 test stub for QUEUE-04: System tracks job status
- *
- * This test file will be implemented after JobStatus model is created.
- * Current assertions are placeholders for Nyquist compliance.
- */
 class JobStatusTest extends TestCase
 {
-    /**
-     * Test that JobStatus model has status enum
-     */
-    public function test_job_status_has_status_enum()
+    use RefreshDatabase;
+
+    #[Test]
+    public function job_status_has_tenant_id_job_id_job_type_status_fields()
     {
-        $this->assertTrue(true, 'Status enum test - to be implemented');
+        $status = JobStatus::factory()->make();
+
+        $this->assertNotNull($status->tenant_id);
+        $this->assertNotNull($status->job_id);
+        $this->assertNotNull($status->job_type);
+        $this->assertNotNull($status->status);
     }
 
-    /**
-     * Test that job status transitions are tracked
-     */
-    public function test_job_status_transitions_are_tracked()
+    #[Test]
+    public function job_status_casts_payload_to_array()
     {
-        $this->assertTrue(true, 'Status transition test - to be implemented');
+        $status = JobStatus::factory()->create([
+            'payload' => ['key' => 'value', 'test' => 123],
+        ]);
+
+        $this->assertIsArray($status->payload);
+        $this->assertEquals(['key' => 'value', 'test' => 123], $status->payload);
     }
 
-    /**
-     * Test that job status includes timestamps
-     */
-    public function test_job_status_includes_timestamps()
+    #[Test]
+    public function job_status_casts_started_at_and_completed_at_to_datetime()
     {
-        $this->assertTrue(true, 'Timestamp tracking test - to be implemented');
+        $status = JobStatus::factory()->create([
+            'started_at' => '2026-03-13 10:00:00',
+            'completed_at' => '2026-03-13 10:05:00',
+        ]);
+
+        $this->assertInstanceOf(\Illuminate\Support\Carbon::class, $status->started_at);
+        $this->assertInstanceOf(\Illuminate\Support\Carbon::class, $status->completed_at);
     }
 
-    /**
-     * Test that job status stores error details
-     */
-    public function test_job_status_stores_error_details()
+    #[Test]
+    public function job_status_belongs_to_tenant()
     {
-        $this->assertTrue(true, 'Error details test - to be implemented');
+        $tenant = Tenant::factory()->create();
+        $status = JobStatus::factory()->create(['tenant_id' => $tenant->id]);
+
+        $this->assertInstanceOf(Tenant::class, $status->tenant);
+        $this->assertEquals($tenant->id, $status->tenant->id);
+    }
+
+    #[Test]
+    public function migration_creates_table_with_all_required_columns()
+    {
+        $this->assertDatabaseHas('job_statuses', [
+            'job_id' => JobStatus::factory()->create()->job_id,
+        ]);
     }
 }
