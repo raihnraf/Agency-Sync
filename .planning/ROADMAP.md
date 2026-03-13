@@ -1,219 +1,3 @@
-# AgencySync Roadmap
-
-**Project:** AgencySync - Multi-tenant E-commerce Agency Management System
-**Created:** 2026-03-13
-**Granularity:** Fine
-**Phases:** 8
-
-## Overview
-
-AgencySync is a multi-tenant API-first backend system for e-commerce agencies to manage multiple client stores efficiently. This roadmap delivers a complete system with tenant isolation, catalog synchronization from Shopify/Shopware, Elasticsearch-powered search, and background job processing.
-
-**Core Value:** E-commerce agencies can reliably manage and synchronize product catalogs across multiple client stores with sub-second search performance and non-blocking background processing.
-
-## Phases
-
-- [x] **Phase 1: Foundation & Infrastructure** - Docker containerization and Laravel 11 base setup (completed 2026-03-12)
-- [x] **Phase 2: Authentication & API Foundation** - Agency admin authentication and RESTful API structure (completed 2026-03-13)
-- [x] **Phase 3: Tenant Management System** - Multi-tenant architecture with client store management (completed 2026-03-13)
-- [x] **Phase 4: Background Processing Infrastructure** - Redis queues with Supervisor for async operations (completed 2026-03-13)
-- [x] **Phase 5: Elasticsearch Integration** - Sub-second product search with fuzzy matching (completed 2026-03-13)
-- [x] **Phase 6: Catalog Synchronization** - Shopify/Shopware integration with async sync workflows (completed 2026-03-13)
-- [ ] **Phase 7: Admin Dashboard** - Complete admin UI with Blade + Alpine.js
-- [ ] **Phase 8: CI/CD & Testing** - Deployment pipeline and automated test coverage
-
-## Phase Details
-
-### Phase 1: Foundation & Infrastructure
-
-**Goal:** Development environment is containerized and ready for team collaboration
-
-**Depends on:** Nothing (first phase)
-
-**Requirements:** INFRA-01, INFRA-02, INFRA-03, INFRA-04, INFRA-05, INFRA-06, INFRA-07, INFRA-08
-
-**Success Criteria** (what must be TRUE):
-1. Developer can start entire application stack with single command (`make up`)
-2. All services (MySQL, Elasticsearch, Redis, Nginx, PHP-FPM) run in isolated containers
-3. Environment configuration works via .env files for all containers
-4. Laravel application serves requests through Nginx reverse proxy
-5. Elasticsearch cluster is accessible for indexing operations
-
-**Plans:** 3/3 plans complete
-- [x] 01-01-PLAN.md — Docker Compose v2 setup with all services (MySQL, Elasticsearch, Redis, Nginx, PHP-FPM), and environment configuration (completed 2026-03-13)
-- [x] 01-02-PLAN.md — Laravel environment configuration with .env setup, application key generation, and database migrations (completed 2026-03-13)
-- [x] 01-03-PLAN.md — Docker health checks and service verification with startup dependency management (completed 2026-03-13)
-
----
-
-### Phase 2: Authentication & API Foundation
-
-**Goal:** Agency admin can securely access the system via authenticated API requests
-
-**Depends on:** Phase 1 (Foundation & Infrastructure)
-
-**Requirements:** AUTH-01, AUTH-02, AUTH-03, AUTH-04, API-01, API-02, API-03, API-04, API-05, API-06, API-07
-
-**Success Criteria** (what must be TRUE):
-1. Agency admin can create account with email/password via API endpoint
-2. Agency admin can log in and receive authentication token
-3. Agency admin can access protected API endpoints using authentication token
-4. Agency admin can log out and invalidate session
-5. API returns consistent JSON structure with appropriate HTTP status codes
-6. API validates request data and returns actionable error messages
-7. API endpoints are versioned (/api/v1/) and use RESTful design principles
-8. API implements rate limiting per authenticated user
-
-**Plans:** 4/4 plans complete
-
-- [x] 02-01-PLAN.md — Laravel Sanctum authentication with registration, login, logout, protected endpoints, and test coverage (completed 2026-03-13)
-- [x] 02-02-PLAN.md — Consistent JSON response structure and validation error formatting with API Resources and Form Requests (completed 2026-03-13)
-- [x] 02-03-PLAN.md — API versioning with /api/v1/ prefix and proper HTTP status codes following RESTful principles (completed 2026-03-13)
-- [x] 02-04-PLAN.md — Rate limiting per authenticated user and 4-hour token inactivity expiration (completed 2026-03-13)
-
----
-
-### Phase 3: Tenant Management System
-
-- [ ] 03-01-PLAN.md — Multi-tenant database schema with encrypted credential storage
-- [ ] 03-02-PLAN.md — Tenant context middleware for header-based selection
-- [ ] 03-03-PLAN.md — Tenant CRUD API endpoints with credential validation
-
-**Goal:** Agency admin can manage multiple client stores with complete data isolation
-
-**Depends on:** Phase 2 (Authentication & API Foundation)
-
-**Requirements:** TENANT-01, TENANT-02, TENANT-03, TENANT-04, TENANT-05, TENANT-06, TENANT-07, TEST-01, TEST-02
-
-**Success Criteria** (what must be TRUE):
-1. Agency admin can create new client store with name, platform type, and API credentials
-2. Agency admin can view list of all client stores
-3. Agency admin can update client store details (name, status, platform URL)
-4. Agency admin can delete client store
-5. API credentials are stored encrypted in database
-6. All database queries automatically scope to current tenant via global scopes
-7. Database uses tenant_id discriminator for multi-tenant data isolation
-8. Unit tests verify tenant scoping logic prevents cross-tenant data access
-9. Feature tests verify API endpoints for tenant management
-
-**Plans:** 3/3 plans complete
-
-- [x] 03-01-PLAN.md — Multi-tenant database schema with encrypted credential storage (completed 2026-03-13)
-- [x] 03-02-PLAN.md — Tenant context middleware for header-based selection (completed 2026-03-13)
-- [x] 03-03-PLAN.md — Tenant CRUD API endpoints with credential validation (completed 2026-03-13)
-
----
-
-### Phase 4: Background Processing Infrastructure
-
-**Goal:** System can process long-running tasks asynchronously without blocking HTTP requests
-
-**Depends on:** Phase 3 (Tenant Management System)
-
-**Requirements:** QUEUE-01, QUEUE-02, QUEUE-03, QUEUE-04, QUEUE-05, QUEUE-06, TEST-03, SYNC-02, SYNC-04
-
-**Success Criteria** (what must be TRUE):
-1. System uses Redis for queue storage
-2. Supervisor monitors and restarts queue workers automatically
-3. Queue jobs include tenant_id in payload for proper context
-4. System tracks job status (pending, running, completed, failed)
-5. Failed jobs automatically retry with exponential backoff (3 attempts max)
-6. System logs all job failures with error details
-7. Sync operations run asynchronously in background queue (non-blocking HTTP)
-8. System implements retry logic with exponential backoff for failed API calls
-9. Integration tests verify queue job processing with tenant context
-
-**Plans:** 3/3 plans complete
-
-- [x] 04-01-PLAN.md — Redis queue configuration and Supervisor setup for worker monitoring (completed 2026-03-13)
-- [x] 04-02-PLAN.md — Tenant-aware job infrastructure with retry logic and status tracking (completed 2026-03-13)
-- [x] 04-03-PLAN.md — Async sync operations demonstration and integration tests (completed 2026-03-13)
-
----
-
-### Phase 5: Elasticsearch Integration
-
-**Goal:** System delivers sub-second search performance across product catalogs
-
-**Depends on:** Phase 4 (Background Processing Infrastructure)
-
-**Requirements:** SEARCH-01, SEARCH-02, SEARCH-03, SEARCH-04, SEARCH-05, SEARCH-06, SEARCH-07, QUEUE-07
-
-**Success Criteria** (what must be TRUE):
-1. Agency admin can search products within a single client's catalog
-2. Search returns results in sub-second time (< 500ms for typical queries)
-3. Search supports fuzzy matching (tolerates typos, partial matches)
-4. Search results are paginated (20 products per page)
-5. System indexes product data in Elasticsearch for fast search
-6. Elasticsearch index is scoped per tenant (tenant_id filter)
-7. Search results only include products from selected client store (tenant isolation)
-8. Agency admin can view queue job status in admin dashboard
-
-**Plans:** 4/4 plans complete
-
-- [x] 05-00-PLAN.md — Nyquist compliance with test stubs for search functionality (completed 2026-03-13)
-- [x] 05-01-PLAN.md — Elasticsearch engine integration with index-per-tenant strategy (completed 2026-03-13)
-- [x] 05-02-PLAN.md — Product search API with fuzzy matching and pagination (completed 2026-03-13)
-- [x] 05-03-PLAN.md — Async indexing jobs for product CRUD operations (completed 2026-03-13)
-
----
-
-### Phase 6: Catalog Synchronization
-
-**Goal:** Agency admin can synchronize product catalogs from Shopify/Shopware platforms
-
-**Depends on:** Phase 5 (Elasticsearch Integration)
-
-**Requirements:** SYNC-01, SYNC-03, SYNC-05, SYNC-06, SYNC-07, SYNC-08, SYNC-09
-
-**Success Criteria** (what must be TRUE):
-1. Agency admin can trigger manual catalog sync for a specific client store
-2. System validates product data before storing (required fields, data types)
-3. System logs all sync operations (start time, end time, status, error messages)
-4. Agency admin can view sync status for each client store (pending, running, completed, failed)
-5. System fetches product data from Shopify API (products, variants, inventory)
-6. System fetches product data from Shopware API (products, variants, inventory)
-7. System stores product data in MySQL with tenant_id association
-
-**Plans:** 4/4 plans complete
-- [x] 06-00-PLAN.md — Nyquist compliance with test stubs for sync functionality (completed 2026-03-13)
-- [x] 06-01-PLAN.md — Platform sync services (Shopify, Shopware) with API integration, product validation, and async job orchestration (completed 2026-03-13)
-- [x] 06-02-PLAN.md — Product storage with MySQL integration, idempotent upsert operations, chunked processing, and Elasticsearch indexing (completed 2026-03-13)
-- [x] 06-03-PLAN.md — Sync status and history API endpoints with pagination, filtering, and tenant isolation (completed 2026-03-13)
-
----
-
-### Phase 7: Admin Dashboard
-
-**Goal:** Agency admin can manage entire system through responsive web interface
-
-**Depends on:** Phase 5 (Elasticsearch Integration), Phase 6 (Catalog Synchronization)
-
-**Requirements:** UI-01, UI-02, UI-03, UI-04, UI-05, UI-06, UI-07, UI-08, UI-09, UI-10, UI-11
-
-**Success Criteria** (what must be TRUE):
-1. Agency admin can view client store list with status indicators
-2. Agency admin can create new client store via form (name, platform, API credentials)
-3. Agency admin can edit client store details
-4. Agency admin can delete client store with confirmation
-5. Agency admin can trigger sync operation for each client store
-6. Agency admin can view last sync status for each client store (time, status, product count)
-7. Agency admin can search products within a client's catalog
-8. Agency admin can view error log with filtering by client store and date
-9. Dashboard uses Blade templates with Alpine.js for interactivity
-10. Dashboard uses TailwindCSS for styling
-11. Dashboard is responsive for mobile and tablet viewing
-
-**Plans:** 6 plans
-- [x] 07-00-PLAN.md — Nyquist compliance with Laravel Dusk browser testing ✅ (completed 2026-03-14)
-- [x] 07-01-PLAN.md — Tenant list and creation form with API integration (UI-01, UI-02) ✅ (completed 2026-03-14)
-- [x] 07-02-PLAN.md — Tenant edit and delete with confirmation dialogs (UI-03, UI-04) ✅ (completed 2026-03-14)
-- [x] 07-03-PLAN.md — Sync trigger and real-time status polling (UI-05, UI-06) ✅ (completed 2026-03-14)
-- [x] 07-04-PLAN.md — Product search and error log viewer (UI-07, UI-08) ✅ (completed 2026-03-14)
-- [x] 07-05-PLAN.md — Dashboard navigation and responsive layout refinement (UI-09, UI-10, UI-11) ✅ (completed 2026-03-14)
-
----
-
 ### Phase 8: CI/CD & Testing
 
 **Goal:** System has automated deployment pipeline with comprehensive test coverage
@@ -233,7 +17,10 @@ AgencySync is a multi-tenant API-first backend system for e-commerce agencies to
 8. Tests achieve minimum 70% code coverage
 9. Tests run in CI/CD pipeline before deployment
 
-**Plans:** 3 plans
+**Plans:** 2 plans
+
+- [ ] 08-01-PLAN.md — GitHub Actions CI workflow with PHPUnit testing and 70% coverage enforcement (CICD-01, CICD-02, TEST-04, TEST-05)
+- [ ] 08-02-PLAN.md — SSH deployment workflow with deployment script and health check endpoint (CICD-03, CICD-04, CICD-05, CICD-06, CICD-07)
 
 ---
 
@@ -247,10 +34,10 @@ AgencySync is a multi-tenant API-first backend system for e-commerce agencies to
 | 4. Background Processing Infrastructure | 3/3 | Complete   | 2026-03-13 |
 | 5. Elasticsearch Integration | 4/4 | Complete   | 2026-03-13 |
 | 6. Catalog Synchronization | 4/4 | Complete   | 2026-03-13 |
-| 7. Admin Dashboard | 0/6 | Planning | - |
-| 8. CI/CD & Testing | 0/3 | Not started | - |
+| 7. Admin Dashboard | 6/6 | Complete   | 2026-03-14 |
+| 8. CI/CD & Testing | 0/2 | Planning | - |
 
-**Overall Progress:** 6/8 phases complete (75%)
+**Overall Progress:** 7/8 phases complete (87.5%)
 
 ## Dependencies
 
