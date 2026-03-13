@@ -39,4 +39,18 @@ class TenantController extends Controller
     {
         return view('dashboard.tenants.edit', ['tenantId' => $id]);
     }
+
+    /**
+     * Display product search page for tenant.
+     */
+    public function products(Request $request, string $id): View
+    {
+        // Fetch tenant data to pass to view
+        $tenant = $request->user()->tenants()->where('id', $id)->firstOrFail();
+
+        return view('dashboard.tenants.products', [
+            'tenantId' => $id,
+            'tenantName' => $tenant->name
+        ]);
+    }
 }
