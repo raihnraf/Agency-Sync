@@ -125,6 +125,10 @@ AgencySync is a multi-tenant API-first backend system for e-commerce agencies to
 
 **Plans:** 3 plans
 
+- [ ] 04-01-PLAN.md — Redis queue configuration and Supervisor setup for worker monitoring (Wave 1)
+- [ ] 04-02-PLAN.md — Tenant-aware job infrastructure with retry logic and status tracking (Wave 1)
+- [ ] 04-03-PLAN.md — Async sync operations demonstration and integration tests (Wave 2)
+
 ---
 
 ### Phase 5: Elasticsearch Integration
@@ -224,8 +228,8 @@ AgencySync is a multi-tenant API-first backend system for e-commerce agencies to
 |-------|----------------|--------|-----------|
 | 1. Foundation & Infrastructure | 3/3 | Complete   | 2026-03-12 |
 | 2. Authentication & API Foundation | 4/4 | Complete   | 2026-03-13 |
-| 3. Tenant Management System | 1/3 | In Progress|  |
-| 4. Background Processing Infrastructure | 0/3 | Not started | - |
+| 3. Tenant Management System | 3/3 | Planned    | - |
+| 4. Background Processing Infrastructure | 3/3 | Planned    | - |
 | 5. Elasticsearch Integration | 0/3 | Not started | - |
 | 6. Catalog Synchronization | 0/3 | Not started | - |
 | 7. Admin Dashboard | 0/3 | Not started | - |
