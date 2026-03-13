@@ -431,3 +431,235 @@ function tenantEdit(tenantId) {
         }
     };
 }
+
+function productSearch(tenantId, tenantName) {
+    return {
+        tenantId,
+        tenantName,
+        searchQuery: '',
+        products: [],
+        searching: false,
+        error: null,
+        currentPage: 1,
+        totalPages: 1,
+        totalProducts: 0,
+        searchTimeout: null,
+
+        async performSearch() {
+            // Clear existing timeout
+            if (this.searchTimeout) {
+                clearTimeout(this.searchTimeout);
+            }
+
+            // Skip if search query is empty
+            if (!this.searchQuery.trim()) {
+                this.products = [];
+                this.totalProducts = 0;
+                this.totalPages = 1;
+                return;
+            }
+
+            // Set loading state
+            this.searching = true;
+            this.error = null;
+
+            try {
+                const response = await fetch(`/api/v1/tenants/${this.tenantId}/products?query=${encodeURIComponent(this.searchQuery)}&page=${this.currentPage}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to search products');
+                }
+
+                const data = await response.json();
+                this.products = data.data;
+                this.totalProducts = data.meta.total;
+                this.totalPages = data.meta.last_page;
+
+            } catch (error) {
+                this.error = error.message;
+                console.error('Error searching products:', error);
+            } finally {
+                this.searching = false;
+            }
+        },
+
+        prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage--;
+                this.performSearch();
+            }
+        },
+
+        nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage++;
+                this.performSearch();
+            }
+        },
+
+        goToPage(page) {
+            this.currentPage = page;
+            this.performSearch();
+        },
+
+        get visiblePages() {
+            const pages = [];
+            const maxVisible = 5;
+            const start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+            const end = Math.min(this.totalPages, start + maxVisible - 1);
+
+            for (let i = start; i <= end; i++) {
+                pages.push(i);
+            }
+
+            return pages;
+        },
+
+        formatPrice(price) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            }).format(price);
+        }
+    };
+}
+
+function errorLog() {
+    return {
+        logs: [],
+        tenants: [],
+        loading: true,
+        error: null,
+        filters: {
+            tenant_id: '',
+            date_from: '',
+            date_to: ''
+        },
+        currentPage: 1,
+        totalPages: 1,
+
+        async fetchLogs() {
+            this.loading = true;
+            this.error = null;
+
+            try {
+                const params = new URLSearchParams({
+                    page: this.currentPage,
+                    per_page: 20
+                });
+
+                if (this.filters.tenant_id) {
+                    params.append('tenant_id', this.filters.tenant_id);
+                }
+                if (this.filters.date_from) {
+                    params.append('date_from', this.filters.date_from);
+                }
+                if (this.filters.date_to) {
+                    params.append('date_to', this.filters.date_to);
+                }
+
+                const response = await fetch(`/api/v1/sync-logs?${params}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch error logs');
+                }
+
+                const data = await response.json();
+                this.logs = data.data.filter(log => log.status === 'failed');
+                this.totalPages = data.meta.last_page;
+
+            } catch (error) {
+                this.error = error.message;
+                console.error('Error fetching logs:', error);
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async fetchTenants() {
+            try {
+                const response = await fetch('/api/v1/tenants', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
+                    }
+                });
+
+                if (!response.ok) {
+                    return;
+                }
+
+                const data = await response.json();
+                this.tenants = data.data;
+            } catch (error) {
+                console.error('Error fetching tenants:', error);
+            }
+        },
+
+        clearFilters() {
+            this.filters = {
+                tenant_id: '',
+                date_from: '',
+                date_to: ''
+            };
+            this.currentPage = 1;
+            this.fetchLogs();
+        },
+
+        prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage--;
+                this.fetchLogs();
+            }
+        },
+
+        nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage++;
+                this.fetchLogs();
+            }
+        },
+
+        formatDateTime(dateString) {
+            return new Date(dateString).toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        },
+
+        calculateDuration(started, completed) {
+            const start = new Date(started);
+            const end = new Date(completed);
+            const duration = Math.round((end - start) / 1000);
+
+            if (duration < 60) {
+                return `${duration}s`;
+            } else {
+                const minutes = Math.floor(duration / 60);
+                const seconds = duration % 60;
+                return `${minutes}m ${seconds}s`;
+            }
+        },
+
+        init() {
+            this.fetchTenants();
+            this.fetchLogs();
+        }
+    };
+}
