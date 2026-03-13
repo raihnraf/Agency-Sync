@@ -34,7 +34,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **SYNC-06**: Agency admin can view sync status for each client store (pending, running, completed, failed)
 - [ ] **SYNC-07**: System fetches product data from Shopify API (products, variants, inventory)
 - [ ] **SYNC-08**: System fetches product data from Shopware API (products, variants, inventory)
-- [ ] **SYNC-09**: System stores product data in MySQL with tenant_id association
+- [x] **SYNC-09**: System stores product data in MySQL with tenant_id association
 
 ### Product Search
 
@@ -173,7 +173,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SYNC-06 | Phase 6 | Pending |
 | SYNC-07 | Phase 6 | Pending |
 | SYNC-08 | Phase 6 | Pending |
-| SYNC-09 | Phase 6 | Pending |
+| SYNC-09 | Phase 6 | Complete |
 | SEARCH-01 | Phase 5 | Pending |
 | SEARCH-02 | Phase 5 | Pending |
 | SEARCH-03 | Phase 5 | Pending |
