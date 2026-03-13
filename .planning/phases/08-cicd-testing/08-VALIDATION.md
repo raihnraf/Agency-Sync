@@ -2,8 +2,8 @@
 phase: 8
 slug: cicd-testing
 status: draft
-nyquist_compliant: false
-wave_0_complete: false
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-03-14
 ---
 
@@ -38,13 +38,15 @@ created: 2026-03-14
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 08-01-01 | 01 | 1 | CICD-01, CICD-02 | integration | `./vendor/bin/phpunit tests/Feature/CiCdWorkflowTest.php` | ✅ | ⬜ pending |
-| 08-01-02 | 01 | 1 | CICD-03 | integration | `./vendor/bin/phpunit tests/Feature/CiCdWorkflowTest.php` | ✅ | ⬜ pending |
-| 08-02-01 | 02 | 2 | CICD-04, CICD-05 | unit | `./vendor/bin/phpunit tests/Unit/DeployScriptTest.php` | ❌ W0 | ⬜ pending |
-| 08-02-02 | 02 | 2 | CICD-06 | unit | `./vendor/bin/phpunit tests/Unit/DeployScriptTest.php` | ❌ W0 | ⬜ pending |
-| 08-02-03 | 02 | 2 | CICD-07 | integration | `./vendor/bin/phpunit tests/Feature/DeployScriptTest.php` | ❌ W0 | ⬜ pending |
-| 08-03-01 | 03 | 3 | TEST-04 | unit | `./vendor/bin/phpunit --coverage-text` | ✅ | ⬜ pending |
-| 08-03-02 | 03 | 3 | TEST-05 | integration | `./vendor/bin/phpunit --coverage-text` | ✅ | ⬜ pending |
+| 08-00-01 | 00 | 0 | CICD-04, CICD-05, CICD-06 | unit | `./vendor/bin/phpunit tests/Unit/DeployScriptTest.php` | ✅ | ⬜ pending |
+| 08-00-02 | 00 | 0 | CICD-07 | integration | `./vendor/bin/phpunit tests/Feature/DeployScriptTest.php` | ✅ | ⬜ pending |
+| 08-01-01 | 01 | 1 | CICD-01, CICD-02, TEST-04, TEST-05 | integration | `./vendor/bin/phpunit` | ✅ | ⬜ pending |
+| 08-01-02 | 01 | 1 | CICD-01, CICD-02, TEST-04, TEST-05 | integration | `./vendor/bin/phpunit` | ✅ | ⬜ pending |
+| 08-01-03 | 01 | 1 | CICD-01, CICD-02, TEST-04, TEST-05 | manual | N/A (checkpoint) | N/A | ⬜ pending |
+| 08-02-01 | 02 | 2 | CICD-03, CICD-04, CICD-05, CICD-06, CICD-07 | unit | `./vendor/bin/phpunit tests/Unit/DeployScriptTest.php` | ✅ | ⬜ pending |
+| 08-02-02 | 02 | 2 | CICD-03, CICD-04, CICD-05, CICD-06, CICD-07 | unit | `./vendor/bin/phpunit tests/Unit/DeployScriptTest.php` | ✅ | ⬜ pending |
+| 08-02-03 | 02 | 2 | CICD-03, CICD-04, CICD-05, CICD-06, CICD-07 | unit | `./vendor/bin/phpunit tests/Unit/DeployScriptTest.php` | ✅ | ⬜ pending |
+| 08-02-04 | 02 | 2 | CICD-03, CICD-04, CICD-05, CICD-06, CICD-07 | manual | N/A (checkpoint) | N/A | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -52,9 +54,9 @@ created: 2026-03-14
 
 ## Wave 0 Requirements
 
-- [ ] `tests/Unit/DeployScriptTest.php` — stubs for CICD-04, CICD-05, CICD-06
-- [ ] `tests/Feature/DeployScriptTest.php` — stubs for CICD-07
-- [ ] Existing PHPUnit infrastructure covers other requirements
+- [x] `tests/Unit/DeployScriptTest.php` — stubs for CICD-04, CICD-05, CICD-06
+- [x] `tests/Feature/DeployScriptTest.php` — stubs for CICD-07
+- [x] Existing PHPUnit infrastructure covers other requirements
 
 *Note: Project has 88 existing test files. Wave 0 only needs test stubs for new deployment script functionality.*
 
@@ -72,11 +74,11 @@ created: 2026-03-14
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 45s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references
+- [x] No watch-mode flags
+- [x] Feedback latency < 45s
+- [x] `nyquist_compliant: true` set in frontmatter
 
 **Approval:** pending
