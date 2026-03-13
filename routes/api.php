@@ -5,22 +5,27 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| API v1 Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
+| All API endpoints are versioned with /api/v1/ prefix.
+| Future versions can be added as separate Route::prefix('v2') groups.
 |
 */
 
 Route::prefix('v1')->group(function () {
-    // Public routes
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
+    // Public routes with stricter rate limiting
+    Route::middleware('throttle:auth')->group(function () {
+        Route::post('/register', [AuthController::class, 'register']);
+        Route::post('/login', [AuthController::class, 'login']);
+    });
 
-    // Protected routes
-    Route::middleware('auth:sanctum')->group(function () {
+    // Protected routes with auth, token expiration, and rate limiting
+    Route::middleware(['auth:sanctum', 'throttle:api-write'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
+    });
+
+    Route::middleware(['auth:sanctum', 'throttle:api-read'])->group(function () {
+        Route::get('/me', [AuthController::class, 'me']);
     });
 });
