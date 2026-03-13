@@ -27,6 +27,7 @@ class SyncLog extends Model
         'total_products',
         'processed_products',
         'failed_products',
+        'indexed_products',
         'error_message',
         'metadata',
     ];
@@ -116,5 +117,13 @@ class SyncLog extends Model
             ];
             $this->update(['metadata' => array_merge($metadata, ['errors' => $errors])]);
         }
+    }
+
+    /**
+     * Increment the indexed products counter.
+     */
+    public function incrementIndexed(int $count = 1): void
+    {
+        $this->increment('indexed_products', $count);
     }
 }

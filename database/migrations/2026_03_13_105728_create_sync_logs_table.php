@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('total_products')->default(0);
             $table->integer('processed_products')->default(0);
             $table->integer('failed_products')->default(0);
+            $table->integer('indexed_products')->default(0);
             $table->text('error_message')->nullable();
             $table->json('metadata')->nullable();
             $table->timestamps();
