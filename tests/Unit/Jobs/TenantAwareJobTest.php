@@ -12,20 +12,21 @@ class TenantAwareJobTest extends TestCase
     #[Test]
     public function job_accepts_tenant_id_in_constructor()
     {
-        $job = new class(42) extends TenantAwareJob {
+        $uuid = 'a149e4e8-c843-402b-b2d4-b2c8602c69a7';
+        $job = new class($uuid) extends TenantAwareJob {
             public function handle(): void
             {
                 // Test implementation
             }
         };
 
-        $this->assertEquals(42, $job->tenantId);
+        $this->assertEquals($uuid, $job->tenantId);
     }
 
     #[Test]
     public function job_sets_queue_to_sync_by_default()
     {
-        $job = new class(1) extends TenantAwareJob {
+        $job = new class('uuid') extends TenantAwareJob {
             public function handle(): void
             {
                 // Test implementation
@@ -38,7 +39,7 @@ class TenantAwareJobTest extends TestCase
     #[Test]
     public function job_has_backoff_method_returning_exponential_delays()
     {
-        $job = new class(1) extends TenantAwareJob {
+        $job = new class('uuid') extends TenantAwareJob {
             public function handle(): void
             {
                 // Test implementation
@@ -51,7 +52,7 @@ class TenantAwareJobTest extends TestCase
     #[Test]
     public function job_has_tries_property_set_to_3()
     {
-        $job = new class(1) extends TenantAwareJob {
+        $job = new class('uuid') extends TenantAwareJob {
             public function handle(): void
             {
                 // Test implementation
@@ -64,7 +65,7 @@ class TenantAwareJobTest extends TestCase
     #[Test]
     public function job_has_timeout_property_set_to_120()
     {
-        $job = new class(1) extends TenantAwareJob {
+        $job = new class('uuid') extends TenantAwareJob {
             public function handle(): void
             {
                 // Test implementation
@@ -77,7 +78,7 @@ class TenantAwareJobTest extends TestCase
     #[Test]
     public function job_middleware_returns_set_tenant_context_instance()
     {
-        $job = new class(1) extends TenantAwareJob {
+        $job = new class('uuid') extends TenantAwareJob {
             public function handle(): void
             {
                 // Test implementation

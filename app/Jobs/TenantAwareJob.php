@@ -13,11 +13,11 @@ abstract class TenantAwareJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public int $tenantId;
+    public string $tenantId;
     public int $tries = 3;
     public int $timeout = 120;
 
-    public function __construct(int $tenantId)
+    public function __construct(string $tenantId)
     {
         $this->tenantId = $tenantId;
         $this->queue = 'sync';

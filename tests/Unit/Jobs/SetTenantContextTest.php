@@ -75,7 +75,7 @@ class SetTenantContextTest extends TestCase
 
         // Tenant context should be cleared after job
         $this->assertNull(Tenant::currentTenant());
-        $this->assertNull(App::get('currentTenant'));
+        $this->assertFalse(app()->bound('currentTenant'));
     }
 
     #[Test]

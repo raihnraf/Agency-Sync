@@ -87,4 +87,27 @@ class Tenant extends Model
             ->withTimestamps()
             ->withPivot('role', 'joined_at');
     }
+
+    /**
+     * Set the current tenant for queue jobs and background processing.
+     */
+    public static function setCurrentTenant(?Tenant $tenant): void
+    {
+        if ($tenant) {
+            app()->instance('currentTenant', $tenant);
+        } else {
+            app()->forgetInstance('currentTenant');
+        }
+    }
+
+    /**
+     * Get the current tenant for queue jobs and background processing.
+     */
+    public static function currentTenant(): ?Tenant
+    {
+        if (app()->bound('currentTenant')) {
+            return app('currentTenant');
+        }
+        return null;
+    }
 }
