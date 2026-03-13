@@ -101,7 +101,7 @@
         <ul class="divide-y divide-gray-200" data-testid="error-log-list">
             <template x-for="log in logs" :key="log.id">
                 <li class="px-4 py-4 sm:px-6" data-testid="error-log-item">
-                    <div class="flex items-start justify-between">
+                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                         <div class="flex-1 min-w-0">
                             <!-- Tenant Name -->
                             <p class="text-sm font-medium text-gray-900" x-text="log.tenant_name"></p>
@@ -112,7 +112,7 @@
                             </div>
 
                             <!-- Metadata -->
-                            <div class="mt-2 flex items-center space-x-4 text-xs text-gray-500">
+                            <div class="mt-2 flex flex-wrap items-center gap-3 text-xs text-gray-500">
                                 <div>
                                     <span class="font-medium">Started:</span>
                                     <span x-text="formatDateTime(log.started_at)"></span>
@@ -129,7 +129,7 @@
                         </div>
 
                         <!-- Status Badge -->
-                        <div class="ml-4 flex-shrink-0">
+                        <div class="flex-shrink-0">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                 Failed
                             </span>

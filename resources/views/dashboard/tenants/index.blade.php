@@ -5,13 +5,13 @@
 @section('content')
 <div x-data="tenantList()" x-init="fetchTenants()" class="space-y-6">
     <!-- Page Header -->
-    <div class="flex justify-between items-center">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <h2 class="text-2xl font-bold text-gray-900">Client Stores</h2>
             <p class="mt-1 text-sm text-gray-600">Manage your e-commerce client stores</p>
         </div>
         <a href="{{ url('/dashboard/tenants/create') }}"
-           class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+           class="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 min-h-[44px]">
             <svg class="mr-2 -ml-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
@@ -62,9 +62,9 @@
         <ul class="divide-y divide-gray-200" data-testid="tenant-list">
             <template x-for="tenant in tenants" :key="tenant.id">
                 <li class="px-4 py-4 sm:px-6 hover:bg-gray-50">
-                    <div class="flex items-center justify-between">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div class="flex-1 min-w-0">
-                            <div class="flex items-center space-x-3">
+                            <div class="flex flex-wrap items-center gap-2">
                                 <p class="text-sm font-medium text-indigo-600 truncate" x-text="tenant.name"></p>
                                 <!-- Status Badge -->
                                 <span x-show="tenant.status === 'active'"
@@ -83,7 +83,7 @@
                                     Error
                                 </span>
                             </div>
-                            <div class="mt-2 flex items-center space-x-4">
+                            <div class="mt-2 flex flex-wrap items-center gap-4">
                                 <div class="flex items-center text-sm text-gray-500">
                                     <svg class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
@@ -98,13 +98,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-2">
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                             <a :href="`/dashboard/tenants/${tenant.id}`"
-                               class="text-indigo-600 hover:text-indigo-900 text-sm font-medium">
+                               class="inline-flex items-center justify-center px-3 py-2 text-indigo-600 hover:text-indigo-900 text-sm font-medium rounded-md hover:bg-gray-100 min-h-[44px]">
                                 View
                             </a>
                             <a :href="`/dashboard/tenants/${tenant.id}/edit`"
-                               class="text-indigo-600 hover:text-indigo-900 text-sm font-medium">
+                               class="inline-flex items-center justify-center px-3 py-2 text-indigo-600 hover:text-indigo-900 text-sm font-medium rounded-md hover:bg-gray-100 min-h-[44px]">
                                 Edit
                             </a>
                         </div>
