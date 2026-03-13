@@ -1,0 +1,38 @@
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Documentation
+README.md
+*.md
+.planning/
+
+# Storage - these directories are mounted as volumes
+storage
+node_modules
+vendor
+
+# Environment
+.env
+.env.*.local
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests
+phpunit.xml
+.phpunit.result.cache
+tests
