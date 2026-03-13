@@ -5,12 +5,12 @@ milestone_name: milestone
 current_phase: 5
 current_plan: Not started
 status: Ready to start
-last_updated: "2026-03-13T11:00:05.779Z"
+last_updated: "2026-03-13T11:14:47.336Z"
 progress:
   total_phases: 8
   completed_phases: 4
   total_plans: 21
-  completed_plans: 14
+  completed_plans: 15
 ---
 
 # AgencySync State
@@ -170,6 +170,10 @@ Completed Phase 4: Background Processing Infrastructure with Redis queues, Super
 - [Phase 04-03]: Simplify integration tests to verify job execution, not full queue event chain
 - [Phase 04-03]: Transmit tenantId in job payload for queue event extraction
 - [Phase 04-03]: Non-blocking API returns sub-100ms response times
+- [Phase 06]: SQLite in-memory database for tests (fixes storage permission issue)
+- [Phase 06]: HTML sanitization allows only safe tags, rejects unsafe HTML
+- [Phase 06]: Shopify rate limiting: 0.5s minimum, 1.0s at 80% threshold
+- [Phase 06]: Testing mode flag in sync services to skip usleep during tests
 
 ### Active Todos
 
@@ -217,7 +221,7 @@ None currently.
 
 ## Session Continuity
 
-**Last Session:** 2026-03-13T08:00:00.000Z
+**Last Session:** 2026-03-13T11:14:27.654Z
 **Current Session:** 2026-03-13T08:00:00.000Z
 **Next Action:** Plan Phase 5 (Elasticsearch Integration) using /gsd:plan-phase 05
 
