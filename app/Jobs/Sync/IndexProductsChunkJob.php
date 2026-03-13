@@ -87,6 +87,13 @@ class IndexProductsChunkJob extends TenantAwareJob
         // Update SyncLog indexed counter
         $syncLog->incrementIndexed($indexedCount);
 
+        // Mark sync as completed after indexing
+        $syncLog->markAsCompleted(
+            $syncLog->total_products,
+            $syncLog->processed_products,
+            $syncLog->failed_products
+        );
+
         Log::info('IndexProductsChunkJob: Completed', [
             'sync_log_id' => $this->syncLogId,
             'tenant_id' => $this->tenantId,

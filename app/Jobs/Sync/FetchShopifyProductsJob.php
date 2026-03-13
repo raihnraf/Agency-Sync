@@ -3,15 +3,16 @@
 namespace App\Jobs\Sync;
 
 use App\Enums\PlatformType;
-use App\Enums\SyncStatus;
-use App\Events\Sync\ProductsFetched;
 use App\Jobs\TenantAwareJob;
+use App\Models\Product;
 use App\Models\SyncLog;
 use App\Models\Tenant;
 use App\Services\Sync\ProductValidator;
 use App\Services\Sync\ShopifySyncService;
 use Exception;
+use Illuminate\Support\Bus;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
 
 class FetchShopifyProductsJob extends TenantAwareJob
 {
@@ -41,40 +42,53 @@ class FetchShopifyProductsJob extends TenantAwareJob
                 throw new Exception('Tenant not found for sync job');
             }
 
-            $validator = new ProductValidator();
+            $validator = app(ProductValidator::class);
             $syncService = new ShopifySyncService($validator, true);
 
+            // Fetch products from Shopify API
             $products = $syncService->fetchProducts($tenant, $syncLog);
 
-            $processed = 0;
-            $failed = 0;
+            // Update total products count
+            $syncLog->update(['total_products' => $products->count()]);
 
-            foreach ($products as $product) {
-                try {
-                    $syncService->normalizeProduct($product);
-                    $syncLog->incrementProcessed();
-                    $processed++;
-                } catch (Exception $e) {
-                    $syncLog->incrementFailed($e->getMessage());
-                    $failed++;
-                }
+            // Normalize products
+            $normalized = $products->map(function ($product) use ($syncService) {
+                return $syncService->normalizeProduct($product);
+            });
+
+            // Chunk normalized products into batches of 500
+            $chunks = $normalized->chunk(500);
+
+            // Build job chain: process chunks -> collect IDs -> index products
+            $jobs = [];
+
+            foreach ($chunks as $chunk) {
+                $jobs[] = new ProcessProductsChunkJob(
+                    $this->tenantId,
+                    $this->syncLogId,
+                    $chunk->toArray()
+                );
             }
 
-            $syncLog->markAsCompleted($products->count(), $processed, $failed);
-
-            ProductsFetched::dispatch(
-                PlatformType::SHOPIFY,
-                $products,
-                $this->tenantId
+            // Add final job to index all products after storage completes
+            // This will collect all product IDs after storage and index them
+            $jobs[] = new IndexAfterStorageJob(
+                $this->tenantId,
+                $this->syncLogId,
+                $normalized->pluck('external_id')->toArray()
             );
 
-            Log::info('Shopify product sync completed', [
+            // Dispatch the job chain
+            Bus::chain($jobs)->dispatch();
+
+            Log::info('Shopify product fetch completed, job chain dispatched', [
                 'sync_log_id' => $this->syncLogId,
                 'tenant_id' => $this->tenantId,
-                'total' => $products->count(),
-                'processed' => $processed,
-                'failed' => $failed,
+                'total_products' => $products->count(),
+                'chunks' => $chunks->count(),
             ]);
+
+            // Note: SyncLog status will be updated by the final job in the chain
         } catch (Exception $e) {
             $syncLog->markAsFailed($e->getMessage());
 
