@@ -17,6 +17,11 @@ class CheckTokenExpiration
             return $next($request);
         }
 
+        // Skip TransientToken (used in tests) which doesn't have an id
+        if (!property_exists($token, 'id')) {
+            return $next($request);
+        }
+
         // Refresh the token from database to get accurate timestamps
         $token = PersonalAccessToken::find($token->id);
         if (!$token) {

@@ -42,6 +42,8 @@ class SyncControllerTest extends TestCase
     #[Test]
     public function endpoint_returns_202_accepted_immediately()
     {
+        Queue::fake();
+
         $response = $this->actingAs($this->user)
             ->postJson('/api/v1/sync/dispatch', [
                 'tenant_id' => $this->tenant->id,
@@ -53,6 +55,8 @@ class SyncControllerTest extends TestCase
     #[Test]
     public function response_includes_job_id_and_status_pending()
     {
+        Queue::fake();
+
         $response = $this->actingAs($this->user)
             ->postJson('/api/v1/sync/dispatch', [
                 'tenant_id' => $this->tenant->id,

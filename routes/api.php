@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\TenantController;
+use App\Http\Controllers\Api\V1\SyncController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,6 +42,13 @@ Route::prefix('v1')->group(function () {
             Route::get('/tenants/{id}', [TenantController::class, 'show']);
             Route::put('/tenants/{id}', [TenantController::class, 'update']);
             Route::delete('/tenants/{id}', [TenantController::class, 'destroy']);
+        });
+
+        // Sync operation routes
+        Route::middleware('throttle:api-write')->group(function () {
+            Route::prefix('sync')->group(function () {
+                Route::post('/dispatch', [SyncController::class, 'dispatch']);
+            });
         });
     });
 });
