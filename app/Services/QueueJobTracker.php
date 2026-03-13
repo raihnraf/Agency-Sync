@@ -21,7 +21,31 @@ class QueueJobTracker
     public function markAsRunning(Job $job): void
     {
         $status = JobStatus::where('job_id', $job->getJobId())->first();
-        if ($status) {
+
+        // Create status if it doesn't exist (for jobs dispatched directly, not via controller)
+        if (!$status) {
+            $payload = json_decode($job->getRawBody(), true);
+            $command = $payload['data']['command'] ?? [];
+
+            // Extract tenantId from serialized job command
+            $tenantId = null;
+            if (is_string($command)) {
+                // Try to extract tenantId using multiple patterns
+                if (preg_match('/s:8:"tenantId";s:36:"([a-f0-9-]{36})"/', $command, $matches)) {
+                    $tenantId = $matches[1];
+                } elseif (preg_match('/s:8:"tenantId";s:\d+:"([^"]+)"/', $command, $matches)) {
+                    $tenantId = $matches[1];
+                }
+            }
+
+            $status = JobStatus::create([
+                'job_id' => $job->getJobId(),
+                'tenant_id' => $tenantId,
+                'job_type' => $payload['data']['commandName'] ?? 'Unknown',
+                'status' => 'running',
+                'payload' => $payload,
+            ]);
+        } else {
             $status->markAsRunning();
         }
     }

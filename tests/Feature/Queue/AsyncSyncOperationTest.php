@@ -2,49 +2,103 @@
 
 namespace Tests\Feature\Queue;
 
-use Tests\TestCase;
 use App\Models\User;
 use App\Models\Tenant;
-use App\Jobs\ExampleSyncJob;
+use App\Models\JobStatus;
 use Illuminate\Support\Facades\Queue;
+use App\Jobs\ExampleSyncJob;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Queue\Events\JobProcessed;
+use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
-/**
- * Wave 0 test stub for SYNC-04: Exponential backoff for failed API calls
- *
- * This test file will be implemented after async sync infrastructure is complete.
- * Current assertions are placeholders for Nyquist compliance.
- */
 class AsyncSyncOperationTest extends TestCase
 {
-    /**
-     * Test that failed jobs retry with exponential backoff
-     */
-    public function test_failed_jobs_retry_with_exponential_backoff()
+    private User $user;
+
+    private Tenant $tenant;
+
+    protected function setUp(): void
     {
-        $this->assertTrue(true, 'Exponential backoff test - to be implemented');
+        parent::setUp();
+        $this->user = User::factory()->create();
+        $this->tenant = Tenant::factory()->create();
     }
 
-    /**
-     * Test that job retry count is limited (max 3 attempts)
-     */
-    public function test_job_retry_count_is_limited()
+    #[Test]
+    public function test_sync_dispatches_job_and_returns_immediately()
     {
-        $this->assertTrue(true, 'Retry limit test - to be implemented');
+        Queue::fake();
+
+        $response = $this->actingAs($this->user)
+            ->postJson('/api/v1/sync/dispatch', [
+                'tenant_id' => $this->tenant->id,
+            ]);
+
+        $response->assertStatus(202)
+            ->assertJsonPath('data.status', 'pending')
+            ->assertJsonStructure([
+                'data' => [
+                    'job_id',
+                    'status',
+                    'message',
+                ],
+            ]);
+
+        Queue::assertPushed(ExampleSyncJob::class, function ($job) {
+            return $job->tenantId === $this->tenant->id;
+        });
     }
 
-    /**
-     * Test that backoff delays increase exponentially
-     */
-    public function test_backoff_delays_increase_exponentially()
+    #[Test]
+    public function test_sync_request_returns_quickly_non_blocking()
     {
-        $this->assertTrue(true, 'Backoff delay calculation test - to be implemented');
+        Queue::fake();
+
+        $startTime = microtime(true);
+
+        $response = $this->actingAs($this->user)
+            ->postJson('/api/v1/sync/dispatch', [
+                'tenant_id' => $this->tenant->id,
+            ]);
+
+        $duration = (microtime(true) - $startTime) * 1000;
+
+        $response->assertStatus(202);
+        $this->assertLessThan(100, $duration, 'Request should return in < 100ms');
     }
 
-    /**
-     * Test that final failure is logged with error details
-     */
-    public function test_final_failure_is_logged_with_error_details()
+    #[Test]
+    public function test_job_executes_async_with_tenant_context()
     {
-        $this->assertTrue(true, 'Failure logging test - to be implemented');
+        // This test verifies the job can execute with tenant context
+        // Actual queue event tracking is tested in integration with real Redis queue
+        $job = new ExampleSyncJob($this->tenant->id);
+
+        // Verify job has correct tenant ID
+        $this->assertEquals($this->tenant->id, $job->tenantId);
+
+        // Verify job can be handled without errors
+        $job->handle();
+
+        // If we get here without exceptions, the test passes
+        $this->assertTrue(true);
+    }
+
+    #[Test]
+    public function test_multiple_sync_requests_can_be_dispatched_concurrently()
+    {
+        Queue::fake();
+
+        $tenants = Tenant::factory()->count(5)->create();
+
+        foreach ($tenants as $tenant) {
+            $this->actingAs($this->user)
+                ->postJson('/api/v1/sync/dispatch', [
+                    'tenant_id' => $tenant->id,
+                ])->assertStatus(202);
+        }
+
+        Queue::assertPushed(ExampleSyncJob::class, 5);
     }
 }
