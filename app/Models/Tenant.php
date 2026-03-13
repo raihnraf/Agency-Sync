@@ -91,13 +91,21 @@ class Tenant extends Model
     /**
      * Set the current tenant for queue jobs and background processing.
      */
-    public static function setCurrentTenant(?Tenant $tenant): void
+    public static function setCurrent(?Tenant $tenant): void
     {
         if ($tenant) {
             app()->instance('currentTenant', $tenant);
         } else {
             app()->forgetInstance('currentTenant');
         }
+    }
+
+    /**
+     * Set the current tenant for queue jobs and background processing.
+     */
+    public static function setCurrentTenant(?Tenant $tenant): void
+    {
+        self::setCurrent($tenant);
     }
 
     /**
@@ -109,5 +117,13 @@ class Tenant extends Model
             return app('currentTenant');
         }
         return null;
+    }
+
+    /**
+     * Clear the current tenant context.
+     */
+    public static function clearCurrent(): void
+    {
+        app()->forgetInstance('currentTenant');
     }
 }

@@ -12,10 +12,12 @@ class ProductFactory extends Factory
 
     public function definition(): array
     {
+        $name = $this->faker->words(3, true);
         return [
             'tenant_id' => Tenant::factory(),
             'external_id' => 'shopify_' . $this->faker->unique()->numerify('######'),
-            'name' => $this->faker->words(3, true),
+            'name' => $name,
+            'slug' => \Illuminate\Support\Str::slug($name),
             'description' => $this->faker->optional()->paragraph(),
             'sku' => $this->faker->optional()->lexify('SKU-????'),
             'price' => $this->faker->randomFloat(2, 10, 1000),

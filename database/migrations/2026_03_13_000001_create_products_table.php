@@ -14,13 +14,15 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('tenant_id')->constrained('tenants')->onDelete('cascade');
+            $table->string('external_id', 255)->nullable()->after('tenant_id');
             $table->string('name', 255);
             $table->string('slug', 255)->index();
             $table->text('description')->nullable();
-            $table->string('sku', 100)->index();
+            $table->string('sku', 100)->nullable()->index();
             $table->decimal('price', 12, 2);
             $table->decimal('compare_at_price', 12, 2)->nullable();
             $table->integer('stock_quantity')->default(0);
+            $table->enum('platform', ['shopify', 'shopware'])->nullable()->after('stock_quantity');
             $table->string('platform_product_id', 100)->nullable()->index();
             $table->json('platform_data')->nullable();
             $table->json('metadata')->nullable();
@@ -28,9 +30,13 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            // Unique constraint for idempotent upsert operations
+            $table->unique(['tenant_id', 'external_id'], 'unique_tenant_external_product');
+
             // Composite index for tenant-scoped queries
             $table->index(['tenant_id', 'slug']);
             $table->index(['tenant_id', 'sku']);
+            $table->index(['tenant_id', 'platform']);
         });
     }
 

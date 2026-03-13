@@ -40,8 +40,8 @@ class Product extends Model
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
-        'compare_at_price' => 'decimal:2',
+        'price' => 'float',
+        'compare_at_price' => 'float',
         'stock_quantity' => 'integer',
         'platform' => 'string',
         'platform_data' => 'array',
@@ -69,6 +69,10 @@ class Product extends Model
         static::creating(function ($model) {
             if (empty($model->id)) {
                 $model->id = (string) \Illuminate\Support\Str::uuid();
+            }
+
+            if (empty($model->slug) && !empty($model->name)) {
+                $model->slug = \Illuminate\Support\Str::slug($model->name);
             }
         });
     }
