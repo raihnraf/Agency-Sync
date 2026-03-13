@@ -47,9 +47,16 @@ Route::prefix('v1')->group(function () {
         });
 
         // Sync operation routes
-        Route::middleware('throttle:api-write')->group(function () {
-            Route::prefix('sync')->group(function () {
+        Route::prefix('sync')->group(function () {
+            // Sync trigger routes (write operations)
+            Route::middleware('throttle:api-write')->group(function () {
                 Route::post('/dispatch', [SyncController::class, 'dispatch']);
+            });
+
+            // Sync status and history routes (read operations)
+            Route::middleware('throttle:api-read')->group(function () {
+                Route::get('/status/{syncLogId}', [SyncController::class, 'status']);
+                Route::get('/history', [SyncController::class, 'history']);
             });
         });
 

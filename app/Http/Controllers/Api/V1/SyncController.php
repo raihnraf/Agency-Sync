@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Enums\PlatformType;
 use App\Enums\SyncStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SyncLogResource;
 use App\Jobs\ExampleSyncJob;
 use App\Jobs\Sync\FetchShopifyProductsJob;
 use App\Jobs\Sync\FetchShopwareProductsJob;
@@ -149,18 +150,17 @@ class SyncController extends Controller
             ], 404);
         }
 
+        // Tenant validation: ensure user can access this sync log
+        $userTenants = auth()->user()->tenants->pluck('id');
+        if (!$userTenants->contains($syncLog->tenant_id)) {
+            return response()->json([
+                'message' => 'Sync log not found',
+            ], 404);
+        }
+
         return response()->json([
-            'data' => [
-                'id' => $syncLog->id,
-                'status' => $syncLog->status->value,
-                'platform_type' => $syncLog->platform_type->value,
-                'started_at' => $syncLog->started_at?->toIso8601String(),
-                'completed_at' => $syncLog->completed_at?->toIso8601String(),
-                'total_products' => $syncLog->total_products,
-                'processed_products' => $syncLog->processed_products,
-                'failed_products' => $syncLog->failed_products,
-                'error_message' => $syncLog->error_message,
-            ],
+            'data' => SyncLogResource::make($syncLog)->toArray(request()),
+            'meta' => [],
         ]);
     }
 }
