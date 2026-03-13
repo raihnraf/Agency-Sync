@@ -73,4 +73,16 @@ class AuthController extends BaseController
 
         return response()->json(null, 204);
     }
+
+    /**
+     * Get authenticated user details.
+     */
+    public function me(Request $request)
+    {
+        return response()->json([
+            'data' => [
+                'user' => new UserResource($request->user()),
+            ],
+        ], 200);
+    }
 }
