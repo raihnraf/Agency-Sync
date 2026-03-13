@@ -20,6 +20,11 @@ return Application::configure(basePath: dirname(__DIR__))
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         ]);
 
+        // Register middleware aliases
+        $middleware->alias([
+            'token.expire' => \App\Http\Middleware\CheckTokenExpiration::class,
+        ]);
+
         // Configure rate limiters
         RateLimiter::for('api-read', function (Request $request) {
             return Limit::perMinute(60)
