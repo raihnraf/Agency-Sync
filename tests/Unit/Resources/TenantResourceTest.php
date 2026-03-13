@@ -50,8 +50,15 @@ class TenantResourceTest extends TestCase
     public function test_tenant_resource_transforms_enums_to_string_values()
     {
         $tenant = Tenant::factory()->make([
+            'id' => '123e4567-e89b-12d3-a456-426614174000',
+            'name' => 'Test Tenant',
+            'slug' => 'test-tenant',
             'platform_type' => PlatformType::SHOPIFY,
+            'platform_url' => 'https://test.myshopify.com',
             'status' => TenantStatus::ACTIVE,
+            'settings' => [],
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         $resource = TenantResource::make($tenant);
@@ -68,6 +75,13 @@ class TenantResourceTest extends TestCase
     {
         $now = now();
         $tenant = Tenant::factory()->make([
+            'id' => '123e4567-e89b-12d3-a456-426614174000',
+            'name' => 'Test Tenant',
+            'slug' => 'test-tenant',
+            'platform_type' => PlatformType::SHOPIFY,
+            'platform_url' => 'https://test.myshopify.com',
+            'status' => TenantStatus::ACTIVE,
+            'settings' => [],
             'last_sync_at' => $now,
             'created_at' => $now,
             'updated_at' => $now,
@@ -76,15 +90,24 @@ class TenantResourceTest extends TestCase
         $resource = TenantResource::make($tenant);
         $array = $resource->toArray(request());
 
-        $this->assertStringMatchesFormat('%d-%d-%dT%d:%d:%d%', $array['last_sync_at']);
-        $this->assertStringMatchesFormat('%d-%d-%dT%d:%d:%d%', $array['created_at']);
-        $this->assertStringMatchesFormat('%d-%d-%dT%d:%d:%d%', $array['updated_at']);
+        $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/', $array['last_sync_at']);
+        $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/', $array['created_at']);
+        $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/', $array['updated_at']);
     }
 
     public function test_tenant_resource_handles_null_last_sync_at()
     {
         $tenant = Tenant::factory()->make([
+            'id' => '123e4567-e89b-12d3-a456-426614174000',
+            'name' => 'Test Tenant',
+            'slug' => 'test-tenant',
+            'platform_type' => PlatformType::SHOPIFY,
+            'platform_url' => 'https://test.myshopify.com',
+            'status' => TenantStatus::ACTIVE,
+            'settings' => [],
             'last_sync_at' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         $resource = TenantResource::make($tenant);
@@ -95,7 +118,17 @@ class TenantResourceTest extends TestCase
 
     public function test_tenant_resource_has_no_data_wrapper()
     {
-        $tenant = Tenant::factory()->make();
+        $tenant = Tenant::factory()->make([
+            'id' => '123e4567-e89b-12d3-a456-426614174000',
+            'name' => 'Test Tenant',
+            'slug' => 'test-tenant',
+            'platform_type' => PlatformType::SHOPIFY,
+            'platform_url' => 'https://test.myshopify.com',
+            'status' => TenantStatus::ACTIVE,
+            'settings' => [],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
         $resource = TenantResource::make($tenant);
         $array = $resource->toArray(request());
