@@ -59,8 +59,7 @@ class PlatformCredentialValidatorTest extends TestCase
         );
 
         Http::assertSent(function ($request) {
-            return $request->hasHeader('Accept') &&
-                   $request->url() !== null;
+            return str_contains($request->url(), 'api.shopify.com');
         });
     }
 
