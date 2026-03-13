@@ -73,6 +73,10 @@ AgencySync is a multi-tenant API-first backend system for e-commerce agencies to
 
 ### Phase 3: Tenant Management System
 
+- [ ] 03-01-PLAN.md — Multi-tenant database schema with encrypted credential storage
+- [ ] 03-02-PLAN.md — Tenant context middleware for header-based selection
+- [ ] 03-03-PLAN.md — Tenant CRUD API endpoints with credential validation
+
 **Goal:** Agency admin can manage multiple client stores with complete data isolation
 
 **Depends on:** Phase 2 (Authentication & API Foundation)
@@ -90,7 +94,7 @@ AgencySync is a multi-tenant API-first backend system for e-commerce agencies to
 8. Unit tests verify tenant scoping logic prevents cross-tenant data access
 9. Feature tests verify API endpoints for tenant management
 
-**Plans:** TBD
+**Plans:** 3 plans
 
 ---
 
@@ -113,7 +117,7 @@ AgencySync is a multi-tenant API-first backend system for e-commerce agencies to
 8. System implements retry logic with exponential backoff for failed API calls
 9. Integration tests verify queue job processing with tenant context
 
-**Plans:** TBD
+**Plans:** 3 plans
 
 ---
 
@@ -135,7 +139,7 @@ AgencySync is a multi-tenant API-first backend system for e-commerce agencies to
 7. Search results only include products from selected client store (tenant isolation)
 8. Agency admin can view queue job status in admin dashboard
 
-**Plans:** TBD
+**Plans:** 3 plans
 
 ---
 
@@ -156,7 +160,7 @@ AgencySync is a multi-tenant API-first backend system for e-commerce agencies to
 6. System fetches product data from Shopware API (products, variants, inventory)
 7. System stores product data in MySQL with tenant_id association
 
-**Plans:** TBD
+**Plans:** 3 plans
 
 ---
 
@@ -181,7 +185,7 @@ AgencySync is a multi-tenant API-first backend system for e-commerce agencies to
 10. Dashboard uses TailwindCSS for styling
 11. Dashboard is responsive for mobile and tablet viewing
 
-**Plans:** TBD
+**Plans:** 3 plans
 
 ---
 
@@ -204,7 +208,7 @@ AgencySync is a multi-tenant API-first backend system for e-commerce agencies to
 8. Tests achieve minimum 70% code coverage
 9. Tests run in CI/CD pipeline before deployment
 
-**Plans:** TBD
+**Plans:** 3 plans
 
 ---
 
