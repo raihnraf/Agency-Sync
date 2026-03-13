@@ -22,7 +22,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **TENANT-04**: Agency admin can delete client store
 - [x] **TENANT-05**: System stores API credentials encrypted in database (Shopify API key, Shopware credentials)
 - [x] **TENANT-06**: Database uses tenant_id discriminator for multi-tenant data isolation
-- [ ] **TENANT-07**: Queries automatically scope to current tenant via global scopes
+- [x] **TENANT-07**: Queries automatically scope to current tenant via global scopes
 
 ### Catalog Synchronization
 
@@ -164,7 +164,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TENANT-04 | Phase 3 | Pending |
 | TENANT-05 | Phase 3 | Complete |
 | TENANT-06 | Phase 3 | Complete |
-| TENANT-07 | Phase 3 | Pending |
+| TENANT-07 | Phase 3 | Complete |
 | SYNC-01 | Phase 6 | Pending |
 | SYNC-02 | Phase 4 | Pending |
 | SYNC-03 | Phase 6 | Pending |
