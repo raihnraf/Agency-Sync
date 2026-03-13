@@ -2,39 +2,92 @@
 
 namespace Tests\Unit\Jobs;
 
-use Tests\TestCase;
 use App\Jobs\TenantAwareJob;
-use App\Models\Tenant;
+use App\Queue\Middleware\SetTenantContext;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
-/**
- * Wave 0 test stub for QUEUE-03: Queue jobs include tenant_id in payload
- *
- * This test file will be implemented after TenantAwareJob is created.
- * Current assertions are placeholders for Nyquist compliance.
- */
 class TenantAwareJobTest extends TestCase
 {
-    /**
-     * Test that job accepts tenant_id in constructor
-     */
-    public function test_job_accepts_tenant_id_in_constructor()
+    #[Test]
+    public function job_accepts_tenant_id_in_constructor()
     {
-        $this->assertTrue(true, 'Constructor test - to be implemented');
+        $job = new class(42) extends TenantAwareJob {
+            public function handle(): void
+            {
+                // Test implementation
+            }
+        };
+
+        $this->assertEquals(42, $job->tenantId);
     }
 
-    /**
-     * Test that job payload includes tenant_id
-     */
-    public function test_job_payload_includes_tenant_id()
+    #[Test]
+    public function job_sets_queue_to_sync_by_default()
     {
-        $this->assertTrue(true, 'Payload serialization test - to be implemented');
+        $job = new class(1) extends TenantAwareJob {
+            public function handle(): void
+            {
+                // Test implementation
+            }
+        };
+
+        $this->assertEquals('sync', $job->queue);
     }
 
-    /**
-     * Test that tenant_id is accessible during job execution
-     */
-    public function test_tenant_id_is_accessible_during_execution()
+    #[Test]
+    public function job_has_backoff_method_returning_exponential_delays()
     {
-        $this->assertTrue(true, 'Tenant context test - to be implemented');
+        $job = new class(1) extends TenantAwareJob {
+            public function handle(): void
+            {
+                // Test implementation
+            }
+        };
+
+        $this->assertEquals([10, 30, 90], $job->backoff());
+    }
+
+    #[Test]
+    public function job_has_tries_property_set_to_3()
+    {
+        $job = new class(1) extends TenantAwareJob {
+            public function handle(): void
+            {
+                // Test implementation
+            }
+        };
+
+        $this->assertEquals(3, $job->tries);
+    }
+
+    #[Test]
+    public function job_has_timeout_property_set_to_120()
+    {
+        $job = new class(1) extends TenantAwareJob {
+            public function handle(): void
+            {
+                // Test implementation
+            }
+        };
+
+        $this->assertEquals(120, $job->timeout);
+    }
+
+    #[Test]
+    public function job_middleware_returns_set_tenant_context_instance()
+    {
+        $job = new class(1) extends TenantAwareJob {
+            public function handle(): void
+            {
+                // Test implementation
+            }
+        };
+
+        $middleware = $job->middleware();
+
+        $this->assertIsArray($middleware);
+        $this->assertCount(1, $middleware);
+        $this->assertInstanceOf(SetTenantContext::class, $middleware[0]);
     }
 }
