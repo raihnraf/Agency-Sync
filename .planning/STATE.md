@@ -5,12 +5,12 @@ milestone_name: milestone
 current_phase: 5
 current_plan: Not started
 status: Ready to start
-last_updated: "2026-03-13T12:07:32.843Z"
+last_updated: "2026-03-13T12:13:11.740Z"
 progress:
   total_phases: 8
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 21
-  completed_plans: 16
+  completed_plans: 17
 ---
 
 # AgencySync State
@@ -174,6 +174,11 @@ Completed Phase 4: Background Processing Infrastructure with Redis queues, Super
 - [Phase 06]: HTML sanitization allows only safe tags, rejects unsafe HTML
 - [Phase 06]: Shopify rate limiting: 0.5s minimum, 1.0s at 80% threshold
 - [Phase 06]: Testing mode flag in sync services to skip usleep during tests
+- [Phase 06-catalog-synchronization]: SyncLogResource with derived fields (duration, progress_percentage) for better UX
+- [Phase 06-catalog-synchronization]: Tenant validation via user->tenants relationship prevents cross-tenant access
+- [Phase 06-catalog-synchronization]: Generic 404 errors prevent tenant enumeration attacks
+- [Phase 06-catalog-synchronization]: Pagination max 100 per page prevents large result sets
+- [Phase 06-catalog-synchronization]: Fixed SetTenant middleware to call Tenant::setCurrentTenant() for app container
 
 ### Active Todos
 
@@ -221,7 +226,7 @@ None currently.
 
 ## Session Continuity
 
-**Last Session:** 2026-03-13T11:14:27.654Z
+**Last Session:** 2026-03-13T12:13:06.997Z
 **Current Session:** 2026-03-13T08:00:00.000Z
 **Next Action:** Plan Phase 5 (Elasticsearch Integration) using /gsd:plan-phase 05
 
