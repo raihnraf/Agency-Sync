@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\TenantController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,6 +29,18 @@ Route::prefix('v1')->group(function () {
 
         Route::middleware('throttle:api-read')->group(function () {
             Route::get('/me', [AuthController::class, 'me']);
+        });
+
+        // Tenant management routes
+        // Index and store don't require tenant context
+        Route::get('/tenants', [TenantController::class, 'index']);
+        Route::post('/tenants', [TenantController::class, 'store']);
+
+        // Show, update, delete require tenant context
+        Route::middleware(['tenant', 'tenant.scope'])->group(function () {
+            Route::get('/tenants/{id}', [TenantController::class, 'show']);
+            Route::put('/tenants/{id}', [TenantController::class, 'update']);
+            Route::delete('/tenants/{id}', [TenantController::class, 'destroy']);
         });
     });
 });

@@ -67,7 +67,7 @@ class Tenant extends Model
         // Add global scope for tenant filtering
         static::addGlobalScope('tenant', function ($builder) {
             if (auth()->check() && ($tenantId = auth()->user()->currentTenantId())) {
-                $builder->where('id', $tenantId);
+                $builder->where('tenants.id', $tenantId);
             }
         });
 

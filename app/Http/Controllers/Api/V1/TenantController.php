@@ -72,7 +72,7 @@ class TenantController extends ApiController
      */
     public function show(string $id)
     {
-        $tenant = auth()->user()->tenants()->findOrFail($id);
+        $tenant = auth()->user()->tenants()->where('tenants.id', $id)->firstOrFail();
 
         return $this->success(new TenantResource($tenant));
     }
@@ -82,7 +82,7 @@ class TenantController extends ApiController
      */
     public function update(UpdateTenantRequest $request, string $id)
     {
-        $tenant = auth()->user()->tenants()->findOrFail($id);
+        $tenant = auth()->user()->tenants()->where('tenants.id', $id)->firstOrFail();
         $tenant->update($request->validated());
 
         return $this->success(new TenantResource($tenant));
@@ -93,7 +93,7 @@ class TenantController extends ApiController
      */
     public function destroy(string $id)
     {
-        $tenant = auth()->user()->tenants()->findOrFail($id);
+        $tenant = auth()->user()->tenants()->where('tenants.id', $id)->firstOrFail();
         $tenant->delete();
 
         return $this->noContent();
