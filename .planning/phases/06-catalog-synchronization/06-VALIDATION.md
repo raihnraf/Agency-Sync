@@ -2,8 +2,8 @@
 phase: 6
 slug: catalog-synchronization
 status: draft
-nyquist_compliant: false
-wave_0_complete: false
+nyquist_compliant: true
+wave_0_complete: true
 created: 2025-03-13
 ---
 
@@ -38,13 +38,22 @@ created: 2025-03-13
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 06-01-01 | 01 | 1 | SYNC-01 | feature | `./vendor/bin/pest --testsuites=Feature --group=shopify-sync` | ❌ W0 | ⬜ pending |
-| 06-01-02 | 01 | 2 | SYNC-05 | unit | `./vendor/bin/pest --testsuites=Unit --group=product-validation` | ❌ W0 | ⬜ pending |
-| 06-01-03 | 01 | 3 | SYNC-06 | feature | `./vendor/bin/pest --testsuites=Feature --group=sync-logging` | ❌ W0 | ⬜ pending |
-| 06-02-01 | 02 | 1 | SYNC-03 | feature | `./vendor/bin/pest --testsuites=Feature --group=shopware-sync` | ❌ W0 | ⬜ pending |
-| 06-02-02 | 02 | 2 | SYNC-07 | unit | `./vendor/bin/pest --testsuites=Unit --group=sync-storage` | ❌ W0 | ⬜ pending |
-| 06-02-03 | 02 | 3 | SYNC-08 | feature | `./vendor/bin/pest --testsuites=Feature --group=sync-status` | ❌ W0 | ⬜ pending |
-| 06-03-01 | 03 | 1 | SYNC-09 | integration | `./vendor/bin/pest --testsuites=Integration --group=end-to-end-sync` | ❌ W0 | ⬜ pending |
+| 06-01-01 | 01 | 1 | SYNC-05 | unit | `./vendor/bin/pest --testsuites=Unit --filter=SyncLogModelTest` | ✅ W0 | ⬜ pending |
+| 06-01-02 | 01 | 2 | SYNC-03 | unit | `./vendor/bin/pest --testsuites=Unit --filter=ProductValidatorTest` | ✅ W0 | ⬜ pending |
+| 06-01-03 | 01 | 3 | SYNC-07 | unit | `./vendor/bin/pest --testsuites=Unit --filter=ShopifySyncServiceTest` | ✅ W0 | ⬜ pending |
+| 06-01-04 | 01 | 3 | SYNC-08 | unit | `./vendor/bin/pest --testsuites=Unit --filter=ShopwareSyncServiceTest` | ✅ W0 | ⬜ pending |
+| 06-01-05 | 01 | 4 | SYNC-07 | unit | `./vendor/bin/pest --testsuites=Unit --filter=FetchShopifyProductsJobTest` | ✅ W0 | ⬜ pending |
+| 06-01-06 | 01 | 4 | SYNC-08 | unit | `./vendor/bin/pest --testsuites=Unit --filter=FetchShopwareProductsJobTest` | ✅ W0 | ⬜ pending |
+| 06-01-07 | 01 | 5 | SYNC-01 | feature | `./vendor/bin/pest --testsuites=Feature --filter=ShopifySyncTriggerTest` | ✅ W0 | ⬜ pending |
+| 06-02-01 | 02 | 2 | SYNC-09 | unit | `./vendor/bin/pest --testsuites=Unit --filter=ProductStorageTest` | ✅ W0 | ⬜ pending |
+| 06-02-02 | 02 | 2 | SYNC-09 | unit | `./vendor/bin/pest --testsuites=Unit --filter=ProcessProductsChunkJobTest` | ✅ W0 | ⬜ pending |
+| 06-02-03 | 02 | 2 | SYNC-09 | unit | `./vendor/bin/pest --testsuites=Unit --filter=IndexProductsChunkJobTest` | ✅ W0 | ⬜ pending |
+| 06-02-04 | 02 | 3 | SYNC-07, SYNC-08 | unit | `./vendor/bin/pest --testsuites=Unit --filter=FetchShopifyProductsJobUpdatedTest` | ✅ W0 | ⬜ pending |
+| 06-02-05 | 02 | 3 | SYNC-07, SYNC-08 | integration | `./vendor/bin/pest --testsuites=Integration --filter=ShopifyEndToEndSyncTest` | ✅ W0 | ⬜ pending |
+| 06-03-01 | 03 | 3 | SYNC-06 | unit | `./vendor/bin/pest --testsuites=Unit --filter=SyncStatusTest` | ✅ W0 | ⬜ pending |
+| 06-03-02 | 03 | 3 | SYNC-06 | unit | `./vendor/bin/pest --testsuites=Unit --filter=SyncLogResourceTest` | ✅ W0 | ⬜ pending |
+| 06-03-03 | 03 | 3 | SYNC-06 | feature | `./vendor/bin/pest --testsuites=Feature --filter=SyncStatusEndpointsTest` | ✅ W0 | ⬜ pending |
+| 06-03-04 | 03 | 3 | SYNC-06 | feature | `./vendor/bin/pest --testsuites=Feature --filter=SyncHistoryEndpointsTest` | ✅ W0 | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -52,15 +61,28 @@ created: 2025-03-13
 
 ## Wave 0 Requirements
 
-- [ ] `tests/Feature/Sync/ShopifySyncTest.php` — stubs for SYNC-01, SYNC-05
-- [ ] `tests/Feature/Sync/SyncLoggingTest.php` — stubs for SYNC-06
-- [ ] `tests/Feature/Sync/ShopwareSyncTest.php` — stubs for SYNC-03, SYNC-07
-- [ ] `tests/Feature/Sync/SyncStatusTest.php` — stubs for SYNC-08
-- [ ] `tests/Integration/Sync/EndToEndSyncTest.php` — stubs for SYNC-09
-- [ ] `tests/Unit/Sync/ProductValidationTest.php` — stubs for data validation
-- [ ] `tests/Unit/Sync/SyncStorageTest.php` — stubs for storage logic
+- [x] `tests/Feature/Sync/ShopifySyncTriggerTest.php` — stubs for SYNC-01, SYNC-05
+- [x] `tests/Feature/Sync/SyncLoggingTest.php` — stubs for SYNC-06
+- [x] `tests/Feature/Sync/ShopwareSyncTriggerTest.php` — stubs for SYNC-03, SYNC-07
+- [x] `tests/Feature/Sync/SyncStatusTest.php` — stubs for SYNC-08
+- [x] `tests/Integration/Sync/EndToEndSyncTest.php` — stubs for SYNC-09
+- [x] `tests/Unit/Sync/ProductValidationTest.php` — stubs for data validation
+- [x] `tests/Unit/Sync/SyncStorageTest.php` — stubs for storage logic
+- [x] `tests/Unit/Sync/SyncLogModelTest.php` — stubs for SyncLog model
+- [x] `tests/Unit/Sync/ProductValidatorTest.php` — stubs for ProductValidator
+- [x] `tests/Unit/Sync/ShopifySyncServiceTest.php` — stubs for ShopifySyncService
+- [x] `tests/Unit/Sync/ShopwareSyncServiceTest.php` — stubs for ShopwareSyncService
+- [x] `tests/Unit/Sync/FetchShopifyProductsJobTest.php` — stubs for FetchShopifyProductsJob
+- [x] `tests/Unit/Sync/FetchShopwareProductsJobTest.php` — stubs for FetchShopwareProductsJob
+- [x] `tests/Unit/Sync/ProductStorageTest.php` — stubs for Product model
+- [x] `tests/Unit/Sync/ProcessProductsChunkJobTest.php` — stubs for ProcessProductsChunkJob
+- [x] `tests/Unit/Sync/IndexProductsChunkJobTest.php` — stubs for IndexProductsChunkJob
+- [x] `tests/Unit/Enums/SyncStatusTest.php` — stubs for SyncStatus enum
+- [x] `tests/Unit/Resources/SyncLogResourceTest.php` — stubs for SyncLogResource
+- [x] `tests/Feature/Sync/SyncStatusEndpointsTest.php` — stubs for status endpoints
+- [x] `tests/Feature/Sync/SyncHistoryEndpointsTest.php` — stubs for history endpoints
 
-*All test files must be created in Wave 0 before implementation begins.*
+*All test files created in Wave 0 before implementation begins.*
 
 ---
 
@@ -76,11 +98,12 @@ created: 2025-03-13
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 60s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references
+- [x] No watch-mode flags
+- [x] Feedback latency < 60s
+- [x] `nyquist_compliant: true` set in frontmatter
+- [x] `wave_0_complete: true` set in frontmatter
 
 **Approval:** pending

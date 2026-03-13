@@ -18,7 +18,7 @@ class CheckTokenExpiration
         }
 
         // Skip TransientToken (used in tests) which doesn't have an id
-        if (!property_exists($token, 'id')) {
+        if (!isset($token->id)) {
             return $next($request);
         }
 

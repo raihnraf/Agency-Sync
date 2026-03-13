@@ -1,5 +1,5 @@
 ---
-phase: 04-background processing infrastructure
+phase: 04-background-processing-infrastructure
 plan: 01
 subsystem: Background Processing
 tags: [redis, supervisor, queue, workers]

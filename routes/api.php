@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\IndexController;
+use App\Http\Controllers\Api\V1\ProductSearchController;
 use App\Http\Controllers\Api\V1\TenantController;
 use App\Http\Controllers\Api\V1\SyncController;
 use Illuminate\Support\Facades\Route;
@@ -49,6 +51,23 @@ Route::prefix('v1')->group(function () {
             Route::prefix('sync')->group(function () {
                 Route::post('/dispatch', [SyncController::class, 'dispatch']);
             });
+        });
+
+        // Product search routes
+        Route::middleware('throttle:api-read')->group(function () {
+            Route::get('/tenants/{tenantId}/search', [ProductSearchController::class, 'search']);
+            Route::get('/tenants/{tenantId}/search/status', [ProductSearchController::class, 'status']);
+            Route::post('/tenants/{tenantId}/search/reindex', [ProductSearchController::class, 'reindex']);
+        });
+
+        // Index management routes (async operations)
+        Route::middleware('throttle:api-write')->group(function () {
+            Route::post('/tenants/{tenantId}/reindex', [IndexController::class, 'reindex']);
+        });
+
+        Route::middleware('throttle:api-read')->group(function () {
+            Route::get('/jobs/{jobId}/status', [IndexController::class, 'status']);
+            Route::get('/tenants/{tenantId}/jobs', [IndexController::class, 'list']);
         });
     });
 });

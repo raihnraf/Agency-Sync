@@ -94,7 +94,7 @@ created: 2026-03-13
 
 ---
 
-*Phase: 04-background processing infrastructure*
+*Phase: 04-background-processing-infrastructure*
 *Validation strategy created: 2026-03-13*
 *Wave 0 completed: 2026-03-13*
 *Nyquist compliance: ✅ compliant*

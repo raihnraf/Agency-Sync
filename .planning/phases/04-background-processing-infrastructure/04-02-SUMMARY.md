@@ -1,5 +1,5 @@
 ---
-phase: 04-background processing infrastructure
+phase: 04-background-processing-infrastructure
 plan: 02
 type: execute
 subsystem: "Background Jobs"
