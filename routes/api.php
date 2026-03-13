@@ -53,9 +53,13 @@ Route::prefix('v1')->group(function () {
                 Route::post('/dispatch', [SyncController::class, 'dispatch']);
             });
 
-            // Sync status and history routes (read operations)
+            // Sync status route (read operation)
             Route::middleware('throttle:api-read')->group(function () {
                 Route::get('/status/{syncLogId}', [SyncController::class, 'status']);
+            });
+
+            // Sync history route (requires tenant context)
+            Route::middleware(['throttle:api-read', 'tenant', 'tenant.scope'])->group(function () {
                 Route::get('/history', [SyncController::class, 'history']);
             });
         });

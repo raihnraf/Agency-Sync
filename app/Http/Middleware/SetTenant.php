@@ -47,6 +47,9 @@ final class SetTenant
         // Set tenant on user
         $request->user()->setCurrentTenant($tenant);
 
+        // Set tenant in app container for Tenant::currentTenant()
+        \App\Models\Tenant::setCurrentTenant($tenant);
+
         return $next($request);
     }
 }

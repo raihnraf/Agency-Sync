@@ -163,4 +163,48 @@ class SyncController extends Controller
             'meta' => [],
         ]);
     }
+
+    /**
+     * Get sync history with pagination and filtering.
+     */
+    public function history(Request $request): JsonResponse
+    {
+        // Validate query parameters
+        $validated = $request->validate([
+            'status' => 'nullable|in:pending,running,completed,failed,partially_failed',
+            'per_page' => 'nullable|integer|min:1|max:100',
+            'page' => 'nullable|integer|min:1',
+        ]);
+
+        // Get current tenant from context
+        $tenant = Tenant::currentTenant();
+
+        // Build query
+        $query = $tenant->syncLogs();
+
+        // Filter by status if provided
+        if (isset($validated['status'])) {
+            $query->where('status', $validated['status']);
+        }
+
+        // Order by created_at DESC (most recent first)
+        $query->orderBy('created_at', 'desc');
+
+        // Paginate
+        $perPage = $validated['per_page'] ?? 20;
+        $paginator = $query->paginate($perPage);
+
+        // Transform collection using SyncLogResource
+        $data = SyncLogResource::collection($paginator);
+
+        return response()->json([
+            'data' => $data->toArray(request()),
+            'meta' => [
+                'total' => $paginator->total(),
+                'per_page' => $paginator->perPage(),
+                'current_page' => $paginator->currentPage(),
+                'last_page' => $paginator->lastPage(),
+            ],
+        ]);
+    }
 }
