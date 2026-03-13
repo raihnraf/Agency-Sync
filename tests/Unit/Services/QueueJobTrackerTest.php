@@ -3,8 +3,11 @@
 namespace Tests\Unit\Services;
 
 use App\Models\JobStatus;
+use App\Models\Tenant;
 use App\Services\QueueJobTracker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Contracts\Queue\Job as JobContract;
+use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -15,16 +18,18 @@ class QueueJobTrackerTest extends TestCase
     #[Test]
     public function track_creates_job_status_with_pending_status()
     {
+        $tenant = Tenant::factory()->create();
         $tracker = app(QueueJobTracker::class);
-        $job = new \stdClass();
-        $job->jobId = 'test-job-id';
-        $job->tenantId = 'test-tenant-id';
+        $job = Mockery::mock(JobContract::class);
+        $job->shouldReceive('getJobId')->andReturn('test-job-id');
+        $job->shouldReceive('payload')->andReturn(['test' => 'data']);
+        $job->tenantId = $tenant->id;
 
         $status = $tracker->track($job, 'TestJob');
 
         $this->assertInstanceOf(JobStatus::class, $status);
         $this->assertEquals('test-job-id', $status->job_id);
-        $this->assertEquals('test-tenant-id', $status->tenant_id);
+        $this->assertEquals($tenant->id, $status->tenant_id);
         $this->assertEquals('TestJob', $status->job_type);
         $this->assertEquals('pending', $status->status);
     }
@@ -32,10 +37,12 @@ class QueueJobTrackerTest extends TestCase
     #[Test]
     public function track_stores_job_payload()
     {
+        $tenant = Tenant::factory()->create();
         $tracker = app(QueueJobTracker::class);
-        $job = new \stdClass();
-        $job->jobId = 'test-job-id';
-        $job->payload = ['key' => 'value', 'test' => 123];
+        $job = Mockery::mock(JobContract::class);
+        $job->shouldReceive('getJobId')->andReturn('test-job-id');
+        $job->shouldReceive('payload')->andReturn(['key' => 'value', 'test' => 123]);
+        $job->tenantId = $tenant->id;
 
         $status = $tracker->track($job, 'TestJob');
 
@@ -47,8 +54,8 @@ class QueueJobTrackerTest extends TestCase
     {
         $status = JobStatus::factory()->create(['status' => 'pending']);
         $tracker = app(QueueJobTracker::class);
-        $job = new \stdClass();
-        $job->jobId = $status->job_id;
+        $job = Mockery::mock(JobContract::class);
+        $job->shouldReceive('getJobId')->andReturn($status->job_id);
 
         $tracker->markAsRunning($job);
 
@@ -62,8 +69,8 @@ class QueueJobTrackerTest extends TestCase
     {
         $status = JobStatus::factory()->create(['status' => 'running']);
         $tracker = app(QueueJobTracker::class);
-        $job = new \stdClass();
-        $job->jobId = $status->job_id;
+        $job = Mockery::mock(JobContract::class);
+        $job->shouldReceive('getJobId')->andReturn($status->job_id);
 
         $tracker->markAsCompleted($job);
 
@@ -77,8 +84,8 @@ class QueueJobTrackerTest extends TestCase
     {
         $status = JobStatus::factory()->create(['status' => 'running']);
         $tracker = app(QueueJobTracker::class);
-        $job = new \stdClass();
-        $job->jobId = $status->job_id;
+        $job = Mockery::mock(JobContract::class);
+        $job->shouldReceive('getJobId')->andReturn($status->job_id);
         $exception = new \Exception('Test error message');
 
         $tracker->markAsFailed($job, $exception);
