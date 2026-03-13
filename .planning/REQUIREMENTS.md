@@ -20,8 +20,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **TENANT-02**: Agency admin can view list of all client stores
 - [ ] **TENANT-03**: Agency admin can update client store details (name, status, platform URL)
 - [ ] **TENANT-04**: Agency admin can delete client store
-- [ ] **TENANT-05**: System stores API credentials encrypted in database (Shopify API key, Shopware credentials)
-- [ ] **TENANT-06**: Database uses tenant_id discriminator for multi-tenant data isolation
+- [x] **TENANT-05**: System stores API credentials encrypted in database (Shopify API key, Shopware credentials)
+- [x] **TENANT-06**: Database uses tenant_id discriminator for multi-tenant data isolation
 - [ ] **TENANT-07**: Queries automatically scope to current tenant via global scopes
 
 ### Catalog Synchronization
@@ -103,7 +103,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Testing
 
-- [ ] **TEST-01**: System has unit tests for core business logic (tenant scoping, validation)
+- [x] **TEST-01**: System has unit tests for core business logic (tenant scoping, validation)
 - [ ] **TEST-02**: System has feature tests for API endpoints
 - [ ] **TEST-03**: System has integration tests for queue jobs
 - [ ] **TEST-04**: Tests achieve minimum 70% code coverage
@@ -162,8 +162,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TENANT-02 | Phase 3 | Pending |
 | TENANT-03 | Phase 3 | Pending |
 | TENANT-04 | Phase 3 | Pending |
-| TENANT-05 | Phase 3 | Pending |
-| TENANT-06 | Phase 3 | Pending |
+| TENANT-05 | Phase 3 | Complete |
+| TENANT-06 | Phase 3 | Complete |
 | TENANT-07 | Phase 3 | Pending |
 | SYNC-01 | Phase 6 | Pending |
 | SYNC-02 | Phase 4 | Pending |
@@ -221,7 +221,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CICD-05 | Phase 8 | Pending |
 | CICD-06 | Phase 8 | Pending |
 | CICD-07 | Phase 8 | Pending |
-| TEST-01 | Phase 3 | Pending |
+| TEST-01 | Phase 3 | Complete |
 | TEST-02 | Phase 3 | Pending |
 | TEST-03 | Phase 4 | Pending |
 | TEST-04 | Phase 8 | Pending |
