@@ -21,11 +21,13 @@ Route::prefix('v1')->group(function () {
     });
 
     // Protected routes with auth, token expiration, and rate limiting
-    Route::middleware(['auth:sanctum', 'throttle:api-write'])->group(function () {
-        Route::post('/logout', [AuthController::class, 'logout']);
-    });
+    Route::middleware(['auth:sanctum', 'token.expire'])->group(function () {
+        Route::middleware('throttle:api-write')->group(function () {
+            Route::post('/logout', [AuthController::class, 'logout']);
+        });
 
-    Route::middleware(['auth:sanctum', 'throttle:api-read'])->group(function () {
-        Route::get('/me', [AuthController::class, 'me']);
+        Route::middleware('throttle:api-read')->group(function () {
+            Route::get('/me', [AuthController::class, 'me']);
+        });
     });
 });
