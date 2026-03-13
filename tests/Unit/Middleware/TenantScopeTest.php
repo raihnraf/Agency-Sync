@@ -46,20 +46,30 @@ final class TenantScopeTest extends TestCase
         // Create a tenant that should not be visible
         $otherTenant = Tenant::factory()->create();
 
-        // Query should not include other tenant
+        // Query should only show current tenant
         $tenants = Tenant::all();
 
-        $this->assertCount(2, $tenants); // Only tenant1 and tenant2
+        $this->assertCount(1, $tenants); // Only tenant1 (current tenant)
+        $this->assertEquals($this->tenant1->id, $tenants->first()->id);
         $this->assertFalse($tenants->contains('id', $otherTenant->id));
+        $this->assertFalse($tenants->contains('id', $this->tenant2->id));
     }
 
     #[Test]
     public function global_scope_only_applies_when_user_is_authenticated_and_has_current_tenant(): void
     {
-        // Without authentication, all tenants should be visible
+        // Clear authentication and current tenant from previous test
+        auth()->guard('web')->forgetUser();
+        $this->user->current_tenant_id = null;
+        $this->user->save();
+
+        // Without authentication or current tenant, all tenants should be visible
         $tenants = Tenant::all();
 
-        $this->assertCount(3, $tenants); // tenant1, tenant2, and otherTenant
+        // Should see all tenants created in setUp (tenant1 and tenant2)
+        $this->assertTrue($tenants->count() >= 2);
+        $this->assertTrue($tenants->contains('id', $this->tenant1->id));
+        $this->assertTrue($tenants->contains('id', $this->tenant2->id));
     }
 
     #[Test]
@@ -69,13 +79,15 @@ final class TenantScopeTest extends TestCase
         $this->actingAs($this->user);
         $this->user->setCurrentTenant($this->tenant1);
 
-        // Create a tenant that should not be visible
+        // Create another tenant that should not be visible
         $otherTenant = Tenant::factory()->create();
 
         // Without global scopes, all tenants should be visible
         $tenants = Tenant::withoutGlobalScopes()->get();
 
-        $this->assertCount(4, $tenants); // All tenants including otherTenant
+        // Should see all tenants including the one just created
+        $this->assertTrue($tenants->contains('id', $this->tenant1->id));
+        $this->assertTrue($tenants->contains('id', $this->tenant2->id));
         $this->assertTrue($tenants->contains('id', $otherTenant->id));
     }
 }

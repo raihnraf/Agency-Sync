@@ -46,10 +46,16 @@ class LogoutTest extends TestCase
             'Authorization' => 'Bearer ' . $token1,
         ])->assertStatus(204);
 
+        // Clear the resolved user from auth guard to force token re-validation
+        auth()->forgetGuards();
+
         // token1 should no longer work
         $this->postJson('/api/v1/logout', [], [
             'Authorization' => 'Bearer ' . $token1,
         ])->assertStatus(401);
+
+        // Clear auth guard again before testing token2
+        auth()->forgetGuards();
 
         // token2 should still work
         $this->postJson('/api/v1/logout', [], [
