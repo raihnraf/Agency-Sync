@@ -24,6 +24,7 @@ class Product extends Model
     protected $fillable = [
         'id',
         'tenant_id',
+        'external_id',
         'name',
         'slug',
         'description',
@@ -31,6 +32,7 @@ class Product extends Model
         'price',
         'compare_at_price',
         'stock_quantity',
+        'platform',
         'platform_product_id',
         'platform_data',
         'metadata',
@@ -41,6 +43,7 @@ class Product extends Model
         'price' => 'decimal:2',
         'compare_at_price' => 'decimal:2',
         'stock_quantity' => 'integer',
+        'platform' => 'string',
         'platform_data' => 'array',
         'metadata' => 'array',
         'last_synced_at' => 'datetime',
@@ -52,6 +55,16 @@ class Product extends Model
     protected static function boot(): void
     {
         parent::boot();
+
+        // Add global scope for tenant filtering
+        static::addGlobalScope('tenant', function ($builder) {
+            if (app()->bound('currentTenant')) {
+                $tenant = app('currentTenant');
+                if ($tenant) {
+                    $builder->where('products.tenant_id', $tenant->id);
+                }
+            }
+        });
 
         static::creating(function ($model) {
             if (empty($model->id)) {
