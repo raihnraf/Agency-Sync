@@ -28,4 +28,22 @@ class ProtectedEndpointTest extends TestCase
 
         $response->assertStatus(204);
     }
+
+    public function test_user_cannot_access_protected_endpoint_with_invalid_token()
+    {
+        $response = $this->postJson('/api/v1/logout', [], [
+            'Authorization' => 'Bearer invalid-token-12345',
+        ]);
+
+        $response->assertStatus(401);
+    }
+
+    public function test_user_cannot_access_protected_endpoint_with_malformed_token()
+    {
+        $response = $this->postJson('/api/v1/logout', [], [
+            'Authorization' => 'Bearer',
+        ]);
+
+        $response->assertStatus(401);
+    }
 }
