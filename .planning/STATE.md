@@ -5,12 +5,12 @@ milestone_name: milestone
 current_phase: 3
 current_plan: Not started
 status: planning
-last_updated: "2026-03-13T05:18:45.794Z"
+last_updated: "2026-03-13T05:30:10.566Z"
 progress:
   total_phases: 8
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 10
-  completed_plans: 9
+  completed_plans: 10
 ---
 
 # AgencySync State
@@ -139,6 +139,11 @@ Completed plan 02-04: Per-user rate limiting (60/min read, 10/min write, 5/min a
 - [Phase 03-tenant-management]: Global scope pattern for automatic tenant filtering on all queries
 - [Phase 03-tenant-management]: Middleware aliases enable flexible route composition in 03-03
 - [Phase 03-tenant-management]: Tenant context stored in both request attributes and user model
+- [Phase 03-tenant-management]: Synchronous credential validation during tenant creation for immediate feedback
+- [Phase 03-tenant-management]: Stub PlatformCredentialValidator returns true for valid-looking credentials (Phase 6 will implement real platform APIs)
+- [Phase 03-tenant-management]: TenantResource excludes api_credentials from JSON responses (security)
+- [Phase 03-tenant-management]: Index and store routes don't require tenant context, show/update/delete do
+- [Phase 03-tenant-management]: Table-qualified column names in global scopes prevent ambiguous column errors
 
 ### Active Todos
 
@@ -186,7 +191,7 @@ None currently.
 
 ## Session Continuity
 
-**Last Session:** 2026-03-13T05:18:45.791Z
+**Last Session:** 2026-03-13T05:30:10.564Z
 **Current Session:** 2026-03-13T05:07:47Z
 **Next Action:** Execute plan 03-02 (Tenant Context Middleware)
 
