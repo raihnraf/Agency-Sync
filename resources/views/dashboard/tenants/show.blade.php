@@ -107,6 +107,146 @@
         </div>
     </div>
 
+    <!-- Sync Section -->
+    <div x-show="!loading && !error" x-cloak class="bg-white shadow rounded-lg mt-6">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                Catalog Synchronization
+            </h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500">
+                Manually trigger product catalog sync from the e-commerce platform
+            </p>
+        </div>
+        <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
+            <!-- Sync Status Display -->
+            <div x-show="syncStatus" class="mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h4 class="text-sm font-medium text-gray-900">Last Sync Status</h4>
+                    <span x-show="syncStatus.status === 'running'"
+                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 animate-pulse">
+                        Syncing...
+                    </span>
+                </div>
+
+                <dl class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-3">
+                    <!-- Status -->
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">Status</dt>
+                        <dd class="mt-1">
+                            <span x-show="syncStatus.status === 'completed'"
+                                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                                  data-testid="sync-status-status">
+                                Completed
+                            </span>
+                            <span x-show="syncStatus.status === 'running'"
+                                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                                  data-testid="sync-status-status">
+                                Running
+                            </span>
+                            <span x-show="syncStatus.status === 'failed'"
+                                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"
+                                  data-testid="sync-status-status">
+                                Failed
+                            </span>
+                            <span x-show="syncStatus.status === 'pending'"
+                                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"
+                                  data-testid="sync-status-status">
+                                Pending
+                            </span>
+                        </dd>
+                    </div>
+
+                    <!-- Started At -->
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">Started</dt>
+                        <dd class="mt-1 text-sm text-gray-900" x-text="formatDateTime(syncStatus.started_at)" data-testid="sync-status-time"></dd>
+                    </div>
+
+                    <!-- Product Count -->
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">Products</dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            <span x-text="syncStatus.indexed_products || 0"></span>
+                            <span x-show="syncStatus.total_products" x-cloak>
+                                / <span x-text="syncStatus.total_products"></span>
+                            </span>
+                        </dd>
+                    </div>
+                </dl>
+
+                <!-- Progress Bar -->
+                <div x-show="syncStatus.status === 'running' || (syncStatus.status === 'completed' && syncStatus.total_products)" class="mt-4">
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+                             :style="`width: ${syncProgress}%`"></div>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">
+                        <span x-text="syncStatus.indexed_products || 0"></span> of <span x-text="syncStatus.total_products || 0"></span> products indexed
+                    </p>
+                </div>
+
+                <!-- Error Message -->
+                <div x-show="syncStatus.status === 'failed' && syncStatus.error_message" x-cloak
+                     class="mt-4 rounded-md bg-red-50 p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-red-800">Sync Error</p>
+                            <p class="mt-1 text-sm text-red-700" x-text="syncStatus.error_message"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Duration -->
+                <div x-show="syncStatus.completed_at" x-cloak class="mt-4 text-sm text-gray-500">
+                    Duration: <span x-text="syncDuration"></span>
+                </div>
+            </div>
+
+            <!-- No Sync Status -->
+            <div x-show="!syncStatus" class="mb-6 text-sm text-gray-500">
+                No sync history available
+            </div>
+
+            <!-- Sync Trigger Button -->
+            <button @click="triggerSync"
+                    :disabled="syncing || (syncStatus && syncStatus.status === 'running')"
+                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    data-testid="sync-trigger-button">
+                <svg x-show="!syncing" class="mr-2 -ml-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                <svg x-show="syncing" class="animate-spin mr-2 -ml-1 h-5 w-5" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span x-show="!syncing">Start Sync</span>
+                <span x-show="syncing">Syncing...</span>
+            </button>
+
+            <!-- Sync Success Message -->
+            <div x-show="syncSuccess" x-cloak
+                 class="mt-4 rounded-md bg-green-50 p-4 border border-green-200">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-green-800">
+                            Sync operation started successfully!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Delete Confirmation Modal -->
     <div x-show="showDeleteModal" x-cloak
          class="fixed z-10 inset-0 overflow-y-auto"
