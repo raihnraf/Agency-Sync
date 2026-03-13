@@ -23,6 +23,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // Register middleware aliases
         $middleware->alias([
             'token.expire' => \App\Http\Middleware\CheckTokenExpiration::class,
+            'tenant' => \App\Http\Middleware\SetTenant::class,
+            'tenant.scope' => \App\Http\Middleware\TenantScope::class,
         ]);
 
         // Configure rate limiters
