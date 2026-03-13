@@ -9,7 +9,7 @@ use App\Models\Tenant;
 use App\Services\Sync\ProductValidator;
 use App\Services\Sync\ShopwareSyncService;
 use Exception;
-use Illuminate\Support\Bus;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
 
