@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 2
 current_plan: 02-03
-status: ready
-last_updated: "2026-03-13T00:35:42Z"
+status: Ready to start
+last_updated: "2026-03-13T00:37:30.213Z"
 progress:
   total_phases: 8
   completed_phases: 1
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 7
+  completed_plans: 5
 ---
 
 # AgencySync State
@@ -99,6 +99,11 @@ Completed plan 02-01: Laravel Sanctum token-based authentication with 4-hour exp
 - Field-level validation errors with field and message properties
 - Laravel 11 api routing configured in bootstrap/app.php
 - Null logging channel for tests to bypass storage permission issues
+- [Phase 02]: Laravel Sanctum for token-based auth (simpler than JWT for SPA/API)
+- [Phase 02]: 4-hour token expiration for security balance
+- [Phase 02]: API versioning with /api/v1/ prefix for future compatibility
+- [Phase 02]: Field-based validation errors with {errors: [{field, message}]} structure
+- [Phase 02]: Token invalidation on logout via currentAccessToken()->delete()
 
 ### Active Todos
 
@@ -146,7 +151,7 @@ None currently.
 
 ## Session Continuity
 
-**Last Session:** 2026-03-13T00:07:00Z
+**Last Session:** 2026-03-13T00:37:30.210Z
 **Current Session:** 2026-03-13T07:15:00Z
 **Next Action:** Execute plan 02-03 or continue with next phase task
 
