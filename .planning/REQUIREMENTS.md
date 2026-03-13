@@ -60,8 +60,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **UI-01**: Agency admin can view client store list with status indicators
 - [ ] **UI-02**: Agency admin can create new client store via form (name, platform, API credentials)
-- [ ] **UI-03**: Agency admin can edit client store details
-- [ ] **UI-04**: Agency admin can delete client store with confirmation
+- [x] **UI-03**: Agency admin can edit client store details
+- [x] **UI-04**: Agency admin can delete client store with confirmation
 - [ ] **UI-05**: Agency admin can trigger sync operation for each client store
 - [ ] **UI-06**: Agency admin can view last sync status for each client store (time, status, product count)
 - [ ] **UI-07**: Agency admin can search products within a client's catalog
@@ -190,8 +190,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | QUEUE-07 | Phase 5 | Pending |
 | UI-01 | Phase 7 | Pending |
 | UI-02 | Phase 7 | Pending |
-| UI-03 | Phase 7 | Pending |
-| UI-04 | Phase 7 | Pending |
+| UI-03 | Phase 7 | Complete |
+| UI-04 | Phase 7 | Complete |
 | UI-05 | Phase 7 | Pending |
 | UI-06 | Phase 7 | Pending |
 | UI-07 | Phase 7 | Pending |
