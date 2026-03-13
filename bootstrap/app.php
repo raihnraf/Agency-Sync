@@ -63,4 +63,10 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+    ->create();
+
+// Register Dusk service provider in testing environment
+if (app()->environment('testing')) {
+    app()->register(\Laravel\Dusk\DuskServiceProvider::class);
+}
