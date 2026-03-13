@@ -2,40 +2,95 @@
 
 namespace Tests\Unit\Jobs;
 
-use Tests\TestCase;
-use App\Jobs\SetTenantContext;
-use App\Models\User;
+use App\Jobs\TenantAwareJob;
 use App\Models\Tenant;
+use App\Queue\Middleware\SetTenantContext;
+use Illuminate\Support\Facades\App;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
-/**
- * Wave 0 test stub for SetTenantContext job middleware
- *
- * This test file will be implemented after SetTenantContext middleware is created.
- * Current assertions are placeholders for Nyquist compliance.
- */
 class SetTenantContextTest extends TestCase
 {
-    /**
-     * Test that middleware sets tenant on job
-     */
-    public function test_middleware_sets_tenant_on_job()
+    #[Test]
+    public function middleware_restores_tenant_from_tenant_id_property()
     {
-        $this->assertTrue(true, 'Tenant setting test - to be implemented');
+        $tenant = Tenant::factory()->create();
+
+        $job = new class($tenant->id) extends TenantAwareJob {
+            public function handle(): void
+            {
+                // Test implementation
+            }
+        };
+
+        $middleware = new SetTenantContext();
+        $nextCalled = false;
+
+        $middleware->handle($job, function ($job) use (&$nextCalled) {
+            $nextCalled = true;
+            $this->assertEquals($job->tenantId, Tenant::currentTenant()?->id);
+        });
+
+        $this->assertTrue($nextCalled, 'Next closure was not called');
     }
 
-    /**
-     * Test that tenant context is restored in job handle method
-     */
-    public function test_tenant_context_is_restored_in_handle()
+    #[Test]
+    public function middleware_calls_tenant_set_current_tenant()
     {
-        $this->assertTrue(true, 'Context restoration test - to be implemented');
+        $tenant = Tenant::factory()->create();
+
+        $job = new class($tenant->id) extends TenantAwareJob {
+            public function handle(): void
+            {
+                // Test implementation
+            }
+        };
+
+        $middleware = new SetTenantContext();
+
+        $middleware->handle($job, function ($job) use ($tenant) {
+            $this->assertNotNull(Tenant::currentTenant());
+            $this->assertEquals($tenant->id, Tenant::currentTenant()->id);
+        });
     }
 
-    /**
-     * Test that queries are scoped to tenant context
-     */
-    public function test_queries_are_scoped_to_tenant_context()
+    #[Test]
+    public function middleware_clears_tenant_context_after_job_execution()
     {
-        $this->assertTrue(true, 'Query scoping test - to be implemented');
+        $tenant = Tenant::factory()->create();
+
+        $job = new class($tenant->id) extends TenantAwareJob {
+            public function handle(): void
+            {
+                // Test implementation
+            }
+        };
+
+        $middleware = new SetTenantContext();
+
+        $middleware->handle($job, function ($job) {
+            // Tenant context should be set during job
+            $this->assertNotNull(Tenant::currentTenant());
+        });
+
+        // Tenant context should be cleared after job
+        $this->assertNull(Tenant::currentTenant());
+        $this->assertNull(App::get('currentTenant'));
+    }
+
+    #[Test]
+    public function middleware_handles_jobs_without_tenant_id_gracefully()
+    {
+        $job = new \stdClass();
+
+        $middleware = new SetTenantContext();
+        $nextCalled = false;
+
+        $middleware->handle($job, function ($job) use (&$nextCalled) {
+            $nextCalled = true;
+            $this->assertNull(Tenant::currentTenant());
+        });
+
+        $this->assertTrue($nextCalled, 'Next closure was not called');
     }
 }
