@@ -6,44 +6,106 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\Queue;
+use App\Jobs\ExampleSyncJob;
+use PHPUnit\Framework\Attributes\Test;
 
-/**
- * Wave 0 test stub for SYNC-02: Sync operations run asynchronously
- *
- * This test file will be implemented after SyncController is created.
- * Current assertions are placeholders for Nyquist compliance.
- */
 class SyncControllerTest extends TestCase
 {
-    /**
-     * Test that sync endpoint dispatches job to queue
-     */
-    public function test_sync_endpoint_dispatches_job_to_queue()
+    private User $user;
+
+    private Tenant $tenant;
+
+    protected function setUp(): void
     {
-        $this->assertTrue(true, 'Job dispatch test - to be implemented');
+        parent::setUp();
+        $this->user = User::factory()->create();
+        $this->tenant = Tenant::factory()->create();
     }
 
-    /**
-     * Test that endpoint returns immediately without blocking
-     */
-    public function test_endpoint_returns_immediately_without_blocking()
+    #[Test]
+    public function post_sync_dispatches_example_sync_job()
     {
-        $this->assertTrue(true, 'Non-blocking test - to be implemented');
+        Queue::fake();
+
+        $response = $this->actingAs($this->user)
+            ->postJson('/api/v1/sync/dispatch', [
+                'tenant_id' => $this->tenant->id,
+            ]);
+
+        $response->assertStatus(202);
+
+        Queue::assertPushed(ExampleSyncJob::class, function ($job) {
+            return $job->tenantId === $this->tenant->id;
+        });
     }
 
-    /**
-     * Test that endpoint requires authentication
-     */
-    public function test_endpoint_requires_authentication()
+    #[Test]
+    public function endpoint_returns_202_accepted_immediately()
     {
-        $this->assertTrue(true, 'Auth requirement test - to be implemented');
+        $response = $this->actingAs($this->user)
+            ->postJson('/api/v1/sync/dispatch', [
+                'tenant_id' => $this->tenant->id,
+            ]);
+
+        $response->assertStatus(202);
     }
 
-    /**
-     * Test that response includes job ID for tracking
-     */
-    public function test_response_includes_job_id_for_tracking()
+    #[Test]
+    public function response_includes_job_id_and_status_pending()
     {
-        $this->assertTrue(true, 'Job ID response test - to be implemented');
+        $response = $this->actingAs($this->user)
+            ->postJson('/api/v1/sync/dispatch', [
+                'tenant_id' => $this->tenant->id,
+            ]);
+
+        $response->assertStatus(202)
+            ->assertJsonPath('data.status', 'pending')
+            ->assertJsonStructure([
+                'data' => [
+                    'job_id',
+                    'status',
+                    'message',
+                ],
+            ]);
+    }
+
+    #[Test]
+    public function endpoint_requires_authentication()
+    {
+        $response = $this->postJson('/api/v1/sync/dispatch', [
+            'tenant_id' => $this->tenant->id,
+        ]);
+
+        $response->assertStatus(401);
+    }
+
+    #[Test]
+    public function endpoint_validates_tenant_id_exists_in_request()
+    {
+        $response = $this->actingAs($this->user)
+            ->postJson('/api/v1/sync/dispatch', [
+                'tenant_id' => 'non-existent-uuid',
+            ]);
+
+        $response->assertStatus(422);
+    }
+
+    #[Test]
+    public function endpoint_accepts_optional_data_array()
+    {
+        Queue::fake();
+
+        $response = $this->actingAs($this->user)
+            ->postJson('/api/v1/sync/dispatch', [
+                'tenant_id' => $this->tenant->id,
+                'data' => ['key' => 'value'],
+            ]);
+
+        $response->assertStatus(202);
+
+        Queue::assertPushed(ExampleSyncJob::class, function ($job) {
+            return $job->tenantId === $this->tenant->id
+                && $job->data === ['key' => 'value'];
+        });
     }
 }
