@@ -260,11 +260,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TEST-03 | Phase 4 | Complete |
 | TEST-04 | Phase 10 | Complete |
 | TEST-05 | Phase 10 | Complete |
-| APIDOCS-01 | Phase 11 | Pending |
-| APIDOCS-02 | Phase 11 | Pending |
-| APIDOCS-03 | Phase 11 | Pending |
-| APIDOCS-04 | Phase 11 | Pending |
-| APIDOCS-05 | Phase 11 | Pending |
+| APIDOCS-01 | Phase 11 | Complete |
+| APIDOCS-02 | Phase 11 | Complete |
+| APIDOCS-03 | Phase 11 | Complete |
+| APIDOCS-04 | Phase 11 | Complete |
+| APIDOCS-05 | Phase 11 | Complete |
 | AUDIT-01 | Phase 12 | Pending |
 | AUDIT-02 | Phase 12 | Pending |
 | AUDIT-03 | Phase 12 | Pending |
