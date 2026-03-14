@@ -105,9 +105,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Operations & Logging
 
-- [ ] **OPS-01**: Server logging documentation covers Nginx access/error logs
-- [ ] **OPS-02**: Server logging documentation covers Laravel logs
-- [ ] **OPS-03**: Server logging documentation covers Supervisor worker logs
+- [x] **OPS-01**: Server logging documentation covers Nginx access/error logs
+- [x] **OPS-02**: Server logging documentation covers Laravel logs
+- [x] **OPS-03**: Server logging documentation covers Supervisor worker logs
 
 ### CI/CD & Deployment
 
