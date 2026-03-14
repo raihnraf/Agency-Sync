@@ -11,17 +11,33 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Index Controller
- * 
- * Manages async index operations with job status tracking.
- * Provides API endpoints for reindexing and job status visibility.
+ * @group Index Management
+ *
+ * API endpoints for managing Elasticsearch index operations (async)
  */
 class IndexController extends ApiController
 {
     /**
-     * Start async reindex of all tenant products
-     * 
-     * POST /api/v1/tenants/{tenantId}/reindex
+     * Start async reindex of all tenant products.
+     *
+     * Triggers an asynchronous reindex job for the tenant's product catalog.
+     *
+     * @authenticated
+     *
+     * @urlParam tenantId string required Tenant UUID. Example: 123e4567-e89b-12d3-a456-426614174000
+     *
+     * @response 202 {
+     *   "data": {
+     *     "job_id": "uuid",
+     *     "status": "pending",
+     *     "message": "Reindexing started",
+     *     "tenant_id": "uuid"
+     *   },
+     *   "meta": {}
+     * }
+     * @response 404 {
+     *   "message": "Tenant not found or access denied"
+     * }
      */
     public function reindex(Request $request, string $tenantId): JsonResponse
     {
@@ -70,9 +86,41 @@ class IndexController extends ApiController
     }
 
     /**
-     * Get job status
-     * 
-     * GET /api/v1/jobs/{jobId}/status
+     * Get job status.
+     *
+     * Returns the current status and progress of an index job.
+     *
+     * @authenticated
+     *
+     * @urlParam jobId string required Job UUID. Example: 123e4567-e89b-12d3-a456-426614174000
+     *
+     * @responseField data.job_id string Job UUID
+     * @responseField data.status string Job status (pending, running, completed, failed)
+     * @responseField data.job_type string Job type identifier
+     * @responseField data.progress integer Progress percentage (0-100)
+     * @responseField data.started_at timestamp Job start time
+     * @responseField data.completed_at timestamp Job completion time
+     * @responseField data.error_message string Error message (null if success)
+     *
+     * @response {
+     *   "data": {
+     *     "job_id": "uuid",
+     *     "status": "running",
+     *     "job_type": "reindex_tenant_products",
+     *     "payload": {
+     *       "tenant_id": "uuid",
+     *       "tenant_name": "My Store",
+     *       "requested_by": "uuid"
+     *     },
+     *     "error_message": null,
+     *     "created_at": "2026-03-15T10:00:00Z",
+     *     "started_at": "2026-03-15T10:00:05Z",
+     *     "completed_at": null
+     *   }
+     * }
+     * @response 404 {
+     *   "message": "Job not found"
+     * }
      */
     public function status(Request $request, string $jobId): JsonResponse
     {
@@ -106,9 +154,38 @@ class IndexController extends ApiController
     }
 
     /**
-     * List recent jobs for a tenant
-     * 
-     * GET /api/v1/tenants/{tenantId}/jobs
+     * List recent jobs for a tenant.
+     *
+     * Returns a list of recent index operations for the specified tenant.
+     *
+     * @authenticated
+     *
+     * @urlParam tenantId string required Tenant UUID. Example: 123e4567-e89b-12d3-a456-426614174000
+     * @queryParam status string optional Filter by status (pending, running, completed, failed). Example: completed
+     * @queryParam page integer Page number (default: 1). Example: 1
+     *
+     * @responseField data.jobs{0}.job_id string Job UUID
+     * @responseField data.jobs{0}.status string Job status
+     * @responseField data.jobs{0}.job_type string Job type
+     * @responseField data.jobs{0}.created_at timestamp Job creation time
+     * @responseField data.jobs{0}.completed_at timestamp Job completion time
+     *
+     * @response {
+     *   "data": {
+     *     "jobs": [
+     *       {
+     *         "job_id": "uuid",
+     *         "status": "completed",
+     *         "job_type": "reindex_tenant_products",
+     *         "created_at": "2026-03-15T10:00:00Z",
+     *         "completed_at": "2026-03-15T10:05:00Z"
+     *       }
+     *     ]
+     *   }
+     * }
+     * @response 404 {
+     *   "message": "Tenant not found or access denied"
+     * }
      */
     public function list(Request $request, string $tenantId): JsonResponse
     {
