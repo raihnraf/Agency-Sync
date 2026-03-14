@@ -99,9 +99,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Web Caching
 
-- [ ] **CACHE-01**: Dashboard metrics are cached for 5 minutes using Redis
-- [ ] **CACHE-02**: Tenant list is cached using Cache::remember()
-- [ ] **CACHE-03**: Cache invalidates on data updates
+- [x] **CACHE-01**: Dashboard metrics are cached for 5 minutes using Redis
+- [x] **CACHE-02**: Tenant list is cached using Cache::remember()
+- [x] **CACHE-03**: Cache invalidates on data updates
 
 ### Operations & Logging
 
