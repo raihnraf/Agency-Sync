@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('tenant_id')->constrained('tenants')->onDelete('cascade');
-            $table->string('external_id', 255)->nullable()->after('tenant_id');
+            $table->string('external_id', 255)->nullable();
             $table->string('name', 255);
             $table->string('slug', 255)->index();
             $table->text('description')->nullable();
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('price', 12, 2);
             $table->decimal('compare_at_price', 12, 2)->nullable();
             $table->integer('stock_quantity')->default(0);
-            $table->enum('platform', ['shopify', 'shopware'])->nullable()->after('stock_quantity');
+            $table->enum('platform', ['shopify', 'shopware'])->nullable();
             $table->string('platform_product_id', 100)->nullable()->index();
             $table->json('platform_data')->nullable();
             $table->json('metadata')->nullable();
