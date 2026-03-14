@@ -1,0 +1,622 @@
+name: 'Tenant Management'
+description: |-
+
+  API endpoints for managing client stores (tenants)
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/tenants
+    metadata:
+      custom: []
+      groupName: 'Tenant Management'
+      groupDescription: |-
+
+        API endpoints for managing client stores (tenants)
+      subgroup: ''
+      subgroupDescription: ''
+      title: "Display a listing of the user's tenants."
+      description: 'Returns all tenants associated with the authenticated user.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": [
+              {
+                "id": "uuid",
+                "name": "My Shopify Store",
+                "slug": "my-shopify-store",
+                "status": "active",
+                "platform_type": "shopify",
+                "platform_url": "https://store.myshopify.com"
+              }
+            ]
+          }
+        headers: []
+        description: ''
+    responseFields:
+      'data{0}.id':
+        custom: []
+        name: 'data{0}.id'
+        description: 'Tenant UUID'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data{0}.name':
+        custom: []
+        name: 'data{0}.name'
+        description: 'Tenant name'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data{0}.slug':
+        custom: []
+        name: 'data{0}.slug'
+        description: 'URL-friendly identifier'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data{0}.status':
+        custom: []
+        name: 'data{0}.status'
+        description: 'Tenant status (active, pending, error)'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data{0}.platform_type':
+        custom: []
+        name: 'data{0}.platform_type'
+        description: 'Platform (shopify, shopware)'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data{0}.platform_url':
+        custom: []
+        name: 'data{0}.platform_url'
+        description: 'Platform base URL'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/tenants
+    metadata:
+      custom: []
+      groupName: 'Tenant Management'
+      groupDescription: |-
+
+        API endpoints for managing client stores (tenants)
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Store a newly created tenant in storage.'
+      description: 'Creates a new tenant with encrypted API credentials.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Tenant name.'
+        required: true
+        example: 'My Client Store'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      platform_type:
+        custom: []
+        name: platform_type
+        description: 'Platform (shopify, shopware).'
+        required: true
+        example: shopify
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      platform_url:
+        custom: []
+        name: platform_url
+        description: 'Platform base URL.'
+        required: true
+        example: 'https://store.myshopify.com'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      api_credentials:
+        custom: []
+        name: api_credentials
+        description: 'API credentials object'
+        required: true
+        example: []
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      api_credentials.api_key:
+        custom: []
+        name: api_credentials.api_key
+        description: 'API key.'
+        required: true
+        example: api_key_123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      api_credentials.api_secret:
+        custom: []
+        name: api_credentials.api_secret
+        description: 'API secret.'
+        required: true
+        example: secret_456
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      settings:
+        custom: []
+        name: settings
+        description: 'optional Additional settings'
+        required: false
+        example: []
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      name: 'My Client Store'
+      platform_type: shopify
+      platform_url: 'https://store.myshopify.com'
+      api_credentials:
+        api_key: api_key_123
+        api_secret: secret_456
+      settings: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "data": {
+              "id": "uuid",
+              "name": "My Client Store",
+              "slug": "my-client-store",
+              "status": "active",
+              "platform_type": "shopify",
+              "platform_url": "https://store.myshopify.com"
+            },
+            "meta": {
+              "message": "Tenant created successfully"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "errors": [
+              {
+                "field": "api_credentials",
+                "message": "Invalid API credentials"
+              }
+            ]
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/tenants/{id}'
+    metadata:
+      custom: []
+      groupName: 'Tenant Management'
+      groupDescription: |-
+
+        API endpoints for managing client stores (tenants)
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display the specified tenant.'
+      description: 'Returns detailed information about a specific tenant.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Tenant-ID: 'required for tenant-scoped requests'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'Tenant UUID'
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: consequatur
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": {
+              "id": "uuid",
+              "name": "My Client Store",
+              "slug": "my-client-store",
+              "status": "active",
+              "platform_type": "shopify",
+              "platform_url": "https://store.myshopify.com"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Tenant not found"
+          }
+        headers: []
+        description: ''
+    responseFields:
+      data.id:
+        custom: []
+        name: data.id
+        description: 'Tenant UUID'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.name:
+        custom: []
+        name: data.name
+        description: 'Tenant name'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.slug:
+        custom: []
+        name: data.slug
+        description: 'URL-friendly identifier'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.status:
+        custom: []
+        name: data.status
+        description: 'Tenant status'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.platform_type:
+        custom: []
+        name: data.platform_type
+        description: 'Platform type'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.platform_url:
+        custom: []
+        name: data.platform_url
+        description: 'Platform base URL'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+    uri: 'api/v1/tenants/{id}'
+    metadata:
+      custom: []
+      groupName: 'Tenant Management'
+      groupDescription: |-
+
+        API endpoints for managing client stores (tenants)
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update the specified tenant in storage.'
+      description: 'Updates tenant information. Only provided fields will be updated.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Tenant-ID: required
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'Tenant UUID'
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: consequatur
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'optional Updated tenant name.'
+        required: false
+        example: 'Updated Store Name'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      status:
+        custom: []
+        name: status
+        description: 'optional Updated status (active, pending, error).'
+        required: false
+        example: active
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      platform_url:
+        custom: []
+        name: platform_url
+        description: 'Must be a valid URL. Must not be greater than 500 characters.'
+        required: false
+        example: 'http://www.kunde.com/'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      settings:
+        custom: []
+        name: settings
+        description: ''
+        required: false
+        example: null
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      name: 'Updated Store Name'
+      status: active
+      platform_url: 'http://www.kunde.com/'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": {
+              "id": "uuid",
+              "name": "Updated Store Name",
+              "slug": "my-client-store",
+              "status": "active",
+              "platform_type": "shopify",
+              "platform_url": "https://store.myshopify.com"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Tenant not found"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "errors": [
+              {
+                "field": "status",
+                "message": "The selected status is invalid."
+              }
+            ]
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/v1/tenants/{id}'
+    metadata:
+      custom: []
+      groupName: 'Tenant Management'
+      groupDescription: |-
+
+        API endpoints for managing client stores (tenants)
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Remove the specified tenant from storage.'
+      description: 'Permanently deletes the tenant and all associated data.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Tenant-ID: required
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'Tenant UUID'
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: consequatur
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 204
+        content: '{}'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Tenant not found"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
+    controller: null
+    method: null
+    route: null

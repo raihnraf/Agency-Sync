@@ -1,0 +1,396 @@
+name: 'Catalog Synchronization'
+description: |-
+
+  API endpoints for triggering and monitoring product catalog synchronization
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/sync/dispatch
+    metadata:
+      custom: []
+      groupName: 'Catalog Synchronization'
+      groupDescription: |-
+
+        API endpoints for triggering and monitoring product catalog synchronization
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Dispatch a sync job for the given tenant.'
+      description: 'Triggers an asynchronous sync job for the specified tenant.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      tenant_id:
+        custom: []
+        name: tenant_id
+        description: 'Tenant UUID to sync.'
+        required: true
+        example: 123e4567-e89b-12d3-a456-426614174000
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      data:
+        custom: []
+        name: data
+        description: 'optional Additional sync data'
+        required: false
+        example:
+          - consequatur
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      tenant_id: 123e4567-e89b-12d3-a456-426614174000
+      data:
+        - consequatur
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 202
+        content: |-
+          {
+            "data": {
+              "job_id": "uuid",
+              "status": "pending",
+              "message": "Sync job dispatched successfully"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "Validation failed",
+            "errors": {
+              "tenant_id": ["The tenant id field is required."]
+            }
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/sync/status/{syncLogId}'
+    metadata:
+      custom: []
+      groupName: 'Catalog Synchronization'
+      groupDescription: |-
+
+        API endpoints for triggering and monitoring product catalog synchronization
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get the status of a sync operation.'
+      description: 'Returns the current status of a sync job including progress and error details.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      syncLogId:
+        custom: []
+        name: syncLogId
+        description: 'Sync log UUID.'
+        required: true
+        example: 123e4567-e89b-12d3-a456-426614174000
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      syncLogId: 123e4567-e89b-12d3-a456-426614174000
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": {
+              "job_id": "uuid",
+              "status": "running",
+              "progress": 45,
+              "products_indexed": 234,
+              "started_at": "2026-03-15T10:00:00Z",
+              "completed_at": null,
+              "error_message": null
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Sync log not found"
+          }
+        headers: []
+        description: ''
+    responseFields:
+      data.job_id:
+        custom: []
+        name: data.job_id
+        description: 'Job UUID'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.status:
+        custom: []
+        name: data.status
+        description: 'Job status (pending, running, completed, failed)'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.progress:
+        custom: []
+        name: data.progress
+        description: 'Progress percentage (0-100)'
+        required: false
+        example: null
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.products_indexed:
+        custom: []
+        name: data.products_indexed
+        description: 'Number of products processed'
+        required: false
+        example: null
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.started_at:
+        custom: []
+        name: data.started_at
+        description: 'timestamp Job start time'
+        required: false
+        example: null
+        type: ''
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.completed_at:
+        custom: []
+        name: data.completed_at
+        description: 'timestamp Job completion time (null if running)'
+        required: false
+        example: null
+        type: ''
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.error_message:
+        custom: []
+        name: data.error_message
+        description: 'Error message (null if success)'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/sync/history
+    metadata:
+      custom: []
+      groupName: 'Catalog Synchronization'
+      groupDescription: |-
+
+        API endpoints for triggering and monitoring product catalog synchronization
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get sync history with pagination and filtering.'
+      description: 'Returns paginated list of sync operations for the current tenant.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      status:
+        custom: []
+        name: status
+        description: 'optional Filter by status (pending, running, completed, failed, partially_failed).'
+        required: false
+        example: completed
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      per_page:
+        custom: []
+        name: per_page
+        description: 'Items per page (default: 20, max: 100).'
+        required: false
+        example: 20
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      page:
+        custom: []
+        name: page
+        description: 'Page number (default: 1).'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+    cleanQueryParameters:
+      status: completed
+      per_page: 20
+      page: 1
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": [
+              {
+                "id": "uuid",
+                "status": "completed",
+                "products_indexed": 1500,
+                "started_at": "2026-03-15T10:00:00Z",
+                "completed_at": "2026-03-15T10:05:00Z"
+              }
+            ],
+            "meta": {
+              "total": 45,
+              "per_page": 20,
+              "current_page": 1,
+              "last_page": 3
+            }
+          }
+        headers: []
+        description: ''
+    responseFields:
+      'data{0}.id':
+        custom: []
+        name: 'data{0}.id'
+        description: 'Sync log UUID'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data{0}.status':
+        custom: []
+        name: 'data{0}.status'
+        description: 'Sync status'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data{0}.products_indexed':
+        custom: []
+        name: 'data{0}.products_indexed'
+        description: 'Products indexed'
+        required: false
+        example: null
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data{0}.started_at':
+        custom: []
+        name: 'data{0}.started_at'
+        description: 'timestamp Start time'
+        required: false
+        example: null
+        type: ''
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data{0}.completed_at':
+        custom: []
+        name: 'data{0}.completed_at'
+        description: 'timestamp Completion time'
+        required: false
+        example: null
+        type: ''
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
+    controller: null
+    method: null
+    route: null
