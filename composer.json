@@ -11,11 +11,13 @@
         "laravel/framework": "^11.31",
         "laravel/sanctum": "*",
         "laravel/scout": "*",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "league/csv": "*",
+        "phpoffice/phpspreadsheet": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
-        "laravel/breeze": "*",
+        "laravel/breeze": "^2.4",
         "laravel/dusk": "^8.4",
         "laravel/pail": "^1.1",
         "laravel/pint": "^1.13",
