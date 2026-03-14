@@ -3,29 +3,36 @@
 namespace Tests\Feature\Auth;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_registration_screen_can_be_rendered(): void
+    public function test_registration_get_route_does_not_exist(): void
     {
-        $response = $this->get('/register');
+        $hasRegisterGet = false;
+        foreach (Route::getRoutes() as $route) {
+            if ($route->uri === 'register' && in_array('GET', $route->methods)) {
+                $hasRegisterGet = true;
+                break;
+            }
+        }
 
-        $response->assertStatus(200);
+        $this->assertFalse($hasRegisterGet, 'GET /register route should not exist');
     }
 
-    public function test_new_users_can_register(): void
+    public function test_registration_post_route_does_not_exist(): void
     {
-        $response = $this->post('/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ]);
+        $hasRegisterPost = false;
+        foreach (Route::getRoutes() as $route) {
+            if ($route->uri === 'register' && in_array('POST', $route->methods)) {
+                $hasRegisterPost = true;
+                break;
+            }
+        }
 
-        $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $this->assertFalse($hasRegisterPost, 'POST /register route should not exist');
     }
 }
