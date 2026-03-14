@@ -6,6 +6,12 @@ use App\Engines\ElasticsearchEngine;
 use App\Search\IndexManager;
 use App\Search\ProductSearchService;
 use App\Services\QueueJobTracker;
+use App\Models\Tenant;
+use App\Models\Product;
+use App\Models\SyncLog;
+use App\Listeners\InvalidateTenantCache;
+use App\Listeners\InvalidateProductCache;
+use App\Listeners\InvalidateSyncLogCache;
 use Elastic\Elasticsearch\ClientBuilder;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -98,5 +104,19 @@ class AppServiceProvider extends ServiceProvider
         \Queue::failing(function ($event) {
             app(QueueJobTracker::class)->markAsFailed($event->job, $event->exception);
         });
+
+        // Tenant cache invalidation
+        Tenant::created(InvalidateTenantCache::class);
+        Tenant::updated(InvalidateTenantCache::class);
+        Tenant::deleted(InvalidateTenantCache::class);
+
+        // Product cache invalidation
+        Product::created(InvalidateProductCache::class);
+        Product::updated(InvalidateProductCache::class);
+        Product::deleted(InvalidateProductCache::class);
+
+        // SyncLog cache invalidation
+        SyncLog::created(InvalidateSyncLogCache::class);
+        SyncLog::updated(InvalidateSyncLogCache::class);
     }
 }
