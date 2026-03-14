@@ -29,11 +29,38 @@
 
 ---
 
-### Phase 9: CI/CD & Testing
+### Phase 9: Data Flows, Caching & Operations
+
+**Goal:** Agency admins can export data to spreadsheets, system uses web caching for performance, and server operations are well-documented
+
+**Depends on:** Phase 8 (Hybrid Authentication)
+
+**Requirements:** DATAFLOW-01, DATAFLOW-02, DATAFLOW-03, CACHE-01, CACHE-02, CACHE-03, OPS-01, OPS-02, OPS-03
+
+**Success Criteria** (what must be TRUE):
+1. Sync logs can be exported to CSV with tenant, timestamps, and status
+2. Product catalog can be exported to CSV/Excel for offline analysis
+3. Dashboard metrics are cached for 5 minutes using Redis
+4. Tenant list is cached using Cache::remember()
+5. Cache invalidates automatically when data updates
+6. Server logging documentation exists for Nginx, Laravel, and Supervisor
+7. Documentation includes log file locations and common troubleshooting
+8. DOITSUYA criteria met: "Data flows (CSV/XML/JSON)" and "Web caching strategies"
+
+**Plans:** 4 plans
+
+- [ ] 09-00-PLAN.md — Wave 0: Create test stubs for data export and caching features (DATAFLOW-01, DATAFLOW-02, CACHE-01, CACHE-02)
+- [ ] 09-01-PLAN.md — CSV export functionality for Sync Logs and Product Catalog (DATAFLOW-01, DATAFLOW-02, DATAFLOW-03)
+- [ ] 09-02-PLAN.md — Redis web caching for Dashboard Metrics and Tenant List (CACHE-01, CACHE-02, CACHE-03)
+- [ ] 09-03-PLAN.md — Server logging documentation for Nginx, Laravel, and Supervisor (OPS-01, OPS-02, OPS-03)
+
+---
+
+### Phase 10: CI/CD & Testing
 
 **Goal:** System has automated deployment pipeline with comprehensive test coverage
 
-**Depends on:** Phase 8 (Hybrid Authentication)
+**Depends on:** Phase 9 (Data Flows, Caching & Operations)
 
 **Requirements:** CICD-01, CICD-02, CICD-03, CICD-04, CICD-05, CICD-06, CICD-07, TEST-04, TEST-05
 
@@ -50,9 +77,9 @@
 
 **Plans:** 3 plans
 
-- [ ] 09-00-PLAN.md — Wave 0: Create test stubs for deployment script functionality (CICD-04, CICD-05, CICD-06, CICD-07)
-- [ ] 09-01-PLAN.md — GitHub Actions CI workflow with PHPUnit testing and 70% coverage enforcement (CICD-01, CICD-02, TEST-04, TEST-05)
-- [ ] 09-02-PLAN.md — SSH deployment workflow with deployment script and health check endpoint (CICD-03, CICD-04, CICD-05, CICD-06, CICD-07)
+- [ ] 10-00-PLAN.md — Wave 0: Create test stubs for deployment script functionality (CICD-04, CICD-05, CICD-06, CICD-07)
+- [ ] 10-01-PLAN.md — GitHub Actions CI workflow with PHPUnit testing and 70% coverage enforcement (CICD-01, CICD-02, TEST-04, TEST-05)
+- [ ] 10-02-PLAN.md — SSH deployment workflow with deployment script and health check endpoint (CICD-03, CICD-04, CICD-05, CICD-06, CICD-07)
 
 ---
 
