@@ -6,7 +6,8 @@
          cacheDirectory=".phpunit.cache"
          testdox="true"
          executionOrder="default"
->
+         failOnRisky="true"
+         failOnWarning="true">
     <testsuites>
         <testsuite name="Unit">
             <directory>tests/Unit</directory>
@@ -20,6 +21,19 @@
             <directory>app</directory>
         </include>
     </source>
+    <coverage>
+        <report>
+            <html outputDirectory="coverage/html"/>
+            <text outputFile="php://stdout" showUncoveredFiles="false" showOnlySummary="true"/>
+            <clover outputFile="coverage/clover.xml"/>
+        </report>
+        <threshold>
+            <global>
+                <line value="70"/>
+                <method value="70"/>
+            </global>
+        </threshold>
+    </coverage>
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
