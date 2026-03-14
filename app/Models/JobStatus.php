@@ -17,12 +17,14 @@ class JobStatus extends Model
         'status',
         'payload',
         'error_message',
+        'result',
         'started_at',
         'completed_at',
     ];
 
     protected $casts = [
         'payload' => 'array',
+        'result' => 'array',
         'started_at' => 'datetime',
         'completed_at' => 'datetime',
     ];
