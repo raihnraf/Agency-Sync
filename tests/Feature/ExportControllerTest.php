@@ -118,7 +118,7 @@ class ExportControllerTest extends TestCase
             'job_type' => 'export_sync_logs',
             'status' => 'completed',
             'tenant_id' => $this->tenant->id,
-            'payload' => [
+            'result' => [
                 'filepath' => storage_path('app/exports/test.csv'),
                 'filename' => 'test.csv',
             ],
