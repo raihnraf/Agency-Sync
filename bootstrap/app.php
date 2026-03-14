@@ -26,40 +26,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'tenant' => \App\Http\Middleware\SetTenant::class,
             'tenant.scope' => \App\Http\Middleware\TenantScope::class,
         ]);
-
-        // Configure rate limiters
-        RateLimiter::for('api-read', function (Request $request) {
-            return Limit::perMinute(60)
-                ->by($request->user()?->id ?: $request->ip())
-                ->response(function () {
-                    return response()->json([
-                        'message' => 'Rate limit exceeded',
-                        'retry_after' => 60,
-                    ], 429);
-                });
-        });
-
-        RateLimiter::for('api-write', function (Request $request) {
-            return Limit::perMinute(10)
-                ->by($request->user()?->id ?: $request->ip())
-                ->response(function () {
-                    return response()->json([
-                        'message' => 'Rate limit exceeded',
-                        'retry_after' => 60,
-                    ], 429);
-                });
-        });
-
-        RateLimiter::for('auth', function (Request $request) {
-            return Limit::perMinute(5)
-                ->by($request->ip())
-                ->response(function () {
-                    return response()->json([
-                        'message' => 'Too many login attempts',
-                        'retry_after' => 60,
-                    ], 429);
-                });
-        });
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

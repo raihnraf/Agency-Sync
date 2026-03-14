@@ -7,6 +7,9 @@ use App\Search\IndexManager;
 use App\Search\ProductSearchService;
 use App\Services\QueueJobTracker;
 use Elastic\Elasticsearch\ClientBuilder;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Scout\EngineManager;
 
@@ -46,6 +49,40 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Configure rate limiters
+        RateLimiter::for('api-read', function (Request $request) {
+            return Limit::perMinute(60)
+                ->by($request->user()?->id ?: $request->ip())
+                ->response(function () {
+                    return response()->json([
+                        'message' => 'Rate limit exceeded',
+                        'retry_after' => 60,
+                    ], 429);
+                });
+        });
+
+        RateLimiter::for('api-write', function (Request $request) {
+            return Limit::perMinute(10)
+                ->by($request->user()?->id ?: $request->ip())
+                ->response(function () {
+                    return response()->json([
+                        'message' => 'Rate limit exceeded',
+                        'retry_after' => 60,
+                    ], 429);
+                });
+        });
+
+        RateLimiter::for('auth', function (Request $request) {
+            return Limit::perMinute(5)
+                ->by($request->ip())
+                ->response(function () {
+                    return response()->json([
+                        'message' => 'Too many login attempts',
+                        'retry_after' => 60,
+                    ], 429);
+                });
+        });
+
         // Track job lifecycle
         \Queue::before(function ($event) {
             app(QueueJobTracker::class)->markAsRunning($event->job);
