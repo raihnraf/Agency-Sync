@@ -1,21 +1,18 @@
 ---
 phase: 09-data-flows-caching-operations
-plan: 01
+plan: 01b
 type: execute
-wave: 1
-depends_on: []
+wave: 2
+depends_on:
+  - 09-01a
 files_modified:
-  - composer.json
   - app/Jobs/ExportSyncLogs.php
   - app/Jobs/ExportProductCatalog.php
-  - app/Services/ExportService.php
   - app/Http/Controllers/ExportController.php
   - routes/api.php
-  - config/filesystems.php
   - resources/views/dashboard/tenants/show.blade.php
   - resources/views/dashboard/tenants/products.blade.php
   - public/js/dashboard.js
-  - database/migrations/2026_03_14_000000_add_exports_disk_to_filesystems.php
 autonomous: false
 requirements:
   - DATAFLOW-01
@@ -23,67 +20,79 @@ requirements:
   - DATAFLOW-03
 must_haves:
   truths:
-    - "Agency admin can export sync logs to CSV file"
-    - "Agency admin can export product catalog to Excel file"
-    - "Export includes tenant information, timestamps, and status"
-    - "Export runs asynchronously in background queue"
-    - "Export download link available when job completes"
-    - "Export filters by date range, tenant, and status"
-    - "Export enforces 100K row limit to prevent abuse"
+    - "ExportSyncLogs job generates CSV with filters and row limit"
+    - "ExportProductCatalog job generates XLSX with chunking"
+    - "ExportController API endpoints working (dispatch and download)"
+    - "Export UI added to views with loading states and download links"
+    - "Job status polling works every 2 seconds"
+    - "Download links appear when export completes"
   artifacts:
     - path: "app/Jobs/ExportSyncLogs.php"
       provides: "Background job for sync log CSV export"
-      exports: ["handle()", "generateCsv()", "generateExcel()", "generateFilename()"]
+      exports: ["handle()", "generateCsv()", "generateFilename()"]
       min_lines: 80
     - path: "app/Jobs/ExportProductCatalog.php"
       provides: "Background job for product catalog Excel export"
       exports: ["handle()", "generateXlsx()", "generateFilename()"]
       min_lines: 70
-    - path: "app/Services/ExportService.php"
-      provides: "Common export logic (filename generation, filter helper)"
-      exports: ["generateFilename()", "applyFilters()", "estimateRowCount()"]
-      min_lines: 50
     - path: "app/Http/Controllers/ExportController.php"
       provides: "API endpoints for export dispatch and download"
-      exports: ["dispatch()", "download()"]
+      exports: ["dispatchSyncLogsExport()", "dispatchProductExport()", "download()"]
       min_lines: 60
-    - path: "storage/exports/"
-      provides: "Export file storage directory (gitignored)"
-    - path: "config/filesystems.php"
-      provides: "Exports disk configuration"
-      contains: "disks.exports"
+    - path: "routes/api.php"
+      provides: "API route registration for export endpoints"
+      contains: "POST.*exports/sync-logs"
+      contains: "GET.*exports/{uuid}"
+      min_lines: 5
+    - path: "resources/views/dashboard/tenants/show.blade.php"
+      provides: "Export UI for sync logs with filters"
+      contains: "exportSyncLogs()"
+      min_lines: 30
+    - path: "resources/views/dashboard/tenants/products.blade.php"
+      provides: "Export UI for product catalog"
+      contains: "exportProducts()"
+      min_lines: 25
+    - path: "public/js/dashboard.js"
+      provides: "Alpine.js components for export UI"
+      contains: "function exportSyncLogs"
+      contains: "function exportProducts"
+      min_lines: 100
   key_links:
     - from: "resources/views/dashboard/tenants/show.blade.php"
       to: "POST /api/v1/exports/sync-logs"
-      via: "Export button dispatches job"
+      via: "Alpine.js fetch() call in exportSyncLogs()"
       pattern: "fetch.*api/v1/exports/sync-logs.*POST"
+    - from: "resources/views/dashboard/tenants/products.blade.php"
+      to: "POST /api/v1/exports/products"
+      via: "Alpine.js fetch() call in exportProducts()"
+      pattern: "fetch.*api/v1/exports/products.*POST"
+    - from: "public/js/dashboard.js (exportSyncLogs)"
+      to: "GET /api/v1/exports/{uuid}"
+      via: "Job status polling in pollJobStatus()"
+      pattern: "fetch.*api/v1/exports/\${.*jobUuid}"
     - from: "app/Http/Controllers/ExportController.php"
       to: "app/Jobs/ExportSyncLogs.php"
       via: "Job dispatch with JobStatus and filters"
       pattern: "ExportSyncLogs::dispatch"
+    - from: "app/Http/Controllers/ExportController.php"
+      to: "app/Jobs/ExportProductCatalog.php"
+      via: "Job dispatch with tenant_id"
+      pattern: "ExportProductCatalog::dispatch"
     - from: "app/Jobs/ExportSyncLogs.php"
       to: "JobStatus model"
       via: "Status updates (pending → running → completed)"
       pattern: "jobStatus->update.*status"
-    - from: "app/Jobs/ExportSyncLogs.php"
-      to: "SyncLog model"
-      via: "Tenant-scoped query with filters"
-      pattern: "SyncLog::where('tenant_id'"
-    - from: "app/Jobs/ExportProductCatalog.php"
-      to: "Product model"
-      via: "Tenant-scoped query with chunking"
-      pattern: "Product::where('tenant_id'->chunk"
     - from: "GET /api/v1/exports/{uuid}"
       to: "Storage::disk('exports')"
       via: "Signed URL generation"
-      pattern: "Storage::disk('exports')->temporaryUrl"
+      pattern: "Storage::disk.*exports.*temporaryUrl"
 ---
 
 <objective>
-Implement async CSV/Excel export functionality for sync logs and product catalogs with background jobs, download links, and comprehensive filtering.
+Implement export background jobs, API endpoints, and UI integration for async CSV/Excel data export with job tracking and download links.
 
-Purpose: Enable agency admins to export data for offline analysis and reporting while maintaining system performance
-Output: Working export jobs with UI integration, file storage, and download links
+Purpose: Enable agency admins to export sync logs and product catalogs while maintaining system performance
+Output: Working export jobs with UI integration, job tracking, and file downloads
 </objective>
 
 <execution_context>
@@ -94,16 +103,24 @@ Output: Working export jobs with UI integration, file storage, and download link
 <context>
 @.planning/phases/09-data-flows-caching-operations/09-CONTEXT.md
 @.planning/phases/09-data-flows-caching-operations/09-RESEARCH.md
-@.planning/phases/09-data-flows-caching-operations/09-00-PLAN.md
+@.planning/phases/09-data-flows-caching-operations/09-00-EXPORT-PLAN.md
+@.planning/phases/09-data-flows-caching-operations/09-01a-PLAN.md
 @.planning/REQUIREMENTS.md
 @.planning/STATE.md
 
-# Key Models and Patterns from Previous Phases
+# Foundation from Plan 01a
+
+From **09-01a-PLAN.md** (Foundation):
+- **Export libraries installed** — league/csv for CSV, phpspreadsheet for XLSX
+- **Exports disk configured** — Private disk at storage/app/exports
+- **ExportService created** — Common logic for filename, filters, row counting
+- **Exports directory exists** — Migrated and writable
+
+# Key Models from Previous Phases
 
 From Phase 4 (Background Processing):
 - **JobStatus model** — Status tracking with enum (pending, running, completed, failed)
 - **TenantAwareJob base class** — Abstract base with tenantId, retry logic, timeout
-- **QueueJobTracker service** — Automatic status updates via queue events
 
 From Phase 6 (Catalog Synchronization):
 - **SyncLog model** — tenant_id, status, products_synced, created_at, completed_at
@@ -112,135 +129,31 @@ From Phase 6 (Catalog Synchronization):
 From Phase 7 (Admin Dashboard):
 - **Alpine.js toast component** — For "export ready" notifications
 - **Client-side API calls** — fetch() with CSRF token
-- **Loading states** — Spinner during job execution
 
-# Export Format Requirements (from CONTEXT.md)
+# Export Format Requirements
 
 **Sync Log CSV:**
 - Headers: Tenant, Status, Products Synced, Started At, Completed At, Duration
-- Filters: date range (start_date, end_date), tenant_id, status
+- Filters: date range, tenant_id, status
 - Row limit: 100K max
 - Filename: synclogs_{tenant_slug}_{date}.csv
 
 **Product Catalog Excel:**
 - Columns: name, sku, price, stock_status, created_at
 - Tenant-scoped query
-- Chunking for large catalogs (1000 rows per chunk)
+- Chunking: 1000 rows per chunk
 - Filename: products_{tenant_slug}_{date}.xlsx
 
 **Delivery:**
 - Background job dispatch (returns 202 with job_id)
-- JobStatus tracking (GET /api/v1/job-statuses/{uuid})
-- Signed URL download (GET /api/v1/exports/{uuid})
-- 24-hour file retention
+- JobStatus tracking (GET /api/v1/exports/{uuid})
+- Signed URL download (24-hour expiration)
 </context>
 
 <tasks>
 
 <task type="auto" tdd="true">
-  <name>Task 1: Install export libraries (league/csv, phpspreadsheet)</name>
-  <files>composer.json</files>
-  <behavior>
-    Test 1: league/csv package installed (version ^9.15)
-    Test 2: phpspreadsheet package installed (version ^2.0)
-    Test 3: Packages loadable via autoloader
-  </behavior>
-  <action>
-    Install CSV and Excel export libraries:
-
-    ```bash
-    composer require league/csv phpoffice/phpspreadsheet
-    ```
-
-    Verify installation:
-    - Check composer.json for league/csv and phpoffice/phpspreadsheet entries
-    - Run `composer show league/csv phpspreadsheet/phpoffice` to verify versions
-    - No autoloader regeneration needed (composer handles it)
-
-    These libraries provide:
-    - league/csv: UTF-8 CSV generation with proper escaping, BOM for Excel compatibility
-    - phpspreadsheet: XLSX file generation with memory-efficient cell writing
-  </action>
-  <verify>
-    <automated>composer show league/csv phpspreadsheet/phpoffice | grep -E "versions |name "</automated>
-  </verify>
-  <done>Export libraries installed and loadable, composer.json updated</done>
-</task>
-
-<task type="auto" tdd="true">
-  <name>Task 2: Create ExportService for common export logic</name>
-  <files>app/Services/ExportService.php</files>
-  <behavior>
-    Test 1: generateFilename() returns correct format with type, tenant slug, date, extension
-    Test 2: applyFilters() applies date range filter to query builder
-    Test 3: applyFilters() applies tenant filter to query builder
-    Test 4: applyFilters() applies status filter to query builder
-    Test 5: estimateRowCount() returns accurate count from query
-  </behavior>
-  <action>
-    Create app/Services/ExportService.php with helper methods:
-
-    ```php
-    <?php
-
-    namespace App\Services;
-
-    use App\Models\Tenant;
-    use Illuminate\Database\Eloquent\Builder;
-    use Illuminate\Support\Facades\DB;
-
-    class ExportService
-    {
-        public function generateFilename(string $type, Tenant $tenant, string $format): string
-        {
-            $date = now()->format('Ymd');
-            $slug = $tenant->slug;
-            $ext = $format === 'csv' ? 'csv' : 'xlsx';
-            return "{$type}_{$slug}_{$date}.{$ext}";
-        }
-
-        public function applyFilters(Builder $query, array $filters): Builder
-        {
-            if (!empty($filters['start_date'])) {
-                $query->where('created_at', '>=', $filters['start_date']);
-            }
-
-            if (!empty($filters['end_date'])) {
-                $query->where('created_at', '<=', $filters['end_date']);
-            }
-
-            if (!empty($filters['tenant_id'])) {
-                $query->where('tenant_id', $filters['tenant_id']);
-            }
-
-            if (!empty($filters['status'])) {
-                $query->where('status', $filters['status']);
-            }
-
-            return $query;
-        }
-
-        public function estimateRowCount(Builder $query): int
-        {
-            return $query->count();
-        }
-    }
-    ```
-
-    Key points:
-    - generateFilename() uses pattern: {type}_{tenant_slug}_{date}.{ext}
-    - applyFilters() applies all filters with AND logic
-    - estimateRowCount() returns integer count for limit validation
-    - Reusable across ExportSyncLogs and ExportProductCatalog jobs
-  </action>
-  <verify>
-    <automated>php artisan test --filter=ExportServiceTest</automated>
-  </verify>
-  <done>ExportService created with filename generation, filter application, and row counting logic</done>
-</task>
-
-<task type="auto" tdd="true">
-  <name>Task 3: Create ExportSyncLogs background job</name>
+  <name>Task 1: Create ExportSyncLogs background job</name>
   <files>app/Jobs/ExportSyncLogs.php</files>
   <behavior>
     Test 1: Job extends TenantAwareJob and implements ShouldQueue
@@ -365,7 +278,7 @@ From Phase 7 (Admin Dashboard):
 </task>
 
 <task type="auto" tdd="true">
-  <name>Task 4: Create ExportProductCatalog background job</name>
+  <name>Task 2: Create ExportProductCatalog background job</name>
   <files>app/Jobs/ExportProductCatalog.php</files>
   <behavior>
     Test 1: Job extends TenantAwareJob and implements ShouldQueue
@@ -482,7 +395,7 @@ From Phase 7 (Admin Dashboard):
 </task>
 
 <task type="auto" tdd="true">
-  <name>Task 5: Create ExportController for API endpoints</name>
+  <name>Task 3: Create ExportController for API endpoints</name>
   <files>app/Http/Controllers/ExportController.php</files>
   <behavior>
     Test 1: POST /exports/sync-logs dispatches ExportSyncLogs job with filters
@@ -621,30 +534,15 @@ From Phase 7 (Admin Dashboard):
 </task>
 
 <task type="auto" tdd="true">
-  <name>Task 6: Configure exports disk and API routes</name>
-  <files>config/filesystems.php routes/api.php</files>
+  <name>Task 4: Register API routes for export endpoints</name>
+  <files>routes/api.php</files>
   <behavior>
-    Test 1: Exports disk configured with local driver
-    Test 2: Exports disk root points to storage/app/exports
-    Test 3: POST /api/v1/exports/sync-logs route registered
-    Test 4: POST /api/v1/exports/products route registered
-    Test 5: GET /api/v1/exports/{uuid} route registered
-    Test 6: All routes require authentication middleware
+    Test 1: POST /api/v1/exports/sync-logs route registered
+    Test 2: POST /api/v1/exports/products route registered
+    Test 3: GET /api/v1/exports/{uuid} route registered
+    Test 4: All routes require authentication middleware
   </behavior>
   <action>
-    Configure exports disk in config/filesystems.php:
-
-    Add 'exports' disk to disks array:
-    ```php
-    'exports' => [
-        'driver' => 'local',
-        'root' => storage_path('app/exports'),
-        'url' => env('APP_URL').'/storage/exports',
-        'visibility' => 'private',
-        'throw' => false,
-    ],
-    ```
-
     Register API routes in routes/api.php:
 
     ```php
@@ -661,23 +559,22 @@ From Phase 7 (Admin Dashboard):
     ```
 
     Key points:
-    - Exports disk uses private visibility (no public access)
-    - Signed URLs provide temporary secure access
     - All routes require Sanctum authentication
     - Routes follow RESTful conventions (POST for dispatch, GET for download)
+    - Endpoint paths match controller method names
   </action>
   <verify>
     <automated>php artisan route:list --path=exports | grep -E "POST|GET"</automated>
   </verify>
-  <done>Exports disk configured and API routes registered</done>
+  <done>Export API routes registered with authentication middleware</done>
 </task>
 
 <task type="auto" tdd="true">
-  <name>Task 7: Add export UI to tenant detail and product views</name>
-  <files>resources/views/dashboard/tenants/show.blade.php resources/views/dashboard/tenants/products.blade.php public/js/dashboard.js</files>
+  <name>Task 5: Add export UI to tenant detail view</name>
+  <files>resources/views/dashboard/tenants/show.blade.php public/js/dashboard.js</files>
   <behavior>
     Test 1: Export button visible on tenant detail view
-    Test 2: Export button visible on product search view
+    Test 2: Filter form present (date range pickers, status dropdown)
     Test 3: Clicking export button dispatches job to API
     Test 4: Loading state appears while job processes
     Test 5: Download button appears when job completes
@@ -685,7 +582,7 @@ From Phase 7 (Admin Dashboard):
     Test 7: Job status polling works every 2 seconds
   </behavior>
   <action>
-    Add export UI components to views:
+    Add export UI components to tenant detail view:
 
     **resources/views/dashboard/tenants/show.blade.php:**
     Add above sync log table:
@@ -713,32 +610,8 @@ From Phase 7 (Admin Dashboard):
     </div>
     ```
 
-    **resources/views/dashboard/tenants/products.blade.php:**
-    Add above product search:
-    ```blade
-    <div x-data="exportProducts()" class="mb-4 flex items-center justify-between">
-        <div class="flex gap-2">
-            <label class="flex items-center gap-1">
-                <input type="radio" x-model="format" value="csv"> CSV
-            </label>
-            <label class="flex items-center gap-1">
-                <input type="radio" x-model="format" value="xlsx"> Excel
-            </label>
-        </div>
-        <button @click="exportProducts" :disabled="loading"
-                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50">
-            <span x-show="!loading">Export Catalog</span>
-            <span x-show="loading">Exporting...</span>
-        </button>
-        <a :href="downloadUrl" x-show="downloadUrl" target="_blank"
-           class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-            Download Export
-        </a>
-    </div>
-    ```
-
     **public/js/dashboard.js:**
-    Add Alpine.js components:
+    Add Alpine.js component:
     ```javascript
     function exportSyncLogs() {
         return {
@@ -789,7 +662,63 @@ From Phase 7 (Admin Dashboard):
             }
         };
     }
+    ```
 
+    Key points:
+    - Alpine.js component handles UI state (loading, downloadUrl)
+    - Export button dispatches job via fetch API to POST /api/v1/exports/sync-logs
+    - Job status polling every 2 seconds via GET /api/v1/exports/{uuid}
+    - Download button appears when job completes
+    - Toast notification from Phase 7 reused for success message
+    - CSRF token included in API requests
+  </action>
+  <verify>
+    <automated>grep -q "exportSyncLogs" resources/views/dashboard/tenants/show.blade.php && grep -q "function exportSyncLogs" public/js/dashboard.js && echo "Export UI components added"</automated>
+  </verify>
+  <done>Export UI added to tenant detail view with loading states, download links, and job polling</done>
+</task>
+
+<task type="auto" tdd="true">
+  <name>Task 6: Add export UI to product search view</name>
+  <files>resources/views/dashboard/tenants/products.blade.php public/js/dashboard.js</files>
+  <behavior>
+    Test 1: Export button visible on product search view
+    Test 2: Format selector present (CSV/XLSX radio buttons)
+    Test 3: Clicking export button dispatches job to API
+    Test 4: Loading state appears while job processes
+    Test 5: Download button appears when job completes
+    Test 6: Job status polling works every 2 seconds
+  </behavior>
+  <action>
+    Add export UI components to product search view:
+
+    **resources/views/dashboard/tenants/products.blade.php:**
+    Add above product search:
+    ```blade
+    <div x-data="exportProducts()" class="mb-4 flex items-center justify-between">
+        <div class="flex gap-2">
+            <label class="flex items-center gap-1">
+                <input type="radio" x-model="format" value="csv"> CSV
+            </label>
+            <label class="flex items-center gap-1">
+                <input type="radio" x-model="format" value="xlsx"> Excel
+            </label>
+        </div>
+        <button @click="exportProducts" :disabled="loading"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50">
+            <span x-show="!loading">Export Catalog</span>
+            <span x-show="loading">Exporting...</span>
+        </button>
+        <a :href="downloadUrl" x-show="downloadUrl" target="_blank"
+           class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            Download Export
+        </a>
+    </div>
+    ```
+
+    **public/js/dashboard.js:**
+    Add Alpine.js component:
+    ```javascript
     function exportProducts() {
         return {
             format: 'csv',
@@ -840,76 +769,22 @@ From Phase 7 (Admin Dashboard):
     ```
 
     Key points:
-    - Alpine.js components handle UI state (loading, downloadUrl)
-    - Export buttons dispatch jobs via fetch API
-    - Job status polling every 2 seconds until completion
+    - Alpine.js component handles UI state (format, loading, downloadUrl)
+    - Export button dispatches job via fetch API to POST /api/v1/exports/products
+    - Job status polling every 2 seconds via GET /api/v1/exports/{uuid}
     - Download button appears when job completes
-    - Toast notification from Phase 7 reused for success message
-    - CSRF token included in API requests
+    - Format selector (CSV/XLSX) included in request body
   </action>
   <verify>
-    <automated>grep -q "exportSyncLogs" resources/views/dashboard/tenants/show.blade.php && grep -q "exportProducts" resources/views/dashboard/tenants/products.blade.php && grep -q "function exportSyncLogs" public/js/dashboard.js && echo "Export UI components added"</automated>
+    <automated>grep -q "exportProducts" resources/views/dashboard/tenants/products.blade.php && grep -q "function exportProducts" public/js/dashboard.js && echo "Export UI components added"</automated>
   </verify>
-  <done>Export UI added to views with loading states, download links, and toast notifications</done>
-</task>
-
-<task type="auto" tdd="true">
-  <name>Task 8: Create migration for exports disk configuration</name>
-  <files>database/migrations/2026_03_14_000000_add_exports_disk_to_filesystems.php</files>
-  <behavior>
-    Test 1: Migration runs successfully
-    Test 2: storage/app/exports directory exists after migration
-    Test 3: Directory has correct permissions (writable by app user)
-  </behavior>
-  <action>
-    Create migration to ensure exports directory exists:
-
-    ```bash
-    php artisan make:migration add_exports_disk_to_filesystems
-    ```
-
-    Edit migration file:
-    ```php
-    <?php
-
-    use Illuminate\Database\Migrations\Migration;
-    use Illuminate\Support\Facades\Storage;
-
-    return new class extends Migration
-    {
-        public function up(): void
-        {
-            // Ensure exports directory exists
-            Storage::disk('local')->makeDirectory('exports');
-        }
-
-        public function down(): void
-        {
-            // Clean up exports directory
-            Storage::disk('local')->deleteDirectory('exports');
-        }
-    };
-    ```
-
-    Run migration:
-    ```bash
-    php artisan migrate
-    ```
-
-    Key points:
-    - Creates storage/app/exports directory
-    - Uses Laravel Storage facade for cross-platform compatibility
-    - Reversible migration (cleanup on rollback)
-  </action>
-  <verify>
-    <automated>test -d /home/raihan/Documents/DAPAT\ KERJA/Projects/AgencySync/storage/app/exports && echo "Directory exists"</automated>
-  </verify>
-  <done>Exports directory created and configured</done>
+  <done>Export UI added to product search view with format selection, loading states, and download links</done>
 </task>
 
 <task type="checkpoint:human-verify" gate="blocking">
-  <what-built>Export UI with loading states, download links, and toast notifications added to tenant detail and product search views</what-built>
-  <how-to-verify>
+  <name>Task 7: Verify export UI and job processing</name>
+  <files>resources/views/dashboard/tenants/show.blade.php, resources/views/dashboard/tenants/products.blade.php, public/js/dashboard.js</files>
+  <action>
     **Manual UI verification steps:**
 
     1. **Tenant detail view export button:**
@@ -937,21 +812,23 @@ From Phase 7 (Admin Dashboard):
        - Verify export includes filtered data only (if filters applied)
 
     **Browser console checks:**
-   - Open DevTools Console
-   - Verify no JavaScript errors during export flow
-   - Verify API calls logged (POST /exports/*, GET /exports/{uuid})
-   - Verify job status polling every 2 seconds
-
-   **Alternative verification (if UI unavailable):**
-   - Test API endpoints directly via curl:
-     ```bash
-     curl -X POST http://localhost/api/v1/exports/sync-logs \
-       -H "Content-Type: application/json" \
-       -H "Authorization: Bearer {token}" \
-       -d '{"format":"csv","filters":{"start_date":"2026-01-01"}}'
-     ```
-  </how-to-verify>
-  <resume-signal>Type "approved" if UI works correctly, or describe issues found</resume-signal>
+    - Open DevTools Console
+    - Verify no JavaScript errors during export flow
+    - Verify API calls logged (POST /exports/*, GET /exports/{uuid})
+    - Verify job status polling every 2 seconds
+  </action>
+  <verify>
+    <automated>grep -q "exportSyncLogs" resources/views/dashboard/tenants/show.blade.php && grep -q "exportProducts" resources/views/dashboard/tenants/products.blade.php && grep -q "function exportSyncLogs" public/js/dashboard.js && grep -q "function exportProducts" public/js/dashboard.js && echo "Export UI components present"</automated>
+  </verify>
+  <done>
+    Export UI verified working:
+    - Export buttons visible and clickable
+    - Loading states appear during job processing
+    - Download links appear when jobs complete
+    - Files download with correct format
+    - Toast notifications appear on completion
+    - No JavaScript errors in console
+  </done>
 </task>
 
 </tasks>
@@ -960,17 +837,14 @@ From Phase 7 (Admin Dashboard):
 
 ### Overall Phase Checks
 
-- [ ] Export libraries installed (league/csv, phpspreadsheet)
-- [ ] ExportService created with helper methods
 - [ ] ExportSyncLogs job generates CSV with filters and row limit
 - [ ] ExportProductCatalog job generates XLSX with chunking
 - [ ] ExportController API endpoints working (dispatch and download)
-- [ ] Exports disk configured and directory created
 - [ ] API routes registered and require authentication
-- [ ] Export UI added to views with loading states and download links (human verified)
-- [ ] JobStatus tracking working (pending → running → completed)
-- [ ] Signed URL generation working for downloads
-- [ ] All tests passing (ExportSyncLogsTest, ExportProductCatalogTest, ExportServiceTest, ExportControllerTest)
+- [ ] Export UI added to both views with loading states
+- [ ] Job status polling working every 2 seconds
+- [ ] Download links appear when exports complete
+- [ ] All tests passing (ExportSyncLogsTest, ExportProductCatalogTest, ExportControllerTest)
 
 ### Integration Verification
 
@@ -981,6 +855,7 @@ From Phase 7 (Admin Dashboard):
 - [ ] Filters work correctly (date range, tenant, status)
 - [ ] 100K row limit enforced
 - [ ] Tenant isolation maintained (exports only show tenant data)
+- [ ] UI→API→Job flow working end-to-end (human verified)
 
 </verification>
 
@@ -999,6 +874,6 @@ From Phase 7 (Admin Dashboard):
 
 <output>
 
-After completion, create `.planning/phases/09-data-flows-caching-operations/09-01-SUMMARY.md`
+After completion, create `.planning/phases/09-data-flows-caching-operations/09-01b-SUMMARY.md`
 
 </output>
