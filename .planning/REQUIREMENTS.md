@@ -111,9 +111,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### CI/CD & Deployment
 
-- [ ] **CICD-01**: GitHub Actions workflow runs automated tests on push to main branch
-- [ ] **CICD-02**: GitHub Actions workflow executes PHPUnit tests
-- [ ] **CICD-03**: GitHub Actions workflow deploys to server via SSH on successful tests
+- [x] **CICD-01**: GitHub Actions workflow runs automated tests on push to main branch
+- [x] **CICD-02**: GitHub Actions workflow executes PHPUnit tests
+- [x] **CICD-03**: GitHub Actions workflow deploys to server via SSH on successful tests
 - [x] **CICD-04**: Deployment script runs git pull on remote server
 - [x] **CICD-05**: Deployment script restarts Docker containers after code update
 - [x] **CICD-06**: Deployment script clears Laravel cache (config, routes, views)
@@ -124,8 +124,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **TEST-01**: System has unit tests for core business logic (tenant scoping, validation)
 - [x] **TEST-02**: System has feature tests for API endpoints
 - [ ] **TEST-03**: System has integration tests for queue jobs
-- [ ] **TEST-04**: Tests achieve minimum 70% code coverage
-- [ ] **TEST-05**: Tests run in CI/CD pipeline before deployment
+- [x] **TEST-04**: Tests achieve minimum 70% code coverage
+- [x] **TEST-05**: Tests run in CI/CD pipeline before deployment
 
 ## v2 Requirements
 
@@ -248,9 +248,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | API-05 | Phase 2 | Complete |
 | API-06 | Phase 2 | Complete |
 | API-07 | Phase 2 | Complete |
-| CICD-01 | Phase 8 | Pending |
-| CICD-02 | Phase 8 | Pending |
-| CICD-03 | Phase 8 | Pending |
+| CICD-01 | Phase 8 | Complete |
+| CICD-02 | Phase 8 | Complete |
+| CICD-03 | Phase 8 | Complete |
 | CICD-04 | Phase 8 | Complete |
 | CICD-05 | Phase 8 | Complete |
 | CICD-06 | Phase 8 | Complete |
@@ -258,8 +258,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TEST-01 | Phase 3 | Complete |
 | TEST-02 | Phase 3 | Complete |
 | TEST-03 | Phase 4 | Complete |
-| TEST-04 | Phase 10 | Pending |
-| TEST-05 | Phase 10 | Pending |
+| TEST-04 | Phase 10 | Complete |
+| TEST-05 | Phase 10 | Complete |
 | APIDOCS-01 | Phase 11 | Pending |
 | APIDOCS-02 | Phase 11 | Pending |
 | APIDOCS-03 | Phase 11 | Pending |
