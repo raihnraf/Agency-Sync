@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\HealthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\TenantController;
 use App\Http\Controllers\Dashboard\ErrorLogController;
+
+// Health check endpoint (must be at top, outside auth middleware)
+Route::get('/health', HealthController::class)->name('health');
 
 Route::get('/', function () {
     return view('welcome');
