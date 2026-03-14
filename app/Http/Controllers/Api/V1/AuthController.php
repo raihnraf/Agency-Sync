@@ -10,10 +10,43 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * @group Authentication
+ *
+ * API endpoints for user authentication and token management
+ */
 class AuthController extends BaseController
 {
     /**
      * Register a new user.
+     *
+     * Creates a new user account and returns an authentication token.
+     *
+     * @bodyParam name string required The user's full name. Example: John Doe
+     * @bodyParam email string required The user's email address. Example: john@example.com
+     * @bodyParam password string required The user's password (min 8 characters). Example: secret123
+     *
+     * @response {
+     *   "data": {
+     *     "user": {
+     *       "id": "uuid",
+     *       "name": "John Doe",
+     *       "email": "john@example.com"
+     *     },
+     *     "token": "plainTextTokenHere"
+     *   },
+     *   "meta": {
+     *     "expires_at": "2026-03-15T12:00:00Z"
+     *   }
+     * }
+     * @response 422 {
+     *   "errors": [
+     *     {
+     *       "field": "email",
+     *       "message": "The email has already been taken."
+     *     }
+     *   ]
+     * }
      */
     public function register(RegisterRequest $request)
     {
@@ -38,6 +71,33 @@ class AuthController extends BaseController
 
     /**
      * Login user and return token.
+     *
+     * Authenticates user credentials and returns a Sanctum token.
+     *
+     * @bodyParam email string required The user's email address. Example: john@example.com
+     * @bodyParam password string required The user's password. Example: secret123
+     *
+     * @response {
+     *   "data": {
+     *     "user": {
+     *       "id": "uuid",
+     *       "name": "John Doe",
+     *       "email": "john@example.com"
+     *     },
+     *     "token": "plainTextTokenHere"
+     *   },
+     *   "meta": {
+     *     "expires_at": "2026-03-15T12:00:00Z"
+     *   }
+     * }
+     * @response 401 {
+     *   "errors": [
+     *     {
+     *       "field": "email",
+     *       "message": "Invalid credentials"
+     *     }
+     *   ]
+     * }
      */
     public function login(LoginRequest $request)
     {
@@ -66,6 +126,12 @@ class AuthController extends BaseController
 
     /**
      * Logout user and invalidate current token.
+     *
+     * Invalidates the authentication token used for this request.
+     *
+     * @authenticated
+     *
+     * @response 204
      */
     public function logout(Request $request)
     {
@@ -76,6 +142,24 @@ class AuthController extends BaseController
 
     /**
      * Get authenticated user details.
+     *
+     * Returns the currently authenticated user's information.
+     *
+     * @authenticated
+     *
+     * @responseField data.user.id string User UUID
+     * @responseField data.user.name string User's full name
+     * @responseField data.user.email string User's email address
+     *
+     * @response {
+     *   "data": {
+     *     "user": {
+     *       "id": "uuid",
+     *       "name": "John Doe",
+     *       "email": "john@example.com"
+     *     }
+     *   }
+     * }
      */
     public function me(Request $request)
     {
