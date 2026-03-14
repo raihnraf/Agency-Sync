@@ -114,10 +114,10 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **CICD-01**: GitHub Actions workflow runs automated tests on push to main branch
 - [ ] **CICD-02**: GitHub Actions workflow executes PHPUnit tests
 - [ ] **CICD-03**: GitHub Actions workflow deploys to server via SSH on successful tests
-- [ ] **CICD-04**: Deployment script runs git pull on remote server
-- [ ] **CICD-05**: Deployment script restarts Docker containers after code update
-- [ ] **CICD-06**: Deployment script clears Laravel cache (config, routes, views)
-- [ ] **CICD-07**: Deployment script runs database migrations
+- [x] **CICD-04**: Deployment script runs git pull on remote server
+- [x] **CICD-05**: Deployment script restarts Docker containers after code update
+- [x] **CICD-06**: Deployment script clears Laravel cache (config, routes, views)
+- [x] **CICD-07**: Deployment script runs database migrations
 
 ### Testing
 
@@ -235,10 +235,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CICD-01 | Phase 8 | Pending |
 | CICD-02 | Phase 8 | Pending |
 | CICD-03 | Phase 8 | Pending |
-| CICD-04 | Phase 8 | Pending |
-| CICD-05 | Phase 8 | Pending |
-| CICD-06 | Phase 8 | Pending |
-| CICD-07 | Phase 8 | Pending |
+| CICD-04 | Phase 8 | Complete |
+| CICD-05 | Phase 8 | Complete |
+| CICD-06 | Phase 8 | Complete |
+| CICD-07 | Phase 8 | Complete |
 | TEST-01 | Phase 3 | Complete |
 | TEST-02 | Phase 3 | Complete |
 | TEST-03 | Phase 4 | Complete |
