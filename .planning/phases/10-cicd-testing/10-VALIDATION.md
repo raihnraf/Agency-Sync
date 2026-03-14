@@ -1,5 +1,5 @@
 ---
-phase: 8
+phase: 10
 slug: cicd-testing
 status: draft
 nyquist_compliant: true
@@ -7,7 +7,7 @@ wave_0_complete: true
 created: 2026-03-14
 ---
 
-# Phase 8 — Validation Strategy
+# Phase 10 — Validation Strategy
 
 > Per-phase validation contract for feedback sampling during execution.
 
@@ -38,15 +38,15 @@ created: 2026-03-14
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 08-00-01 | 00 | 0 | CICD-04, CICD-05, CICD-06 | unit | `./vendor/bin/phpunit tests/Unit/DeployScriptTest.php` | ✅ | ⬜ pending |
-| 08-00-02 | 00 | 0 | CICD-07 | integration | `./vendor/bin/phpunit tests/Feature/DeployScriptTest.php` | ✅ | ⬜ pending |
-| 08-01-01 | 01 | 1 | CICD-01, CICD-02, TEST-04, TEST-05 | integration | `./vendor/bin/phpunit` | ✅ | ⬜ pending |
-| 08-01-02 | 01 | 1 | CICD-01, CICD-02, TEST-04, TEST-05 | integration | `./vendor/bin/phpunit` | ✅ | ⬜ pending |
-| 08-01-03 | 01 | 1 | CICD-01, CICD-02, TEST-04, TEST-05 | manual | N/A (checkpoint) | N/A | ⬜ pending |
-| 08-02-01 | 02 | 2 | CICD-03, CICD-04, CICD-05, CICD-06, CICD-07 | unit | `./vendor/bin/phpunit tests/Unit/DeployScriptTest.php` | ✅ | ⬜ pending |
-| 08-02-02 | 02 | 2 | CICD-03, CICD-04, CICD-05, CICD-06, CICD-07 | unit | `./vendor/bin/phpunit tests/Unit/DeployScriptTest.php` | ✅ | ⬜ pending |
-| 08-02-03 | 02 | 2 | CICD-03, CICD-04, CICD-05, CICD-06, CICD-07 | unit | `./vendor/bin/phpunit tests/Unit/DeployScriptTest.php` | ✅ | ⬜ pending |
-| 08-02-04 | 02 | 2 | CICD-03, CICD-04, CICD-05, CICD-06, CICD-07 | manual | N/A (checkpoint) | N/A | ⬜ pending |
+| 10-00-01 | 00 | 0 | CICD-04, CICD-05, CICD-06 | unit | `./vendor/bin/phpunit tests/Unit/DeployScriptTest.php` | ✅ | ⬜ pending |
+| 10-00-02 | 00 | 0 | CICD-07 | integration | `./vendor/bin/phpunit tests/Feature/DeployScriptTest.php` | ✅ | ⬜ pending |
+| 10-01-01 | 01 | 1 | CICD-01, CICD-02, TEST-04, TEST-05 | integration | `./vendor/bin/phpunit` | ✅ | ⬜ pending |
+| 10-01-02 | 01 | 1 | CICD-01, CICD-02, TEST-04, TEST-05 | integration | `./vendor/bin/phpunit` | ✅ | ⬜ pending |
+| 10-01-03 | 01 | 1 | CICD-01, CICD-02, TEST-04, TEST-05 | manual | N/A (checkpoint) | N/A | ⬜ pending |
+| 10-02-01 | 02 | 2 | CICD-03, CICD-04, CICD-05, CICD-06, CICD-07 | unit | `./vendor/bin/phpunit tests/Unit/DeployScriptTest.php` | ✅ | ⬜ pending |
+| 10-02-02 | 02 | 2 | CICD-03, CICD-04, CICD-05, CICD-06, CICD-07 | unit | `./vendor/bin/phpunit tests/Unit/DeployScriptTest.php` | ✅ | ⬜ pending |
+| 10-02-03 | 02 | 2 | CICD-03, CICD-04, CICD-05, CICD-06, CICD-07 | unit | `./vendor/bin/phpunit tests/Unit/DeployScriptTest.php` | ✅ | ⬜ pending |
+| 10-02-04 | 02 | 2 | CICD-03, CICD-04, CICD-05, CICD-06, CICD-07 | manual | N/A (checkpoint) | N/A | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
