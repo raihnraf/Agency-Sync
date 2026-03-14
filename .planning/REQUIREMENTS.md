@@ -149,6 +149,22 @@ Deferred to future release. Tracked but not in current roadmap.
 - **SEARCH-50**: Advanced search filters (price range, stock status, category)
 - **UI-50**: Performance metrics dashboard (sync speed, API usage)
 
+### API Documentation
+
+- **APIDOCS-01**: System generates interactive API documentation from Laravel docblocks and route definitions
+- **APIDOCS-02**: API documentation accessible at `/docs` endpoint with clean, modern UI
+- **APIDOCS-03**: All API endpoints documented with request/response examples and authentication methods
+- **APIDOCS-04**: Documentation includes curl command examples for each endpoint
+- **APIDOCS-05**: Response schemas and validation rules clearly documented for each endpoint
+
+### Audit Logs & Debugging
+
+- **AUDIT-01**: Sync Logs table includes "View Details" button for each log entry
+- **AUDIT-02**: Failed syncs display raw JSON error payloads from external APIs (Shopify, Shopware)
+- **AUDIT-03**: System captures and displays Laravel stack traces for internal errors
+- **AUDIT-04**: Error details include timestamps, error codes, and full context in formatted JSON
+- **AUDIT-05**: Rate limiting errors and API failures clearly shown with actionable error messages
+
 ## Out of Scope
 
 Explicitly excluded. Documented to prevent scope creep.
@@ -242,14 +258,24 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TEST-01 | Phase 3 | Complete |
 | TEST-02 | Phase 3 | Complete |
 | TEST-03 | Phase 4 | Complete |
-| TEST-04 | Phase 8 | Pending |
-| TEST-05 | Phase 8 | Pending |
+| TEST-04 | Phase 10 | Pending |
+| TEST-05 | Phase 10 | Pending |
+| APIDOCS-01 | Phase 11 | Pending |
+| APIDOCS-02 | Phase 11 | Pending |
+| APIDOCS-03 | Phase 11 | Pending |
+| APIDOCS-04 | Phase 11 | Pending |
+| APIDOCS-05 | Phase 11 | Pending |
+| AUDIT-01 | Phase 12 | Pending |
+| AUDIT-02 | Phase 12 | Pending |
+| AUDIT-03 | Phase 12 | Pending |
+| AUDIT-04 | Phase 12 | Pending |
+| AUDIT-05 | Phase 12 | Pending |
 
 **Coverage:**
-- v1 requirements: 60 total
-- Mapped to phases: 60
+- v1 requirements: 70 total
+- Mapped to phases: 70
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-13*
-*Last updated: 2026-03-14 - All Phase 1-8 marked Complete with SUMMARY files. Phase 5 SUMMARY created. Only Phase 9 (CI/CD) remaining.*
+*Last updated: 2026-03-15 - Added Phase 11 (API Documentation) and Phase 12 (Audit Logs) for DOITSUYA portfolio enhancement*

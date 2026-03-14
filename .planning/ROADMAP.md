@@ -84,6 +84,52 @@
 
 ---
 
+### Phase 11: Interactive API Documentation
+
+**Goal:** Beautiful, interactive API documentation that demonstrates API-first backend development capabilities to employers
+
+**Depends on:** Phase 10 (CI/CD & Testing)
+
+**Requirements:** APIDOCS-01, APIDOCS-02, APIDOCS-03, APIDOCS-04, APIDOCS-05
+
+**Success Criteria** (what must be TRUE):
+1. Laravel Scribe package installed and configured
+2. API documentation auto-generated from Laravel docblocks and route definitions
+3. Documentation accessible at `/docs` endpoint with interactive examples
+4. All API endpoints documented with request/response examples
+5. Authentication methods clearly documented (Sanctum tokens)
+6. Example requests with curl commands for each endpoint
+7. Response schemas and validation rules documented
+8. DOITSUYA criteria met: "API-first backend system" with visible, consumable API
+9. Portfolio-ready: employer can see full API capabilities without reading code
+
+**Plans:** TBD
+
+---
+
+### Phase 12: Deep-Dive Audit Logs
+
+**Goal:** Enhanced sync logs with detailed error information showing production debugging capabilities
+
+**Depends on:** Phase 11 (Interactive API Documentation)
+
+**Requirements:** AUDIT-01, AUDIT-02, AUDIT-03, AUDIT-04, AUDIT-05
+
+**Success Criteria** (what must be TRUE):
+1. Sync Logs table has "View Details" button/modal for each row
+2. Failed syncs display raw JSON error payloads from external APIs
+3. Laravel stack traces captured and displayed for internal errors
+4. Error details include timestamps, error codes, and full context
+5. Modal displays error information in formatted, readable JSON
+6. Rate limiting errors from Shopify/Shopware APIs clearly shown
+7. Success syncs show detailed response data (items processed, duration)
+8. DOITSUYA criteria met: "Improving performance, stability, and maintainability" with debugging focus
+9. Portfolio-ready: demonstrates production-ready error handling and debugging mindset
+
+**Plans:** TBD
+
+---
+
 ## Progress Tracking
 
 | Phase | Plans Complete | Status | Completed |
