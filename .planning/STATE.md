@@ -5,12 +5,12 @@ milestone_name: milestone
 current_phase: 8
 current_plan: 06
 status: executing
-last_updated: "2026-03-14T10:57:13.483Z"
+last_updated: "2026-03-14T10:58:47.407Z"
 progress:
   total_phases: 2
   completed_phases: 0
   total_plans: 10
-  completed_plans: 2
+  completed_plans: 4
 ---
 
 # AgencySync State
@@ -260,6 +260,8 @@ Completed Plan 08-05: Custom Admin Command for Interactive User Creation. Implem
 - [Phase 08-05]: Success message includes login URL (http://localhost/login) for immediate access guidance
 - [Phase 08-hybrid-authentication]: Laravel 11 auto-discovers commands from app/Console/Commands/ directory
 - [Phase 08-hybrid-authentication]: Interactive artisan command pattern with validation helpers and retry logic
+- [Phase 08]: Logout redirects to / (welcome.blade.php) instead of Laravel default /home
+- [Phase 08]: Public home page shows AgencySync value proposition with login CTA button
 
 ### Active Todos
 
@@ -307,7 +309,7 @@ None currently.
 
 ## Session Continuity
 
-**Last Session:** 2026-03-14T10:57:13.479Z
+**Last Session:** 2026-03-14T10:58:47.405Z
 **Current Session:** 2026-03-13T21:02:47.000Z
 **Next Action:** Execute Plan 07-02 (Tenant Detail, Edit, and Delete Views)
 
