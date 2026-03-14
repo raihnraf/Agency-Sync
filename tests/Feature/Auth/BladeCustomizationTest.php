@@ -8,7 +8,10 @@ class BladeCustomizationTest extends TestCase
 {
     public function test_login_page_has_agency_sync_logo()
     {
-        $this->assertTrue(true);
+        $response = $this->get('/login');
+        $response->assertStatus(200);
+        $response->assertSee('AgencySync');
+        $response->assertSee('text-indigo-600');
     }
 
     public function test_login_page_uses_indigo_color_scheme()
