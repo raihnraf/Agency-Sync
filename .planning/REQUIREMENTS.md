@@ -93,9 +93,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Data Flows
 
-- [ ] **DATAFLOW-01**: Agency admin can export sync logs to CSV file
-- [ ] **DATAFLOW-02**: Agency admin can export product catalog to CSV/Excel file
-- [ ] **DATAFLOW-03**: Export includes tenant information, timestamps, and status
+- [x] **DATAFLOW-01**: Agency admin can export sync logs to CSV file
+- [x] **DATAFLOW-02**: Agency admin can export product catalog to CSV/Excel file
+- [x] **DATAFLOW-03**: Export includes tenant information, timestamps, and status
 
 ### Web Caching
 
