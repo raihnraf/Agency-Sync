@@ -3,7 +3,7 @@
 @section('title', "{$tenant['name']} - AgencySync Dashboard")
 
 @section('content')
-<div x-data="tenantDetail({{ $tenantId }})" x-init="fetchTenant()" class="space-y-6">
+<div x-data="tenantDetail({{ $tenantId }})" x-init="fetchTenant()" class="space-y-6" data-tenant-id="{{ $tenantId }}">
     <!-- Page Header -->
     <div class="flex justify-between items-center">
         <div>
@@ -104,6 +104,53 @@
                     <dd class="mt-1 text-sm text-gray-900" x-text="formatDate(tenant.created_at)"></dd>
                 </div>
             </dl>
+        </div>
+    </div>
+
+    <!-- Sync Logs Export Section -->
+    <div x-show="!loading && !error" x-cloak class="bg-white shadow rounded-lg mt-6" x-data="exportSyncLogsComponent()">
+        <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                Export Sync Logs
+            </h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500">
+                Export sync history to CSV for reporting
+            </p>
+        </div>
+        <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="flex gap-2">
+                    <input type="date" x-model="filters.start_date" class="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                    <input type="date" x-model="filters.end_date" class="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                    <select x-model="filters.status" class="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <option value="">All Statuses</option>
+                        <option value="completed">Completed</option>
+                        <option value="failed">Failed</option>
+                        <option value="partially_failed">Partially Failed</option>
+                    </select>
+                </div>
+                <div class="flex gap-2 ml-auto">
+                    <button @click="exportSyncLogs()" :disabled="loading"
+                            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <svg x-show="!loading" class="mr-2 -ml-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        <svg x-show="loading" class="animate-spin mr-2 -ml-1 h-5 w-5" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span x-show="!loading">Export CSV</span>
+                        <span x-show="loading">Exporting...</span>
+                    </button>
+                    <a :href="downloadUrl" x-show="downloadUrl" target="_blank"
+                       class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700">
+                        <svg class="mr-2 -ml-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        Download
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 

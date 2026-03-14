@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\IndexController;
 use App\Http\Controllers\Api\V1\ProductSearchController;
 use App\Http\Controllers\Api\V1\TenantController;
 use App\Http\Controllers\Api\V1\SyncController;
+use App\Http\Controllers\ExportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -79,6 +80,16 @@ Route::prefix('v1')->group(function () {
         Route::middleware('throttle:api-read')->group(function () {
             Route::get('/jobs/{jobId}/status', [IndexController::class, 'status']);
             Route::get('/tenants/{tenantId}/jobs', [IndexController::class, 'list']);
+        });
+
+        // Export routes
+        Route::middleware('throttle:api-write')->group(function () {
+            Route::post('/exports/sync-logs', [ExportController::class, 'dispatchSyncLogsExport']);
+            Route::post('/exports/products', [ExportController::class, 'dispatchProductExport']);
+        });
+
+        Route::middleware('throttle:api-read')->group(function () {
+            Route::get('/exports/{uuid}', [ExportController::class, 'download']);
         });
     });
 });

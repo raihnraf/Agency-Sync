@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\TenantController;
 use App\Http\Controllers\Dashboard\ErrorLogController;
@@ -21,6 +22,9 @@ Route::middleware('auth')->group(function () {
 
 // Dashboard routes (require authentication)
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
+    // Dashboard metrics endpoint (cached)
+    Route::get('/metrics', [DashboardController::class, 'metrics'])->name('dashboard.metrics');
+    
     // Tenant management
     Route::get('/tenants', [TenantController::class, 'index'])->name('dashboard.tenants.index');
     Route::get('/tenants/create', [TenantController::class, 'create'])->name('dashboard.tenants.create');

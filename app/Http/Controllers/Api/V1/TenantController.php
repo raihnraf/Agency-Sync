@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateTenantRequest;
 use App\Http\Resources\TenantResource;
 use App\Models\Tenant;
 use App\Services\PlatformCredentialValidator;
+use Illuminate\Support\Facades\Cache;
 
 class TenantController extends ApiController
 {
@@ -26,7 +27,15 @@ class TenantController extends ApiController
      */
     public function index()
     {
-        $tenants = auth()->user()->tenants()->paginate(20);
+        $userId = auth()->id();
+        
+        // Cache tenant list for 15 minutes per user
+        $tenants = Cache::remember("agency:tenants:list:{$userId}", 900, function () {
+            return auth()->user()->tenants()
+                ->select('tenants.id', 'tenants.name', 'tenants.slug', 'tenants.status', 'tenants.platform_type', 'tenants.platform_url')
+                ->orderBy('tenants.name')
+                ->get();
+        });
 
         return $this->success($tenants);
     }

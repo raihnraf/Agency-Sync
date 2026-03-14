@@ -3,7 +3,7 @@
 @section('title', 'Product Search - AgencySync Dashboard')
 
 @section('content')
-<div x-data="productSearch({{ $tenantId }}, {{ $tenantName }})" class="space-y-6">
+<div x-data="productSearch({{ $tenantId }}, '{{ $tenantName }}')" class="space-y-6" data-tenant-id="{{ $tenantId }}">
     <!-- Page Header -->
     <div class="mb-6">
         <a href="{{ url('/dashboard/tenants') }}/{{ $tenantId }}"
@@ -12,6 +12,45 @@
         </a>
         <h2 class="mt-2 text-2xl font-bold text-gray-900">Product Search</h2>
         <p class="mt-1 text-sm text-gray-600">Search products in <strong>{{ $tenantName }}</strong> catalog</p>
+    </div>
+
+    <!-- Product Catalog Export Section -->
+    <div class="bg-white shadow rounded-lg p-6 mb-6" x-data="exportProductsComponent()">
+        <div class="flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-medium text-gray-900">Export Catalog</h3>
+                <p class="mt-1 text-sm text-gray-500">Download product catalog as CSV or Excel</p>
+            </div>
+            <div class="flex gap-4 items-center">
+                <div class="flex gap-2">
+                    <label class="flex items-center gap-1 text-sm">
+                        <input type="radio" x-model="format" value="csv" class="text-blue-600"> CSV
+                    </label>
+                    <label class="flex items-center gap-1 text-sm">
+                        <input type="radio" x-model="format" value="xlsx" class="text-blue-600"> Excel
+                    </label>
+                </div>
+                <button @click="exportProducts()" :disabled="loading"
+                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg x-show="!loading" class="mr-2 -ml-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    <svg x-show="loading" class="animate-spin mr-2 -ml-1 h-5 w-5" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span x-show="!loading">Export</span>
+                    <span x-show="loading">Exporting...</span>
+                </button>
+                <a :href="downloadUrl" x-show="downloadUrl" target="_blank"
+                   class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700">
+                    <svg class="mr-2 -ml-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    Download
+                </a>
+            </div>
+        </div>
     </div>
 
     <!-- Search Box -->

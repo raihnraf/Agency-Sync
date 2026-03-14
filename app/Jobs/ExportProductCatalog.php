@@ -15,17 +15,19 @@ class ExportProductCatalog extends TenantAwareJob implements ShouldQueue
 {
     use Queueable, \Illuminate\Foundation\Bus\Dispatchable, \Illuminate\Queue\InteractsWithQueue, \Illuminate\Queue\SerializesModels;
 
-    private $jobStatusId;
+    private string $jobStatusId;
 
-    public function __construct(string $jobStatusId)
+    public function __construct(string $tenantId, string $jobStatusId)
     {
         $this->jobStatusId = $jobStatusId;
         // Set timeout to 5 minutes for large catalogs
         $this->timeout = 300;
+        parent::__construct($tenantId);
     }
 
-    public function handle(ExportService $exportService): void
+    public function handle(): void
     {
+        $exportService = app(ExportService::class);
         $jobStatus = JobStatus::findOrFail($this->jobStatusId);
         $jobStatus->markAsRunning();
 

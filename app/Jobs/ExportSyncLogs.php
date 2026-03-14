@@ -15,19 +15,21 @@ class ExportSyncLogs extends TenantAwareJob implements ShouldQueue
 {
     use Queueable, \Illuminate\Foundation\Bus\Dispatchable, \Illuminate\Queue\InteractsWithQueue, \Illuminate\Queue\SerializesModels;
 
-    private $jobStatusId;
-    private $filters;
-    private $format;
+    private string $jobStatusId;
+    private array $filters;
+    private string $format;
 
-    public function __construct(string $jobStatusId, array $filters, string $format)
+    public function __construct(string $tenantId, string $jobStatusId, array $filters, string $format)
     {
         $this->jobStatusId = $jobStatusId;
         $this->filters = $filters;
         $this->format = $format;
+        parent::__construct($tenantId);
     }
 
-    public function handle(ExportService $exportService): void
+    public function handle(): void
     {
+        $exportService = app(ExportService::class);
         $jobStatus = JobStatus::findOrFail($this->jobStatusId);
         $jobStatus->markAsRunning();
 

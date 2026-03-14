@@ -663,3 +663,138 @@ function errorLog() {
         }
     };
 }
+
+
+/**
+ * Export Sync Logs Component
+ * Handles CSV export of sync logs with filters
+ */
+function exportSyncLogsComponent() {
+    return {
+        filters: {
+            start_date: '',
+            end_date: '',
+            status: ''
+        },
+        loading: false,
+        downloadUrl: null,
+        jobUuid: null,
+
+        async exportSyncLogs() {
+            this.loading = true;
+            this.downloadUrl = null;
+
+            try {
+                const tenantId = document.querySelector('[data-tenant-id]')?.dataset.tenantId;
+                const filters = { ...this.filters };
+                if (tenantId) filters.tenant_id = tenantId;
+
+                const response = await fetch('/api/v1/exports/sync-logs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        filters: filters,
+                        format: 'csv'
+                    })
+                });
+
+                if (!response.ok) throw new Error('Export request failed');
+
+                const data = await response.json();
+                this.jobUuid = data.data.job_uuid;
+                this.pollJobStatus();
+            } catch (error) {
+                console.error('Export failed:', error);
+                showToast('Export failed: ' + error.message, 'error');
+                this.loading = false;
+            }
+        },
+
+        async pollJobStatus() {
+            const interval = setInterval(async () => {
+                try {
+                    const response = await fetch(`/api/v1/exports/${this.jobUuid}`);
+                    const data = await response.json();
+
+                    if (response.ok && data.data.download_url) {
+                        this.downloadUrl = data.data.download_url;
+                        this.loading = false;
+                        clearInterval(interval);
+                        showToast('Export ready! Click Download to save.', 'success');
+                    }
+                } catch (error) {
+                    console.error('Status check failed:', error);
+                    clearInterval(interval);
+                    this.loading = false;
+                }
+            }, 2000);
+        }
+    };
+}
+
+/**
+ * Export Products Component
+ * Handles Excel/CSV export of product catalog
+ */
+function exportProductsComponent() {
+    return {
+        format: 'csv',
+        loading: false,
+        downloadUrl: null,
+        jobUuid: null,
+
+        async exportProducts() {
+            this.loading = true;
+            this.downloadUrl = null;
+
+            try {
+                const tenantId = document.querySelector('[data-tenant-id]')?.dataset.tenantId;
+                if (!tenantId) throw new Error('Tenant ID not found');
+
+                const response = await fetch('/api/v1/exports/products', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        tenant_id: tenantId
+                    })
+                });
+
+                if (!response.ok) throw new Error('Export request failed');
+
+                const data = await response.json();
+                this.jobUuid = data.data.job_uuid;
+                this.pollJobStatus();
+            } catch (error) {
+                console.error('Export failed:', error);
+                showToast('Export failed: ' + error.message, 'error');
+                this.loading = false;
+            }
+        },
+
+        async pollJobStatus() {
+            const interval = setInterval(async () => {
+                try {
+                    const response = await fetch(`/api/v1/exports/${this.jobUuid}`);
+                    const data = await response.json();
+
+                    if (response.ok && data.data.download_url) {
+                        this.downloadUrl = data.data.download_url;
+                        this.loading = false;
+                        clearInterval(interval);
+                        showToast('Export ready! Click Download to save.', 'success');
+                    }
+                } catch (error) {
+                    console.error('Status check failed:', error);
+                    clearInterval(interval);
+                    this.loading = false;
+                }
+            }, 2000);
+        }
+    };
+}
