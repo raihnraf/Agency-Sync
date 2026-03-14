@@ -9,21 +9,19 @@ class BladeCustomizationTest extends TestCase
 {
     public function test_login_page_has_agency_sync_logo()
     {
-        // Check login page view contains AgencySync branding
-        $loginViewPath = base_path('resources/views/auth/login.blade.php');
-        $content = file_get_contents($loginViewPath);
-
-        $this->assertNotEmpty($content, 'Login page view should not be empty');
-        // Note: AgencySync branding might be in layout, check view has form fields
-        $this->assertTrue(
-            str_contains($content, 'email') || str_contains($content, 'password'),
-            'Login page should have email and password fields'
-        );
+        $response = $this->get('/login');
+        $response->assertStatus(200);
+        $response->assertSee('AgencySync');
+        $response->assertSee('text-indigo-600');
     }
 
     public function test_login_page_uses_indigo_color_scheme()
     {
-        $this->assertTrue(true);
+        $response = $this->get('/login');
+        $response->assertStatus(200);
+        $response->assertSee('bg-indigo-600');
+        $response->assertSee('hover:bg-indigo-700');
+        $response->assertSee('focus:bg-indigo-700');
     }
 
     public function test_login_page_has_custom_footer()
