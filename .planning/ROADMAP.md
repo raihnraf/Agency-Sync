@@ -47,10 +47,11 @@
 7. Documentation includes log file locations and common troubleshooting
 8. DOITSUYA criteria met: "Data flows (CSV/XML/JSON)" and "Web caching strategies"
 
-**Plans:** 4 plans
+**Plans:** 5 plans
 
-- [ ] 09-00-PLAN.md — Wave 0: Create test stubs for data export and caching features (DATAFLOW-01, DATAFLOW-02, CACHE-01, CACHE-02)
-- [ ] 09-01-PLAN.md — CSV export functionality for Sync Logs and Product Catalog (DATAFLOW-01, DATAFLOW-02, DATAFLOW-03)
+- [ ] 09-00-EXPORT-PLAN.md — Wave 0: Create test stubs for data export features (DATAFLOW-01, DATAFLOW-02, DATAFLOW-03)
+- [ ] 09-00-CACHE-PLAN.md — Wave 0: Create test stubs for caching features (CACHE-01, CACHE-02, CACHE-03)
+- [ ] 09-01-PLAN.md — CSV/Excel export functionality for Sync Logs and Product Catalog (DATAFLOW-01, DATAFLOW-02, DATAFLOW-03)
 - [ ] 09-02-PLAN.md — Redis web caching for Dashboard Metrics and Tenant List (CACHE-01, CACHE-02, CACHE-03)
 - [ ] 09-03-PLAN.md — Server logging documentation for Nginx, Laravel, and Supervisor (OPS-01, OPS-02, OPS-03)
 
