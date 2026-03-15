@@ -159,11 +159,11 @@ Deferred to future release. Tracked but not in current roadmap.
 
 ### Audit Logs & Debugging
 
-- **AUDIT-01**: Sync Logs table includes "View Details" button for each log entry
-- **AUDIT-02**: Failed syncs display raw JSON error payloads from external APIs (Shopify, Shopware)
-- **AUDIT-03**: System captures and displays Laravel stack traces for internal errors
-- **AUDIT-04**: Error details include timestamps, error codes, and full context in formatted JSON
-- **AUDIT-05**: Rate limiting errors and API failures clearly shown with actionable error messages
+- [x] **AUDIT-01**: Sync Logs table includes "View Details" button for each log entry
+- [x] **AUDIT-02**: Failed syncs display raw JSON error payloads from external APIs (Shopify, Shopware)
+- [x] **AUDIT-03**: System captures and displays Laravel stack traces for internal errors
+- [x] **AUDIT-04**: Error details include timestamps, error codes, and full context in formatted JSON
+- [x] **AUDIT-05**: Rate limiting errors and API failures clearly shown with actionable error messages
 
 ## Out of Scope
 
