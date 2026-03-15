@@ -112,7 +112,7 @@
                                                     'bg-yellow-100 text-yellow-800': tenant.syncStatus.status === 'pending'
                                                   }"
                                                   x-text="tenant.syncStatus.status"></span>
-                                            <span class="text-xs text-gray-600" x-text="tenant.syncStatus.products_processed + ' products'"></span>
+                                            <span class="text-xs text-gray-600" x-text="tenant.syncStatus.processed_products + ' products'"></span>
                                         </div>
                                     </div>
                                     <div x-show="!tenant.syncStatus" class="text-xs text-gray-400">
