@@ -63,10 +63,11 @@
     </script>
 
     <!-- Alpine.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.0/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.0/dist/cdn.min.js"></script>
 
     <!-- Custom dashboard styles -->
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <script defer src="{{ asset("js/dashboard.js") }}"></script>
 
     @stack('styles')
 </head>
@@ -166,8 +167,6 @@
         </footer>
     </div>
 
-    <!-- Dashboard JavaScript -->
     <script src="{{ asset('js/dashboard.js') }}"></script>
-    @stack('scripts')
 </body>
 </html>
