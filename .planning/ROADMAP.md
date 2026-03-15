@@ -61,6 +61,7 @@
 - [ ] 15-04-PLAN.md — Test and verify tenant list polling (UI-06) - Tests + Human verification
 
 
+
 ### Phase 18: Portfolio-Ready Fixes - Dashboard Security & UI Bug Fixes
 
 **Goal:** Fix visible UI bugs and basic security gaps for DOITSUYA job application portfolio
@@ -79,15 +80,15 @@
 3. Sync status displays correctly in tenant list view (visible UI bug fixed)
 4. Simple refresh mechanism or fixed API endpoint (no complex real-time polling needed)
 
-**Plans:** 2-3 plans (minimal focused fixes)
+**Plans:** 3 plans
 
-- [ ] 18-01-PLAN.md — Fix sync status API route mismatch in frontend (SYNC-06, UI-06)
-- [ ] 18-02-PLAN.md — Add authentication middleware to dashboard routes (AUTH-04)
-- [ ] 18-03-PLAN.md — Manual testing verification (AUTH-04, SYNC-06, UI-06)
+- [ ] 18-01-PLAN.md — Fix sync status API route mismatch in dashboard.js line 150 (SYNC-06, UI-06)
+- [ ] 18-02-PLAN.md — Verify dashboard route authentication middleware (AUTH-04)
+- [ ] 18-03-PLAN.md — Add sync status display to tenant list view (UI-06)
 
 **Notes:**
 - Focus on visible fixes only (what recruiters see in demo)
-- Skip complex real-time polling (use simple refresh or fix endpoint)
+- Skip complex real-time polling (use simple page load fetch)
 - Skip documentation/verification files (not valuable for recruiters)
 - Skip TENANT-05 stub validation (add TODO comment, acceptable for portfolio)
 
