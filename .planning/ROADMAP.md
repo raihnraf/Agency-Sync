@@ -28,3 +28,34 @@
 - [ ] 14-03-PLAN.md — Gap closure: Fix undefined variable bug in sync trigger (line 189) (SYNC-01, UI-05)
 - [ ] 14-04-PLAN.md — Gap closure: Fix undefined variable bug in export products (line 809) (UI-05)
 - [ ] 14-05-PLAN.md — Gap closure: Implement real test assertions in 3 placeholder files (SEARCH-01, SEARCH-07, SYNC-01, UI-05, UI-07)
+
+
+### Phase 15: Complete Dashboard Integrations - Route protection on dashboard endpoints and real-time sync status polling mechanism for production readiness
+
+**Goal:** Complete dashboard integrations for production readiness - secure dashboard routes with authentication middleware and implement real-time sync status polling for tenant list view
+
+**Depends on:** Phase 14
+
+**Type:** Standard Phase (Production Readiness)
+
+**Requirements:** AUTH-04, SYNC-06, UI-06
+
+**Gap Closure:** Closes production readiness gaps for dashboard security and real-time UX
+
+**Success Criteria** (what must be TRUE):
+1. Dashboard web routes protected with authentication middleware (unauthenticated users redirected to login)
+2. API endpoint exists to fetch latest sync status for a tenant (/api/v1/sync/status/{tenantId})
+3. Sync status endpoint validates tenant ownership (prevents cross-tenant enumeration)
+4. Tenant list view displays sync status for each tenant
+5. Sync status updates in real-time via 2-second polling mechanism
+6. Polling stops automatically when sync completes or fails
+7. Polling intervals cleaned up on page navigation (prevents memory leaks)
+8. All test files have real assertions (GREEN phase)
+
+**Plans:** 4 plans
+
+- [ ] 15-00-PLAN.md — Wave 0: Create test stubs for dashboard integrations (AUTH-04, SYNC-06, UI-06)
+- [ ] 15-01-PLAN.md — Verify dashboard route protection (AUTH-04)
+- [ ] 15-02-PLAN.md — Create sync status polling endpoint (SYNC-06)
+- [ ] 15-03-PLAN.md — Implement tenant list sync status polling (UI-06)
+
