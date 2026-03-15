@@ -67,7 +67,73 @@
 
     <!-- Custom dashboard styles -->
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
-    <script src="{{ asset("js/dashboard.js") }}"></script>
+    <!-- Inline Alpine.js component definition -->
+    <script>
+        function tenantList() {
+            return {
+                tenants: [],
+                loading: true,
+                error: null,
+                async fetchTenants() {
+                    this.loading = true;
+                    this.error = null;
+                    try {
+                        const response = await fetch('/dashboard/tenants/json', {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
+                            }
+                        });
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch client stores');
+                        }
+                        const data = await response.json();
+                        this.tenants = data.data;
+                    } catch (error) {
+                        this.error = error.message;
+                        console.error('Error fetching tenants:', error);
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                async fetchAllSyncStatus() {
+                    for (let tenant of this.tenants) {
+                        try {
+                            const response = await fetch(`/api/v1/sync-logs?tenant_id=${tenant.id}&per_page=1`, {
+                                method: 'GET',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
+                                }
+                            });
+                            if (response.ok) {
+                                const data = await response.json();
+                                if (data.data && data.data.length > 0) {
+                                    tenant.syncStatus = data.data[0];
+                                }
+                            }
+                        } catch (error) {
+                            console.error(`Error fetching sync status for tenant ${tenant.id}:`, error);
+                        }
+                    }
+                },
+                formatSyncTime(timestamp) {
+                    if (!timestamp) return 'Unknown';
+                    const date = new Date(timestamp);
+                    const now = new Date();
+                    const diffMs = now - date;
+                    const diffMins = Math.floor(diffMs / 60000);
+                    const diffHours = Math.floor(diffMins / 60);
+                    const diffDays = Math.floor(diffHours / 24);
+                    if (diffMins < 1) return 'Just now';
+                    if (diffMins < 60) return `${diffMins}m ago`;
+                    if (diffHours < 24) return `${diffHours}h ago`;
+                    return `${diffDays}d ago`;
+                }
+            };
+        }
+    </script>
 
     @stack('styles')
 </head>
