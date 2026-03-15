@@ -71,7 +71,7 @@
 - [x] 13-01-PLAN.md — Move sync-log routes from web.php to api.php with Sanctum authentication (REFACTOR-01) ✅
 - [x] 13-02-PLAN.md — API Resource Collections for pagination responses (REFACTOR-02) ✅
 - [x] 13-03-PLAN.md — Frontend integration with Resource Collections (REFACTOR-03) ✅
-- [ ] 13-04-PLAN.md — Gap closure: Convert SanctumAuthTest placeholders to real assertions (REFACTOR-01) 🔄
+- [x] 13-04-PLAN.md — Gap closure: Convert SanctumAuthTest placeholders to real assertions (REFACTOR-01) ✅
 
 ---
 
@@ -89,13 +89,17 @@
 
 **Success Criteria** (what must be TRUE):
 1. Product search UI calls correct `/search` endpoint (not `/products`)
-2. Sync trigger button calls valid route (either alias or `/api/v1/sync/dispatch`)
+2. Sync trigger button calls valid route (POST /api/v1/sync/dispatch with tenant_id in body)
 3. Users can search products within client catalogs
 4. Users can trigger sync operations for client stores
 5. Integration verified: Frontend → API route connections working
 6. Milestone-ready: No broken user-facing flows
 
-**Plans:** 0/2 plans
+**Plans:** 3/3 plans
+
+- [ ] 14-00-PLAN.md — Wave 0: Create test stubs for frontend API integration (SEARCH-01, SEARCH-07, SYNC-01, UI-05, UI-07)
+- [ ] 14-01-PLAN.md — Fix product search endpoint in frontend (SEARCH-01, SEARCH-07, UI-07)
+- [ ] 14-02-PLAN.md — Fix sync trigger endpoint in frontend (SYNC-01, UI-05)
 
 ---
 
@@ -188,10 +192,9 @@
 | 11 | 3/3 | ✅ Complete | 2026-03-14 |
 | 12 | 4/4 | ✅ Complete | 2026-03-15 |
 | 13 | 5/5 | ✅ Complete | 2026-03-15 |
-| 14 | 0/2 | ○ Pending | - |
+| 14 | 0/3 | ○ Pending | - |
 | 15 | 0/2 | ○ Pending | - |
 | 16 | 0/2 | ○ Pending | - |
 | 17 | 0/12 | ○ Pending | - |
 
 ---
-| 13 | 5/5 | ✅ Complete | 2026-03-15 |
