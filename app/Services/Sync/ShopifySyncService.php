@@ -18,6 +18,7 @@ class ShopifySyncService
     private float $lastRequestTime = 0.0;
     private float $minRequestInterval = 0.5; // 500ms minimum between requests
     private bool $testingMode = false;
+    private ?Tenant $tenant = null;
 
     public function __construct(ProductValidator $validator, bool $testingMode = false)
     {
@@ -38,6 +39,7 @@ class ShopifySyncService
 
         $this->accessToken = $credentials['access_token'];
         $this->shopDomain = $credentials['shop_domain'];
+        $this->tenant = $tenant;
 
         // Validate shop domain format
         if (!str_ends_with($this->shopDomain, '.myshopify.com') && !str_ends_with($this->shopDomain, '.myshopify.io')) {
@@ -67,15 +69,38 @@ class ShopifySyncService
 
             $response = Http::withToken($this->accessToken)
                 ->timeout(30)
-                ->retry(3, 100)
+                ->retry(3, 100, throw: false)  // Don't throw exceptions automatically
                 ->get($url, $query);
 
             if (!$response->successful()) {
-                Log::error('Shopify API error', [
-                    'status' => $response->status(),
-                    'body' => $response->body(),
-                    'tenant_id' => $tenant->id,
-                ]);
+                $errorPayload = [
+                    'type' => 'api_error',
+                    'source' => 'shopify',
+                    'status_code' => $response->status(),
+                    'response_body' => $response->json() ?? $response->body(),
+                    'request_url' => $url,
+                    'request_method' => 'GET',
+                    'timestamp' => now()->toIso8601String(),
+                ];
+
+                // Capture rate limit headers
+                $rateLimitHeader = $response->header('X-Shopify-Shop-Api-Call-Limit');
+                if ($rateLimitHeader) {
+                    [$used, $limit] = array_pad(explode('/', $rateLimitHeader), 2, null);
+                    $errorPayload['rate_limit_info'] = [
+                        'used' => $used,
+                        'limit' => $limit,
+                        'retry_after' => $response->header('Retry-After'),
+                    ];
+                }
+
+                // Store in sync log metadata
+                $currentMetadata = $syncLog->metadata ?? [];
+                $syncLog->update(['metadata' => array_merge($currentMetadata, ['error_details' => $errorPayload])]);
+
+                // Log error (existing behavior)
+                Log::error('Shopify API error', $errorPayload);
+
                 throw new Exception("Shopify API error: {$response->status()}");
             }
 
