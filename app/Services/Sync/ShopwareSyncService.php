@@ -17,6 +17,7 @@ class ShopwareSyncService
     private float $lastRequestTime = 0.0;
     private float $minRequestInterval = 0.3; // 300ms minimum between requests
     private bool $testingMode = false;
+    private ?Tenant $tenant = null;
 
     public function __construct(ProductValidator $validator, bool $testingMode = false)
     {
@@ -36,6 +37,7 @@ class ShopwareSyncService
         }
 
         $this->shopUrl = rtrim($credentials['shop_url'], '/');
+        $this->tenant = $tenant;
 
         $response = Http::asForm()->post("{$this->shopUrl}/api/oauth/token", [
             'grant_type' => 'client_credentials',
@@ -73,20 +75,33 @@ class ShopwareSyncService
         do {
             $this->respectRateLimit();
 
+            $url = "{$this->shopUrl}/api/product";
             $response = Http::withToken($this->accessToken)
                 ->timeout(30)
-                ->retry(3, 100)
-                ->get("{$this->shopUrl}/api/product", [
+                ->retry(3, 100, throw: false)  // Don't throw exceptions automatically
+                ->get($url, [
                     'limit' => $limit,
                     'offset' => $offset,
                 ]);
 
             if (!$response->successful()) {
-                Log::error('Shopware API error', [
-                    'status' => $response->status(),
-                    'body' => $response->body(),
-                    'tenant_id' => $tenant->id,
-                ]);
+                $errorPayload = [
+                    'type' => 'api_error',
+                    'source' => 'shopware',
+                    'status_code' => $response->status(),
+                    'response_body' => $response->json() ?? $response->body(),
+                    'request_url' => $url,
+                    'request_method' => 'GET',
+                    'timestamp' => now()->toIso8601String(),
+                ];
+
+                // Store in sync log metadata
+                $currentMetadata = $syncLog->metadata ?? [];
+                $syncLog->update(['metadata' => array_merge($currentMetadata, ['error_details' => $errorPayload])]);
+
+                // Log error
+                Log::error('Shopware API error', $errorPayload);
+
                 throw new Exception("Shopware API error: {$response->status()}");
             }
 
