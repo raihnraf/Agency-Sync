@@ -13,7 +13,7 @@ class TenantController extends Controller
      */
     public function index(): View
     {
-        return view('dashboard.tenants.index');
+        return view("dashboard.tenants.index");
     }
 
     /**
@@ -21,7 +21,7 @@ class TenantController extends Controller
      */
     public function create(): View
     {
-        return view('dashboard.tenants.create');
+        return view("dashboard.tenants.create");
     }
 
     /**
@@ -29,7 +29,7 @@ class TenantController extends Controller
      */
     public function show(Request $request, string $id): View
     {
-        return view('dashboard.tenants.show', ['tenantId' => $id]);
+        return view("dashboard.tenants.show", ["tenantId" => $id]);
     }
 
     /**
@@ -37,7 +37,7 @@ class TenantController extends Controller
      */
     public function edit(Request $request, string $id): View
     {
-        return view('dashboard.tenants.edit', ['tenantId' => $id]);
+        return view("dashboard.tenants.edit", ["tenantId" => $id]);
     }
 
     /**
@@ -45,12 +45,36 @@ class TenantController extends Controller
      */
     public function products(Request $request, string $id): View
     {
-        // Fetch tenant data to pass to view
-        $tenant = $request->user()->tenants()->where('id', $id)->firstOrFail();
+        $tenant = $request->user()->tenants()->where("id", $id)->firstOrFail();
 
-        return view('dashboard.tenants.products', [
-            'tenantId' => $id,
-            'tenantName' => $tenant->name
+        return view("dashboard.tenants.products", [
+            "tenantId" => $id,
+            "tenantName" => $tenant->name
+        ]);
+    }
+
+    /**
+     * Return JSON list of tenants for AJAX calls (session authenticated).
+     */
+    public function indexJson(Request $request)
+    {
+        $tenants = $request->user()
+            ->tenants()
+            ->orderBy("name")
+            ->get()
+            ->map(function ($tenant) {
+                return [
+                    "id" => $tenant->id,
+                    "name" => $tenant->name,
+                    "platform_type" => $tenant->platform_type->value,
+                    "platform_url" => $tenant->platform_url,
+                    "status" => $tenant->status->value,
+                    "created_at" => $tenant->created_at->toISOString(),
+                ];
+            });
+
+        return response()->json([
+            "data" => $tenants
         ]);
     }
 }

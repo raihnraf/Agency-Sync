@@ -9,7 +9,7 @@ function tenantList() {
             this.error = null;
 
             try {
-                const response = await fetch('/api/v1/tenants', {
+                const response = await fetch('/dashboard/tenants/json', {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
@@ -97,7 +97,7 @@ function tenantCreate() {
                     return;
                 }
 
-                const response = await fetch('/api/v1/tenants', {
+                const response = await fetch('/dashboard/tenants/json', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
@@ -158,7 +158,7 @@ function tenantDetail(tenantId) {
             this.error = null;
 
             try {
-                const response = await fetch(`/api/v1/tenants/${tenantId}`, {
+                const response = await fetch(`/dashboard/tenants/json/${tenantId}`, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
@@ -303,7 +303,7 @@ function tenantDetail(tenantId) {
             this.deleting = true;
 
             try {
-                const response = await fetch(`/api/v1/tenants/${tenantId}`, {
+                const response = await fetch(`/dashboard/tenants/json/${tenantId}`, {
                     method: 'DELETE',
                     headers: {
                         'Accept': 'application/json',
@@ -385,7 +385,7 @@ function tenantEdit(tenantId) {
 
         async fetchTenant() {
             try {
-                const response = await fetch(`/api/v1/tenants/${tenantId}`, {
+                const response = await fetch(`/dashboard/tenants/json/${tenantId}`, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
@@ -434,7 +434,7 @@ function tenantEdit(tenantId) {
                     }
                 }
 
-                const response = await fetch(`/api/v1/tenants/${tenantId}`, {
+                const response = await fetch(`/dashboard/tenants/json/${tenantId}`, {
                     method: 'PATCH',
                     headers: {
                         'Accept': 'application/json',
@@ -506,7 +506,7 @@ function productSearch(tenantId, tenantName) {
             this.error = null;
 
             try {
-                const response = await fetch(`/api/v1/tenants/${this.tenantId}/search?query=${encodeURIComponent(this.searchQuery)}&page=${this.currentPage}`, {
+                const response = await fetch(`/dashboard/tenants/json/${this.tenantId}/search?query=${encodeURIComponent(this.searchQuery)}&page=${this.currentPage}`, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
@@ -637,7 +637,7 @@ function errorLog() {
 
         async fetchTenants() {
             try {
-                const response = await fetch('/api/v1/tenants', {
+                const response = await fetch('/dashboard/tenants/json', {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
