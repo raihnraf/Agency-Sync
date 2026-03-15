@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', "{$tenant['name']} - AgencySync Dashboard")
+@section('title', 'Client Store Details - AgencySync Dashboard')
 
 @section('content')
 <div x-data="tenantDetail({{ $tenantId }})" x-init="fetchTenant()" class="space-y-6" data-tenant-id="{{ $tenantId }}">
