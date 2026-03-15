@@ -1,0 +1,1061 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "http:\/\/localhost"
+        }
+    ],
+    "info": {
+        "name": "Laravel API Documentation",
+        "_postman_id": "4168afda-e175-4c77-9252-71a245b81dd2",
+        "description": "",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "description": "\nAPI endpoints for user authentication and token management",
+            "item": [
+                {
+                    "name": "Register a new user.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/register",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/register"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"John Doe\",\"email\":\"john@example.com\",\"password\":\"secret123\"}"
+                        },
+                        "description": "Creates a new user account and returns an authentication token."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"user\": {\n      \"id\": \"uuid\",\n      \"name\": \"John Doe\",\n      \"email\": \"john@example.com\"\n    },\n    \"token\": \"plainTextTokenHere\"\n  },\n  \"meta\": {\n    \"expires_at\": \"2026-03-15T12:00:00Z\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    {\n      \"field\": \"email\",\n      \"message\": \"The email has already been taken.\"\n    }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Login user and return token.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/login",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/login"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"john@example.com\",\"password\":\"secret123\"}"
+                        },
+                        "description": "Authenticates user credentials and returns a Sanctum token."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"user\": {\n      \"id\": \"uuid\",\n      \"name\": \"John Doe\",\n      \"email\": \"john@example.com\"\n    },\n    \"token\": \"plainTextTokenHere\"\n  },\n  \"meta\": {\n    \"expires_at\": \"2026-03-15T12:00:00Z\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"errors\": [\n    {\n      \"field\": \"email\",\n      \"message\": \"Invalid credentials\"\n    }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Logout user and invalidate current token.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/logout"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Invalidates the authentication token used for this request."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 204,
+                            "body": "{}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get authenticated user details.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/me",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/me"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns the currently authenticated user's information."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"user\": {\n      \"id\": \"uuid\",\n      \"name\": \"John Doe\",\n      \"email\": \"john@example.com\"\n    }\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Catalog Synchronization",
+            "description": "\nAPI endpoints for triggering and monitoring product catalog synchronization",
+            "item": [
+                {
+                    "name": "Dispatch a sync job for the given tenant.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/sync\/dispatch",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/sync\/dispatch"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"tenant_id\":\"123e4567-e89b-12d3-a456-426614174000\",\"data\":[\"consequatur\"]}"
+                        },
+                        "description": "Triggers an asynchronous sync job for the specified tenant."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 202,
+                            "body": "{\n  \"data\": {\n    \"job_id\": \"uuid\",\n    \"status\": \"pending\",\n    \"message\": \"Sync job dispatched successfully\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"Validation failed\",\n  \"errors\": {\n    \"tenant_id\": [\"The tenant id field is required.\"]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get the status of a sync operation.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/sync\/status\/:syncLogId",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/sync\/status\/:syncLogId",
+                            "variable": [
+                                {
+                                    "id": "syncLogId",
+                                    "key": "syncLogId",
+                                    "value": "123e4567-e89b-12d3-a456-426614174000",
+                                    "description": "Sync log UUID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns the current status of a sync job including progress and error details."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"job_id\": \"uuid\",\n    \"status\": \"running\",\n    \"progress\": 45,\n    \"products_indexed\": 234,\n    \"started_at\": \"2026-03-15T10:00:00Z\",\n    \"completed_at\": null,\n    \"error_message\": null\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"Sync log not found\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get sync history with pagination and filtering.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/sync\/history",
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "completed",
+                                    "description": "optional Filter by status (pending, running, completed, failed, partially_failed).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Items per page (default: 20, max: 100).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number (default: 1).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/sync\/history?status=completed&per_page=20&page=1"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns paginated list of sync operations for the current tenant."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"status\": \"completed\",\n      \"products_indexed\": 1500,\n      \"started_at\": \"2026-03-15T10:00:00Z\",\n      \"completed_at\": \"2026-03-15T10:05:00Z\"\n    }\n  ],\n  \"meta\": {\n    \"total\": 45,\n    \"per_page\": 20,\n    \"current_page\": 1,\n    \"last_page\": 3\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Endpoints",
+            "description": "",
+            "item": [
+                {
+                    "name": "POST api\/v1\/exports\/sync-logs",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/exports\/sync-logs",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/exports\/sync-logs"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"filters\":{\"start_date\":\"2026-03-15T07:39:18\",\"end_date\":\"2026-03-15T07:39:18\",\"tenant_id\":\"66529e01-d113-3473-8d6f-9e11e09332ea\",\"status\":\"partially_failed\"},\"format\":\"csv\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST api\/v1\/exports\/products",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/exports\/products",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/exports\/products"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"tenant_id\":\"66529e01-d113-3473-8d6f-9e11e09332ea\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "GET api\/v1\/exports\/{uuid}",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/exports\/:uuid",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/exports\/:uuid",
+                            "variable": [
+                                {
+                                    "id": "uuid",
+                                    "key": "uuid",
+                                    "value": "66529e01-d113-3473-8d6f-9e11e09332ea",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Index Management",
+            "description": "\nAPI endpoints for managing Elasticsearch index operations (async)",
+            "item": [
+                {
+                    "name": "Start async reindex of all tenant products.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/tenants\/:tenantId\/reindex",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/tenants\/:tenantId\/reindex",
+                            "variable": [
+                                {
+                                    "id": "tenantId",
+                                    "key": "tenantId",
+                                    "value": "123e4567-e89b-12d3-a456-426614174000",
+                                    "description": "Tenant UUID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Triggers an asynchronous reindex job for the tenant's product catalog."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 202,
+                            "body": "{\n  \"data\": {\n    \"job_id\": \"uuid\",\n    \"status\": \"pending\",\n    \"message\": \"Reindexing started\",\n    \"tenant_id\": \"uuid\"\n  },\n  \"meta\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"Tenant not found or access denied\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get job status.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/jobs\/:jobId\/status",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/jobs\/:jobId\/status",
+                            "variable": [
+                                {
+                                    "id": "jobId",
+                                    "key": "jobId",
+                                    "value": "123e4567-e89b-12d3-a456-426614174000",
+                                    "description": "Job UUID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns the current status and progress of an index job."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"job_id\": \"uuid\",\n    \"status\": \"running\",\n    \"job_type\": \"reindex_tenant_products\",\n    \"payload\": {\n      \"tenant_id\": \"uuid\",\n      \"tenant_name\": \"My Store\",\n      \"requested_by\": \"uuid\"\n    },\n    \"error_message\": null,\n    \"created_at\": \"2026-03-15T10:00:00Z\",\n    \"started_at\": \"2026-03-15T10:00:05Z\",\n    \"completed_at\": null\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"Job not found\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "List recent jobs for a tenant.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/tenants\/:tenantId\/jobs",
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "completed",
+                                    "description": "optional Filter by status (pending, running, completed, failed).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number (default: 1).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/tenants\/:tenantId\/jobs?status=completed&page=1",
+                            "variable": [
+                                {
+                                    "id": "tenantId",
+                                    "key": "tenantId",
+                                    "value": "123e4567-e89b-12d3-a456-426614174000",
+                                    "description": "Tenant UUID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns a list of recent index operations for the specified tenant."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"jobs\": [\n      {\n        \"job_id\": \"uuid\",\n        \"status\": \"completed\",\n        \"job_type\": \"reindex_tenant_products\",\n        \"created_at\": \"2026-03-15T10:00:00Z\",\n        \"completed_at\": \"2026-03-15T10:05:00Z\"\n      }\n    ]\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"Tenant not found or access denied\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Product Search",
+            "description": "\nAPI endpoints for searching products within tenant catalogs using Elasticsearch",
+            "item": [
+                {
+                    "name": "Search products within a tenant's catalog.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/tenants\/:tenantId\/search",
+                            "query": [
+                                {
+                                    "key": "query",
+                                    "value": "blue+shoes",
+                                    "description": "Search query.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number (default: 1).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Results per page (default: 20, max: 100).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filters",
+                                    "value": "%7B%22stock_status%22%3A%22in_stock%22%7D",
+                                    "description": "optional JSON filters (stock_status, price_range).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/tenants\/:tenantId\/search?query=blue+shoes&page=1&per_page=20&filters=%7B%22stock_status%22%3A%22in_stock%22%7D",
+                            "variable": [
+                                {
+                                    "id": "tenantId",
+                                    "key": "tenantId",
+                                    "value": "123e4567-e89b-12d3-a456-426614174000",
+                                    "description": "Tenant UUID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Performs full-text search with fuzzy matching and pagination."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"name\": \"Blue Running Shoes\",\n      \"price\": 89.99,\n      \"stock_status\": \"in_stock\"\n    }\n  ],\n  \"meta\": {\n    \"pagination\": {\n      \"total\": 150,\n      \"per_page\": 20,\n      \"current_page\": 1\n    }\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"Tenant not found or access denied\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get search index status for a tenant.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/tenants\/:tenantId\/search\/status",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/tenants\/:tenantId\/search\/status",
+                            "variable": [
+                                {
+                                    "id": "tenantId",
+                                    "key": "tenantId",
+                                    "value": "123e4567-e89b-12d3-a456-426614174000",
+                                    "description": "Tenant UUID."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns information about the Elasticsearch index status."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"index_exists\": true,\n    \"index_name\": \"tenant_uuid_products\",\n    \"tenant_id\": \"uuid\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"Tenant not found or access denied\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Reindex all products for a tenant.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/tenants\/:tenantId\/search\/reindex",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/tenants\/:tenantId\/search\/reindex",
+                            "variable": [
+                                {
+                                    "id": "tenantId",
+                                    "key": "tenantId",
+                                    "value": "123e4567-e89b-12d3-a456-426614174000",
+                                    "description": "Tenant UUID."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Rebuilds the Elasticsearch search index for all tenant products."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"message\": \"Reindex completed successfully\",\n    \"tenant_id\": \"uuid\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"Tenant not found or access denied\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"message\": \"Reindex failed: connection timeout\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Sync Logs",
+            "description": "\nAPI endpoints for accessing detailed sync log information",
+            "item": [
+                {
+                    "name": "Display detailed sync log information.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/sync-logs\/:id\/details",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/sync-logs\/:id\/details",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "consequatur",
+                                    "description": "Sync Log UUID"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns comprehensive details including error payloads, stack traces,\nproducts summary, and timing information."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"id\": \"uuid\",\n    \"tenant_id\": \"tenant-uuid\",\n    \"platform_type\": \"shopify\",\n    \"status\": \"completed\",\n    \"error_message\": null,\n    \"metadata\": {},\n    \"error_details\": null,\n    \"tenant\": {\n      \"id\": \"tenant-uuid\",\n      \"name\": \"My Store\",\n      \"platform_type\": \"shopify\"\n    },\n    \"products_summary\": {\n      \"total\": 100,\n      \"processed\": 95,\n      \"failed\": 5,\n      \"indexed\": 90\n    },\n    \"started_at\": \"2026-03-15T07:00:00+00:00\",\n    \"completed_at\": \"2026-03-15T07:05:00+00:00\",\n    \"duration_seconds\": 300\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"Sync log not found\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Tenant Management",
+            "description": "\nAPI endpoints for managing client stores (tenants)",
+            "item": [
+                {
+                    "name": "Display a listing of the user's tenants.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/tenants",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/tenants"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns all tenants associated with the authenticated user."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"name\": \"My Shopify Store\",\n      \"slug\": \"my-shopify-store\",\n      \"status\": \"active\",\n      \"platform_type\": \"shopify\",\n      \"platform_url\": \"https:\/\/store.myshopify.com\"\n    }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Store a newly created tenant in storage.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/tenants",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/tenants"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"My Client Store\",\"platform_type\":\"shopify\",\"platform_url\":\"https:\\\/\\\/store.myshopify.com\",\"api_credentials\":{\"api_key\":\"api_key_123\",\"api_secret\":\"secret_456\"},\"settings\":[]}"
+                        },
+                        "description": "Creates a new tenant with encrypted API credentials."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"data\": {\n    \"id\": \"uuid\",\n    \"name\": \"My Client Store\",\n    \"slug\": \"my-client-store\",\n    \"status\": \"active\",\n    \"platform_type\": \"shopify\",\n    \"platform_url\": \"https:\/\/store.myshopify.com\"\n  },\n  \"meta\": {\n    \"message\": \"Tenant created successfully\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    {\n      \"field\": \"api_credentials\",\n      \"message\": \"Invalid API credentials\"\n    }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Display the specified tenant.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/tenants\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/tenants\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "consequatur",
+                                    "description": "Tenant UUID"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-Tenant-ID",
+                                "value": "required for tenant-scoped requests"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns detailed information about a specific tenant."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"id\": \"uuid\",\n    \"name\": \"My Client Store\",\n    \"slug\": \"my-client-store\",\n    \"status\": \"active\",\n    \"platform_type\": \"shopify\",\n    \"platform_url\": \"https:\/\/store.myshopify.com\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"Tenant not found\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update the specified tenant in storage.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/tenants\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/tenants\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "consequatur",
+                                    "description": "Tenant UUID"
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "X-Tenant-ID",
+                                "value": "required"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Updated Store Name\",\"status\":\"active\",\"platform_url\":\"http:\\\/\\\/www.kunde.com\\\/\"}"
+                        },
+                        "description": "Updates tenant information. Only provided fields will be updated."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"id\": \"uuid\",\n    \"name\": \"Updated Store Name\",\n    \"slug\": \"my-client-store\",\n    \"status\": \"active\",\n    \"platform_type\": \"shopify\",\n    \"platform_url\": \"https:\/\/store.myshopify.com\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"Tenant not found\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    {\n      \"field\": \"status\",\n      \"message\": \"The selected status is invalid.\"\n    }\n  ]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Remove the specified tenant from storage.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/tenants\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/tenants\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "consequatur",
+                                    "description": "Tenant UUID"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "X-Tenant-ID",
+                                "value": "required"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Permanently deletes the tenant and all associated data."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 204,
+                            "body": "{}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"Tenant not found\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "Authorization",
+                "type": "string"
+            }
+        ]
+    }
+}

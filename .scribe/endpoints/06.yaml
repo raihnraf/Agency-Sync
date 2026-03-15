@@ -1,0 +1,220 @@
+name: Endpoints
+description: ''
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/exports/sync-logs
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      filters:
+        custom: []
+        name: filters
+        description: ''
+        required: false
+        example: null
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      filters.start_date:
+        custom: []
+        name: filters.start_date
+        description: 'Must be a valid date.'
+        required: false
+        example: '2026-03-15T07:39:18'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      filters.end_date:
+        custom: []
+        name: filters.end_date
+        description: 'Must be a valid date.'
+        required: false
+        example: '2026-03-15T07:39:18'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      filters.tenant_id:
+        custom: []
+        name: filters.tenant_id
+        description: 'Must be a valid UUID. The <code>id</code> of an existing record in the tenants table.'
+        required: false
+        example: 66529e01-d113-3473-8d6f-9e11e09332ea
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      filters.status:
+        custom: []
+        name: filters.status
+        description: ''
+        required: false
+        example: partially_failed
+        type: string
+        enumValues:
+          - completed
+          - failed
+          - partially_failed
+          - running
+          - pending
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      format:
+        custom: []
+        name: format
+        description: ''
+        required: true
+        example: csv
+        type: string
+        enumValues:
+          - csv
+          - xlsx
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      filters:
+        start_date: '2026-03-15T07:39:18'
+        end_date: '2026-03-15T07:39:18'
+        tenant_id: 66529e01-d113-3473-8d6f-9e11e09332ea
+        status: partially_failed
+      format: csv
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/exports/products
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      tenant_id:
+        custom: []
+        name: tenant_id
+        description: 'Must be a valid UUID. The <code>id</code> of an existing record in the tenants table.'
+        required: true
+        example: 66529e01-d113-3473-8d6f-9e11e09332ea
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      tenant_id: 66529e01-d113-3473-8d6f-9e11e09332ea
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/exports/{uuid}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      uuid:
+        custom: []
+        name: uuid
+        description: ''
+        required: true
+        example: 66529e01-d113-3473-8d6f-9e11e09332ea
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      uuid: 66529e01-d113-3473-8d6f-9e11e09332ea
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
+    controller: null
+    method: null
+    route: null

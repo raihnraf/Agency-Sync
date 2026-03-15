@@ -1,253 +1,23 @@
-name: 'Index Management'
+name: 'Product Search'
 description: |-
 
-  API endpoints for managing Elasticsearch index operations (async)
+  API endpoints for searching products within tenant catalogs using Elasticsearch
 endpoints:
   -
     custom: []
     httpMethods:
-      - POST
-    uri: 'api/v1/tenants/{tenantId}/reindex'
-    metadata:
-      custom: []
-      groupName: 'Index Management'
-      groupDescription: |-
-
-        API endpoints for managing Elasticsearch index operations (async)
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Start async reindex of all tenant products.'
-      description: "Triggers an asynchronous reindex job for the tenant's product catalog."
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      tenantId:
-        custom: []
-        name: tenantId
-        description: 'Tenant UUID.'
-        required: true
-        example: 123e4567-e89b-12d3-a456-426614174000
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-    cleanUrlParameters:
-      tenantId: 123e4567-e89b-12d3-a456-426614174000
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 202
-        content: |-
-          {
-            "data": {
-              "job_id": "uuid",
-              "status": "pending",
-              "message": "Reindexing started",
-              "tenant_id": "uuid"
-            },
-            "meta": {}
-          }
-        headers: []
-        description: ''
-      -
-        custom: []
-        status: 404
-        content: |-
-          {
-            "message": "Tenant not found or access denied"
-          }
-        headers: []
-        description: ''
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
       - GET
-    uri: 'api/v1/jobs/{jobId}/status'
+    uri: 'api/v1/tenants/{tenantId}/search'
     metadata:
       custom: []
-      groupName: 'Index Management'
+      groupName: 'Product Search'
       groupDescription: |-
 
-        API endpoints for managing Elasticsearch index operations (async)
+        API endpoints for searching products within tenant catalogs using Elasticsearch
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get job status.'
-      description: 'Returns the current status and progress of an index job.'
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      jobId:
-        custom: []
-        name: jobId
-        description: 'Job UUID.'
-        required: true
-        example: 123e4567-e89b-12d3-a456-426614174000
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        deprecated: false
-    cleanUrlParameters:
-      jobId: 123e4567-e89b-12d3-a456-426614174000
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        custom: []
-        status: 200
-        content: |-
-          {
-            "data": {
-              "job_id": "uuid",
-              "status": "running",
-              "job_type": "reindex_tenant_products",
-              "payload": {
-                "tenant_id": "uuid",
-                "tenant_name": "My Store",
-                "requested_by": "uuid"
-              },
-              "error_message": null,
-              "created_at": "2026-03-15T10:00:00Z",
-              "started_at": "2026-03-15T10:00:05Z",
-              "completed_at": null
-            }
-          }
-        headers: []
-        description: ''
-      -
-        custom: []
-        status: 404
-        content: |-
-          {
-            "message": "Job not found"
-          }
-        headers: []
-        description: ''
-    responseFields:
-      data.job_id:
-        custom: []
-        name: data.job_id
-        description: 'Job UUID'
-        required: false
-        example: null
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      data.status:
-        custom: []
-        name: data.status
-        description: 'Job status (pending, running, completed, failed)'
-        required: false
-        example: null
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      data.job_type:
-        custom: []
-        name: data.job_type
-        description: 'Job type identifier'
-        required: false
-        example: null
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      data.progress:
-        custom: []
-        name: data.progress
-        description: 'Progress percentage (0-100)'
-        required: false
-        example: null
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      data.started_at:
-        custom: []
-        name: data.started_at
-        description: 'timestamp Job start time'
-        required: false
-        example: null
-        type: ''
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      data.completed_at:
-        custom: []
-        name: data.completed_at
-        description: 'timestamp Job completion time'
-        required: false
-        example: null
-        type: ''
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      data.error_message:
-        custom: []
-        name: data.error_message
-        description: 'Error message (null if success)'
-        required: false
-        example: null
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - GET
-    uri: 'api/v1/tenants/{tenantId}/jobs'
-    metadata:
-      custom: []
-      groupName: 'Index Management'
-      groupDescription: |-
-
-        API endpoints for managing Elasticsearch index operations (async)
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'List recent jobs for a tenant.'
-      description: 'Returns a list of recent index operations for the specified tenant.'
+      title: "Search products within a tenant's catalog."
+      description: 'Performs full-text search with fuzzy matching and pagination.'
       authenticated: true
       deprecated: false
     headers:
@@ -269,12 +39,12 @@ endpoints:
     cleanUrlParameters:
       tenantId: 123e4567-e89b-12d3-a456-426614174000
     queryParameters:
-      status:
+      query:
         custom: []
-        name: status
-        description: 'optional Filter by status (pending, running, completed, failed).'
-        required: false
-        example: completed
+        name: query
+        description: 'Search query.'
+        required: true
+        example: 'blue shoes'
         type: string
         enumValues: []
         exampleWasSpecified: true
@@ -291,9 +61,33 @@ endpoints:
         exampleWasSpecified: true
         nullable: false
         deprecated: false
+      per_page:
+        custom: []
+        name: per_page
+        description: 'Results per page (default: 20, max: 100).'
+        required: false
+        example: 20
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      filters:
+        custom: []
+        name: filters
+        description: 'optional JSON filters (stock_status, price_range).'
+        required: false
+        example: '{"stock_status":"in_stock"}'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
     cleanQueryParameters:
-      status: completed
+      query: 'blue shoes'
       page: 1
+      per_page: 20
+      filters: '{"stock_status":"in_stock"}'
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
@@ -303,16 +97,20 @@ endpoints:
         status: 200
         content: |-
           {
-            "data": {
-              "jobs": [
-                {
-                  "job_id": "uuid",
-                  "status": "completed",
-                  "job_type": "reindex_tenant_products",
-                  "created_at": "2026-03-15T10:00:00Z",
-                  "completed_at": "2026-03-15T10:05:00Z"
-                }
-              ]
+            "data": [
+              {
+                "id": "uuid",
+                "name": "Blue Running Shoes",
+                "price": 89.99,
+                "stock_status": "in_stock"
+              }
+            ],
+            "meta": {
+              "pagination": {
+                "total": 150,
+                "per_page": 20,
+                "current_page": 1
+              }
             }
           }
         headers: []
@@ -327,10 +125,10 @@ endpoints:
         headers: []
         description: ''
     responseFields:
-      'data.jobs{0}.job_id':
+      'data{0}.id':
         custom: []
-        name: 'data.jobs{0}.job_id'
-        description: 'Job UUID'
+        name: 'data{0}.id'
+        description: 'Product UUID'
         required: false
         example: null
         type: string
@@ -338,10 +136,10 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
-      'data.jobs{0}.status':
+      'data{0}.name':
         custom: []
-        name: 'data.jobs{0}.status'
-        description: 'Job status'
+        name: 'data{0}.name'
+        description: 'Product name'
         required: false
         example: null
         type: string
@@ -349,10 +147,21 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
-      'data.jobs{0}.job_type':
+      'data{0}.price':
         custom: []
-        name: 'data.jobs{0}.job_type'
-        description: 'Job type'
+        name: 'data{0}.price'
+        description: 'Product price'
+        required: false
+        example: null
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data{0}.stock_status':
+        custom: []
+        name: 'data{0}.stock_status'
+        description: 'Stock status (in_stock, low_stock, out_of_stock)'
         required: false
         example: null
         type: string
@@ -360,10 +169,147 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
-      'data.jobs{0}.created_at':
+      meta.pagination.total:
         custom: []
-        name: 'data.jobs{0}.created_at'
-        description: 'timestamp Job creation time'
+        name: meta.pagination.total
+        description: 'Total results'
+        required: false
+        example: null
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      meta.pagination.per_page:
+        custom: []
+        name: meta.pagination.per_page
+        description: 'Results per page'
+        required: false
+        example: null
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      meta.pagination.current_page:
+        custom: []
+        name: meta.pagination.current_page
+        description: 'Current page'
+        required: false
+        example: null
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/tenants/{tenantId}/search/status'
+    metadata:
+      custom: []
+      groupName: 'Product Search'
+      groupDescription: |-
+
+        API endpoints for searching products within tenant catalogs using Elasticsearch
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get search index status for a tenant.'
+      description: 'Returns information about the Elasticsearch index status.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      tenantId:
+        custom: []
+        name: tenantId
+        description: 'Tenant UUID.'
+        required: true
+        example: 123e4567-e89b-12d3-a456-426614174000
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      tenantId: 123e4567-e89b-12d3-a456-426614174000
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": {
+              "index_exists": true,
+              "index_name": "tenant_uuid_products",
+              "tenant_id": "uuid"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Tenant not found or access denied"
+          }
+        headers: []
+        description: ''
+    responseFields:
+      data.index_exists:
+        custom: []
+        name: data.index_exists
+        description: 'Whether index exists'
+        required: false
+        example: null
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.index_name:
+        custom: []
+        name: data.index_name
+        description: 'Elasticsearch index name'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.documents_count:
+        custom: []
+        name: data.documents_count
+        description: 'Number of indexed products'
+        required: false
+        example: null
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.last_updated:
+        custom: []
+        name: data.last_updated
+        description: 'timestamp Last index update time'
         required: false
         example: null
         type: ''
@@ -371,17 +317,85 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         deprecated: false
-      'data.jobs{0}.completed_at':
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/v1/tenants/{tenantId}/search/reindex'
+    metadata:
+      custom: []
+      groupName: 'Product Search'
+      groupDescription: |-
+
+        API endpoints for searching products within tenant catalogs using Elasticsearch
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Reindex all products for a tenant.'
+      description: 'Rebuilds the Elasticsearch search index for all tenant products.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      tenantId:
         custom: []
-        name: 'data.jobs{0}.completed_at'
-        description: 'timestamp Job completion time'
-        required: false
-        example: null
-        type: ''
+        name: tenantId
+        description: 'Tenant UUID.'
+        required: true
+        example: 123e4567-e89b-12d3-a456-426614174000
+        type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
+    cleanUrlParameters:
+      tenantId: 123e4567-e89b-12d3-a456-426614174000
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": {
+              "message": "Reindex completed successfully",
+              "tenant_id": "uuid"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Tenant not found or access denied"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 500
+        content: |-
+          {
+            "message": "Reindex failed: connection timeout"
+          }
+        headers: []
+        description: ''
+    responseFields: []
     auth:
       - headers
       - Authorization

@@ -1,0 +1,1689 @@
+openapi: 3.0.3
+info:
+  title: 'Laravel API Documentation'
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost'
+tags:
+  -
+    name: Authentication
+    description: "\nAPI endpoints for user authentication and token management"
+  -
+    name: 'Catalog Synchronization'
+    description: "\nAPI endpoints for triggering and monitoring product catalog synchronization"
+  -
+    name: Endpoints
+    description: ''
+  -
+    name: 'Index Management'
+    description: "\nAPI endpoints for managing Elasticsearch index operations (async)"
+  -
+    name: 'Product Search'
+    description: "\nAPI endpoints for searching products within tenant catalogs using Elasticsearch"
+  -
+    name: 'Sync Logs'
+    description: "\nAPI endpoints for accessing detailed sync log information"
+  -
+    name: 'Tenant Management'
+    description: "\nAPI endpoints for managing client stores (tenants)"
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'Most endpoints require authentication using a Laravel Sanctum Bearer token. Use the login endpoint to obtain your token.'
+security:
+  -
+    default: []
+paths:
+  /api/v1/register:
+    post:
+      summary: 'Register a new user.'
+      operationId: registerANewUser
+      description: 'Creates a new user account and returns an authentication token.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    user:
+                      id: uuid
+                      name: 'John Doe'
+                      email: john@example.com
+                    token: plainTextTokenHere
+                  meta:
+                    expires_at: '2026-03-15T12:00:00Z'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: uuid
+                          name:
+                            type: string
+                            example: 'John Doe'
+                          email:
+                            type: string
+                            example: john@example.com
+                      token:
+                        type: string
+                        example: plainTextTokenHere
+                  meta:
+                    type: object
+                    properties:
+                      expires_at:
+                        type: string
+                        example: '2026-03-15T12:00:00Z'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    -
+                      field: email
+                      message: 'The email has already been taken.'
+                properties:
+                  errors:
+                    type: array
+                    example:
+                      -
+                        field: email
+                        message: 'The email has already been taken.'
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: email
+                        message:
+                          type: string
+                          example: 'The email has already been taken.'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: "The user's full name."
+                  example: 'John Doe'
+                email:
+                  type: string
+                  description: "The user's email address."
+                  example: john@example.com
+                password:
+                  type: string
+                  description: "The user's password (min 8 characters)."
+                  example: secret123
+              required:
+                - name
+                - email
+                - password
+  /api/v1/login:
+    post:
+      summary: 'Login user and return token.'
+      operationId: loginUserAndReturnToken
+      description: 'Authenticates user credentials and returns a Sanctum token.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    user:
+                      id: uuid
+                      name: 'John Doe'
+                      email: john@example.com
+                    token: plainTextTokenHere
+                  meta:
+                    expires_at: '2026-03-15T12:00:00Z'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: uuid
+                          name:
+                            type: string
+                            example: 'John Doe'
+                          email:
+                            type: string
+                            example: john@example.com
+                      token:
+                        type: string
+                        example: plainTextTokenHere
+                  meta:
+                    type: object
+                    properties:
+                      expires_at:
+                        type: string
+                        example: '2026-03-15T12:00:00Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    -
+                      field: email
+                      message: 'Invalid credentials'
+                properties:
+                  errors:
+                    type: array
+                    example:
+                      -
+                        field: email
+                        message: 'Invalid credentials'
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: email
+                        message:
+                          type: string
+                          example: 'Invalid credentials'
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: "The user's email address."
+                  example: john@example.com
+                password:
+                  type: string
+                  description: "The user's password."
+                  example: secret123
+              required:
+                - email
+                - password
+  /api/v1/logout:
+    post:
+      summary: 'Logout user and invalidate current token.'
+      operationId: logoutUserAndInvalidateCurrentToken
+      description: 'Invalidates the authentication token used for this request.'
+      parameters: []
+      responses:
+        204:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {  }
+                properties: {  }
+      tags:
+        - Authentication
+  /api/v1/me:
+    get:
+      summary: 'Get authenticated user details.'
+      operationId: getAuthenticatedUserDetails
+      description: "Returns the currently authenticated user's information."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    user:
+                      id: uuid
+                      name: 'John Doe'
+                      email: john@example.com
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: uuid
+                            description: 'User UUID'
+                          name:
+                            type: string
+                            example: 'John Doe'
+                            description: "User's full name"
+                          email:
+                            type: string
+                            example: john@example.com
+                            description: "User's email address"
+      tags:
+        - Authentication
+  /api/v1/sync/dispatch:
+    post:
+      summary: 'Dispatch a sync job for the given tenant.'
+      operationId: dispatchASyncJobForTheGivenTenant
+      description: 'Triggers an asynchronous sync job for the specified tenant.'
+      parameters: []
+      responses:
+        202:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    job_id: uuid
+                    status: pending
+                    message: 'Sync job dispatched successfully'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      job_id:
+                        type: string
+                        example: uuid
+                      status:
+                        type: string
+                        example: pending
+                      message:
+                        type: string
+                        example: 'Sync job dispatched successfully'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Validation failed'
+                  errors:
+                    tenant_id:
+                      - 'The tenant id field is required.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  errors:
+                    type: object
+                    properties:
+                      tenant_id:
+                        type: array
+                        example:
+                          - 'The tenant id field is required.'
+                        items:
+                          type: string
+      tags:
+        - 'Catalog Synchronization'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tenant_id:
+                  type: string
+                  description: 'Tenant UUID to sync.'
+                  example: 123e4567-e89b-12d3-a456-426614174000
+                data:
+                  type: array
+                  description: 'optional Additional sync data'
+                  example:
+                    - consequatur
+                  items:
+                    type: string
+                    nullable: true
+              required:
+                - tenant_id
+  '/api/v1/sync/status/{syncLogId}':
+    get:
+      summary: 'Get the status of a sync operation.'
+      operationId: getTheStatusOfASyncOperation
+      description: 'Returns the current status of a sync job including progress and error details.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    job_id: uuid
+                    status: running
+                    progress: 45
+                    products_indexed: 234
+                    started_at: '2026-03-15T10:00:00Z'
+                    completed_at: null
+                    error_message: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      job_id:
+                        type: string
+                        example: uuid
+                        description: 'Job UUID'
+                      status:
+                        type: string
+                        example: running
+                        description: 'Job status (pending, running, completed, failed)'
+                      progress:
+                        type: integer
+                        example: 45
+                        description: 'Progress percentage (0-100)'
+                      products_indexed:
+                        type: integer
+                        example: 234
+                        description: 'Number of products processed'
+                      started_at:
+                        type: string
+                        example: '2026-03-15T10:00:00Z'
+                        description: 'timestamp Job start time'
+                      completed_at:
+                        type: string
+                        example: null
+                        description: 'timestamp Job completion time (null if running)'
+                      error_message:
+                        type: string
+                        example: null
+                        description: 'Error message (null if success)'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Sync log not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Sync log not found'
+      tags:
+        - 'Catalog Synchronization'
+    parameters:
+      -
+        in: path
+        name: syncLogId
+        description: 'Sync log UUID.'
+        example: 123e4567-e89b-12d3-a456-426614174000
+        required: true
+        schema:
+          type: string
+  /api/v1/sync/history:
+    get:
+      summary: 'Get sync history with pagination and filtering.'
+      operationId: getSyncHistoryWithPaginationAndFiltering
+      description: 'Returns paginated list of sync operations for the current tenant.'
+      parameters:
+        -
+          in: query
+          name: status
+          description: 'optional Filter by status (pending, running, completed, failed, partially_failed).'
+          example: completed
+          required: false
+          schema:
+            type: string
+            description: 'optional Filter by status (pending, running, completed, failed, partially_failed).'
+            example: completed
+            nullable: true
+        -
+          in: query
+          name: per_page
+          description: 'Items per page (default: 20, max: 100).'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Items per page (default: 20, max: 100).'
+            example: 20
+            nullable: true
+        -
+          in: query
+          name: page
+          description: 'Page number (default: 1).'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number (default: 1).'
+            example: 1
+            nullable: true
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: uuid
+                      status: completed
+                      products_indexed: 1500
+                      started_at: '2026-03-15T10:00:00Z'
+                      completed_at: '2026-03-15T10:05:00Z'
+                  meta:
+                    total: 45
+                    per_page: 20
+                    current_page: 1
+                    last_page: 3
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: uuid
+                        status: completed
+                        products_indexed: 1500
+                        started_at: '2026-03-15T10:00:00Z'
+                        completed_at: '2026-03-15T10:05:00Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: uuid
+                        status:
+                          type: string
+                          example: completed
+                        products_indexed:
+                          type: integer
+                          example: 1500
+                        started_at:
+                          type: string
+                          example: '2026-03-15T10:00:00Z'
+                        completed_at:
+                          type: string
+                          example: '2026-03-15T10:05:00Z'
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        example: 45
+                      per_page:
+                        type: integer
+                        example: 20
+                      current_page:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 3
+      tags:
+        - 'Catalog Synchronization'
+  /api/v1/exports/sync-logs:
+    post:
+      summary: ''
+      operationId: postApiV1ExportsSyncLogs
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filters:
+                  type: object
+                  description: ''
+                  example: null
+                  properties:
+                    start_date:
+                      type: string
+                      description: 'Must be a valid date.'
+                      example: '2026-03-15T07:39:18'
+                    end_date:
+                      type: string
+                      description: 'Must be a valid date.'
+                      example: '2026-03-15T07:39:18'
+                    tenant_id:
+                      type: string
+                      description: 'Must be a valid UUID. The <code>id</code> of an existing record in the tenants table.'
+                      example: 66529e01-d113-3473-8d6f-9e11e09332ea
+                    status:
+                      type: string
+                      description: ''
+                      example: partially_failed
+                      enum:
+                        - completed
+                        - failed
+                        - partially_failed
+                        - running
+                        - pending
+                format:
+                  type: string
+                  description: ''
+                  example: csv
+                  enum:
+                    - csv
+                    - xlsx
+              required:
+                - format
+  /api/v1/exports/products:
+    post:
+      summary: ''
+      operationId: postApiV1ExportsProducts
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tenant_id:
+                  type: string
+                  description: 'Must be a valid UUID. The <code>id</code> of an existing record in the tenants table.'
+                  example: 66529e01-d113-3473-8d6f-9e11e09332ea
+              required:
+                - tenant_id
+  '/api/v1/exports/{uuid}':
+    get:
+      summary: ''
+      operationId: getApiV1ExportsUuid
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: uuid
+        description: ''
+        example: 66529e01-d113-3473-8d6f-9e11e09332ea
+        required: true
+        schema:
+          type: string
+  '/api/v1/tenants/{tenantId}/reindex':
+    post:
+      summary: 'Start async reindex of all tenant products.'
+      operationId: startAsyncReindexOfAllTenantProducts
+      description: "Triggers an asynchronous reindex job for the tenant's product catalog."
+      parameters: []
+      responses:
+        202:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    job_id: uuid
+                    status: pending
+                    message: 'Reindexing started'
+                    tenant_id: uuid
+                  meta: {  }
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      job_id:
+                        type: string
+                        example: uuid
+                      status:
+                        type: string
+                        example: pending
+                      message:
+                        type: string
+                        example: 'Reindexing started'
+                      tenant_id:
+                        type: string
+                        example: uuid
+                  meta:
+                    type: object
+                    properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Tenant not found or access denied'
+                properties:
+                  message:
+                    type: string
+                    example: 'Tenant not found or access denied'
+      tags:
+        - 'Index Management'
+    parameters:
+      -
+        in: path
+        name: tenantId
+        description: 'Tenant UUID.'
+        example: 123e4567-e89b-12d3-a456-426614174000
+        required: true
+        schema:
+          type: string
+  '/api/v1/jobs/{jobId}/status':
+    get:
+      summary: 'Get job status.'
+      operationId: getJobStatus
+      description: 'Returns the current status and progress of an index job.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    job_id: uuid
+                    status: running
+                    job_type: reindex_tenant_products
+                    payload:
+                      tenant_id: uuid
+                      tenant_name: 'My Store'
+                      requested_by: uuid
+                    error_message: null
+                    created_at: '2026-03-15T10:00:00Z'
+                    started_at: '2026-03-15T10:00:05Z'
+                    completed_at: null
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      job_id:
+                        type: string
+                        example: uuid
+                        description: 'Job UUID'
+                      status:
+                        type: string
+                        example: running
+                        description: 'Job status (pending, running, completed, failed)'
+                      job_type:
+                        type: string
+                        example: reindex_tenant_products
+                        description: 'Job type identifier'
+                      payload:
+                        type: object
+                        properties:
+                          tenant_id:
+                            type: string
+                            example: uuid
+                          tenant_name:
+                            type: string
+                            example: 'My Store'
+                          requested_by:
+                            type: string
+                            example: uuid
+                      error_message:
+                        type: string
+                        example: null
+                        description: 'Error message (null if success)'
+                      created_at:
+                        type: string
+                        example: '2026-03-15T10:00:00Z'
+                      started_at:
+                        type: string
+                        example: '2026-03-15T10:00:05Z'
+                        description: 'timestamp Job start time'
+                      completed_at:
+                        type: string
+                        example: null
+                        description: 'timestamp Job completion time'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Job not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Job not found'
+      tags:
+        - 'Index Management'
+    parameters:
+      -
+        in: path
+        name: jobId
+        description: 'Job UUID.'
+        example: 123e4567-e89b-12d3-a456-426614174000
+        required: true
+        schema:
+          type: string
+  '/api/v1/tenants/{tenantId}/jobs':
+    get:
+      summary: 'List recent jobs for a tenant.'
+      operationId: listRecentJobsForATenant
+      description: 'Returns a list of recent index operations for the specified tenant.'
+      parameters:
+        -
+          in: query
+          name: status
+          description: 'optional Filter by status (pending, running, completed, failed).'
+          example: completed
+          required: false
+          schema:
+            type: string
+            description: 'optional Filter by status (pending, running, completed, failed).'
+            example: completed
+        -
+          in: query
+          name: page
+          description: 'Page number (default: 1).'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number (default: 1).'
+            example: 1
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    jobs:
+                      -
+                        job_id: uuid
+                        status: completed
+                        job_type: reindex_tenant_products
+                        created_at: '2026-03-15T10:00:00Z'
+                        completed_at: '2026-03-15T10:05:00Z'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      jobs:
+                        type: array
+                        example:
+                          -
+                            job_id: uuid
+                            status: completed
+                            job_type: reindex_tenant_products
+                            created_at: '2026-03-15T10:00:00Z'
+                            completed_at: '2026-03-15T10:05:00Z'
+                        items:
+                          type: object
+                          properties:
+                            job_id:
+                              type: string
+                              example: uuid
+                            status:
+                              type: string
+                              example: completed
+                            job_type:
+                              type: string
+                              example: reindex_tenant_products
+                            created_at:
+                              type: string
+                              example: '2026-03-15T10:00:00Z'
+                            completed_at:
+                              type: string
+                              example: '2026-03-15T10:05:00Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Tenant not found or access denied'
+                properties:
+                  message:
+                    type: string
+                    example: 'Tenant not found or access denied'
+      tags:
+        - 'Index Management'
+    parameters:
+      -
+        in: path
+        name: tenantId
+        description: 'Tenant UUID.'
+        example: 123e4567-e89b-12d3-a456-426614174000
+        required: true
+        schema:
+          type: string
+  '/api/v1/tenants/{tenantId}/search':
+    get:
+      summary: "Search products within a tenant's catalog."
+      operationId: searchProductsWithinATenantsCatalog
+      description: 'Performs full-text search with fuzzy matching and pagination.'
+      parameters:
+        -
+          in: query
+          name: query
+          description: 'Search query.'
+          example: 'blue shoes'
+          required: true
+          schema:
+            type: string
+            description: 'Search query.'
+            example: 'blue shoes'
+        -
+          in: query
+          name: page
+          description: 'Page number (default: 1).'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number (default: 1).'
+            example: 1
+        -
+          in: query
+          name: per_page
+          description: 'Results per page (default: 20, max: 100).'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Results per page (default: 20, max: 100).'
+            example: 20
+        -
+          in: query
+          name: filters
+          description: 'optional JSON filters (stock_status, price_range).'
+          example: '{"stock_status":"in_stock"}'
+          required: false
+          schema:
+            type: string
+            description: 'optional JSON filters (stock_status, price_range).'
+            example: '{"stock_status":"in_stock"}'
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: uuid
+                      name: 'Blue Running Shoes'
+                      price: 89.99
+                      stock_status: in_stock
+                  meta:
+                    pagination:
+                      total: 150
+                      per_page: 20
+                      current_page: 1
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: uuid
+                        name: 'Blue Running Shoes'
+                        price: 89.99
+                        stock_status: in_stock
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: uuid
+                        name:
+                          type: string
+                          example: 'Blue Running Shoes'
+                        price:
+                          type: number
+                          example: 89.99
+                        stock_status:
+                          type: string
+                          example: in_stock
+                  meta:
+                    type: object
+                    properties:
+                      pagination:
+                        type: object
+                        properties:
+                          total:
+                            type: integer
+                            example: 150
+                            description: 'Total results'
+                          per_page:
+                            type: integer
+                            example: 20
+                            description: 'Results per page'
+                          current_page:
+                            type: integer
+                            example: 1
+                            description: 'Current page'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Tenant not found or access denied'
+                properties:
+                  message:
+                    type: string
+                    example: 'Tenant not found or access denied'
+      tags:
+        - 'Product Search'
+    parameters:
+      -
+        in: path
+        name: tenantId
+        description: 'Tenant UUID.'
+        example: 123e4567-e89b-12d3-a456-426614174000
+        required: true
+        schema:
+          type: string
+  '/api/v1/tenants/{tenantId}/search/status':
+    get:
+      summary: 'Get search index status for a tenant.'
+      operationId: getSearchIndexStatusForATenant
+      description: 'Returns information about the Elasticsearch index status.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    index_exists: true
+                    index_name: tenant_uuid_products
+                    tenant_id: uuid
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      index_exists:
+                        type: boolean
+                        example: true
+                        description: 'Whether index exists'
+                      index_name:
+                        type: string
+                        example: tenant_uuid_products
+                        description: 'Elasticsearch index name'
+                      tenant_id:
+                        type: string
+                        example: uuid
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Tenant not found or access denied'
+                properties:
+                  message:
+                    type: string
+                    example: 'Tenant not found or access denied'
+      tags:
+        - 'Product Search'
+    parameters:
+      -
+        in: path
+        name: tenantId
+        description: 'Tenant UUID.'
+        example: 123e4567-e89b-12d3-a456-426614174000
+        required: true
+        schema:
+          type: string
+  '/api/v1/tenants/{tenantId}/search/reindex':
+    post:
+      summary: 'Reindex all products for a tenant.'
+      operationId: reindexAllProductsForATenant
+      description: 'Rebuilds the Elasticsearch search index for all tenant products.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    message: 'Reindex completed successfully'
+                    tenant_id: uuid
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: 'Reindex completed successfully'
+                      tenant_id:
+                        type: string
+                        example: uuid
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Tenant not found or access denied'
+                properties:
+                  message:
+                    type: string
+                    example: 'Tenant not found or access denied'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Reindex failed: connection timeout'
+                properties:
+                  message:
+                    type: string
+                    example: 'Reindex failed: connection timeout'
+      tags:
+        - 'Product Search'
+    parameters:
+      -
+        in: path
+        name: tenantId
+        description: 'Tenant UUID.'
+        example: 123e4567-e89b-12d3-a456-426614174000
+        required: true
+        schema:
+          type: string
+  '/api/v1/sync-logs/{id}/details':
+    get:
+      summary: 'Display detailed sync log information.'
+      operationId: displayDetailedSyncLogInformation
+      description: "Returns comprehensive details including error payloads, stack traces,\nproducts summary, and timing information."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: uuid
+                    tenant_id: tenant-uuid
+                    platform_type: shopify
+                    status: completed
+                    error_message: null
+                    metadata: {  }
+                    error_details: null
+                    tenant:
+                      id: tenant-uuid
+                      name: 'My Store'
+                      platform_type: shopify
+                    products_summary:
+                      total: 100
+                      processed: 95
+                      failed: 5
+                      indexed: 90
+                    started_at: '2026-03-15T07:00:00+00:00'
+                    completed_at: '2026-03-15T07:05:00+00:00'
+                    duration_seconds: 300
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: uuid
+                        description: 'Sync log UUID'
+                      tenant_id:
+                        type: string
+                        example: tenant-uuid
+                        description: 'Tenant UUID'
+                      platform_type:
+                        type: string
+                        example: shopify
+                        description: 'Platform (shopify, shopware)'
+                      status:
+                        type: string
+                        example: completed
+                        description: 'Sync status'
+                      error_message:
+                        type: string
+                        example: null
+                        description: 'Error message if failed'
+                      metadata:
+                        type: object
+                        properties: {  }
+                        description: 'Full metadata JSON'
+                      error_details:
+                        type: string
+                        example: null
+                        description: 'Extracted error details from metadata'
+                      tenant:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: tenant-uuid
+                          name:
+                            type: string
+                            example: 'My Store'
+                          platform_type:
+                            type: string
+                            example: shopify
+                        description: 'Tenant information (id, name, platform_type)'
+                      products_summary:
+                        type: object
+                        properties:
+                          total:
+                            type: integer
+                            example: 100
+                          processed:
+                            type: integer
+                            example: 95
+                          failed:
+                            type: integer
+                            example: 5
+                          indexed:
+                            type: integer
+                            example: 90
+                        description: 'Product counts (total, processed, failed, indexed)'
+                      started_at:
+                        type: string
+                        example: '2026-03-15T07:00:00+00:00'
+                        description: 'ISO8601 start timestamp'
+                      completed_at:
+                        type: string
+                        example: '2026-03-15T07:05:00+00:00'
+                        description: 'ISO8601 completion timestamp'
+                      duration_seconds:
+                        type: integer
+                        example: 300
+                        description: 'Duration in seconds'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Sync log not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Sync log not found'
+      tags:
+        - 'Sync Logs'
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'Sync Log UUID'
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  /api/v1/tenants:
+    get:
+      summary: "Display a listing of the user's tenants."
+      operationId: displayAListingOfTheUsersTenants
+      description: 'Returns all tenants associated with the authenticated user.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      id: uuid
+                      name: 'My Shopify Store'
+                      slug: my-shopify-store
+                      status: active
+                      platform_type: shopify
+                      platform_url: 'https://store.myshopify.com'
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: uuid
+                        name: 'My Shopify Store'
+                        slug: my-shopify-store
+                        status: active
+                        platform_type: shopify
+                        platform_url: 'https://store.myshopify.com'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: uuid
+                        name:
+                          type: string
+                          example: 'My Shopify Store'
+                        slug:
+                          type: string
+                          example: my-shopify-store
+                        status:
+                          type: string
+                          example: active
+                        platform_type:
+                          type: string
+                          example: shopify
+                        platform_url:
+                          type: string
+                          example: 'https://store.myshopify.com'
+      tags:
+        - 'Tenant Management'
+    post:
+      summary: 'Store a newly created tenant in storage.'
+      operationId: storeANewlyCreatedTenantInStorage
+      description: 'Creates a new tenant with encrypted API credentials.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: uuid
+                    name: 'My Client Store'
+                    slug: my-client-store
+                    status: active
+                    platform_type: shopify
+                    platform_url: 'https://store.myshopify.com'
+                  meta:
+                    message: 'Tenant created successfully'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: uuid
+                      name:
+                        type: string
+                        example: 'My Client Store'
+                      slug:
+                        type: string
+                        example: my-client-store
+                      status:
+                        type: string
+                        example: active
+                      platform_type:
+                        type: string
+                        example: shopify
+                      platform_url:
+                        type: string
+                        example: 'https://store.myshopify.com'
+                  meta:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: 'Tenant created successfully'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    -
+                      field: api_credentials
+                      message: 'Invalid API credentials'
+                properties:
+                  errors:
+                    type: array
+                    example:
+                      -
+                        field: api_credentials
+                        message: 'Invalid API credentials'
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: api_credentials
+                        message:
+                          type: string
+                          example: 'Invalid API credentials'
+      tags:
+        - 'Tenant Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Tenant name.'
+                  example: 'My Client Store'
+                platform_type:
+                  type: string
+                  description: 'Platform (shopify, shopware).'
+                  example: shopify
+                platform_url:
+                  type: string
+                  description: 'Platform base URL.'
+                  example: 'https://store.myshopify.com'
+                api_credentials:
+                  type: object
+                  description: 'API credentials object'
+                  example: []
+                  properties:
+                    api_key:
+                      type: string
+                      description: 'API key.'
+                      example: api_key_123
+                    api_secret:
+                      type: string
+                      description: 'API secret.'
+                      example: secret_456
+                  required:
+                    - api_key
+                    - api_secret
+                settings:
+                  type: object
+                  description: 'optional Additional settings'
+                  example: []
+                  properties: {  }
+              required:
+                - name
+                - platform_type
+                - platform_url
+                - api_credentials
+  '/api/v1/tenants/{id}':
+    get:
+      summary: 'Display the specified tenant.'
+      operationId: displayTheSpecifiedTenant
+      description: 'Returns detailed information about a specific tenant.'
+      parameters:
+        -
+          in: header
+          name: X-Tenant-ID
+          description: ''
+          example: 'required for tenant-scoped requests'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: uuid
+                    name: 'My Client Store'
+                    slug: my-client-store
+                    status: active
+                    platform_type: shopify
+                    platform_url: 'https://store.myshopify.com'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: uuid
+                        description: 'Tenant UUID'
+                      name:
+                        type: string
+                        example: 'My Client Store'
+                        description: 'Tenant name'
+                      slug:
+                        type: string
+                        example: my-client-store
+                        description: 'URL-friendly identifier'
+                      status:
+                        type: string
+                        example: active
+                        description: 'Tenant status'
+                      platform_type:
+                        type: string
+                        example: shopify
+                        description: 'Platform type'
+                      platform_url:
+                        type: string
+                        example: 'https://store.myshopify.com'
+                        description: 'Platform base URL'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Tenant not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Tenant not found'
+      tags:
+        - 'Tenant Management'
+    put:
+      summary: 'Update the specified tenant in storage.'
+      operationId: updateTheSpecifiedTenantInStorage
+      description: 'Updates tenant information. Only provided fields will be updated.'
+      parameters:
+        -
+          in: header
+          name: X-Tenant-ID
+          description: ''
+          example: required
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    id: uuid
+                    name: 'Updated Store Name'
+                    slug: my-client-store
+                    status: active
+                    platform_type: shopify
+                    platform_url: 'https://store.myshopify.com'
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: uuid
+                      name:
+                        type: string
+                        example: 'Updated Store Name'
+                      slug:
+                        type: string
+                        example: my-client-store
+                      status:
+                        type: string
+                        example: active
+                      platform_type:
+                        type: string
+                        example: shopify
+                      platform_url:
+                        type: string
+                        example: 'https://store.myshopify.com'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Tenant not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Tenant not found'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    -
+                      field: status
+                      message: 'The selected status is invalid.'
+                properties:
+                  errors:
+                    type: array
+                    example:
+                      -
+                        field: status
+                        message: 'The selected status is invalid.'
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                          example: status
+                        message:
+                          type: string
+                          example: 'The selected status is invalid.'
+      tags:
+        - 'Tenant Management'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'optional Updated tenant name.'
+                  example: 'Updated Store Name'
+                status:
+                  type: string
+                  description: 'optional Updated status (active, pending, error).'
+                  example: active
+                platform_url:
+                  type: string
+                  description: 'Must be a valid URL. Must not be greater than 500 characters.'
+                  example: 'http://www.kunde.com/'
+                settings:
+                  type: object
+                  description: ''
+                  example: null
+                  properties: {  }
+    delete:
+      summary: 'Remove the specified tenant from storage.'
+      operationId: removeTheSpecifiedTenantFromStorage
+      description: 'Permanently deletes the tenant and all associated data.'
+      parameters:
+        -
+          in: header
+          name: X-Tenant-ID
+          description: ''
+          example: required
+          schema:
+            type: string
+      responses:
+        204:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {  }
+                properties: {  }
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Tenant not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'Tenant not found'
+      tags:
+        - 'Tenant Management'
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'Tenant UUID'
+        example: consequatur
+        required: true
+        schema:
+          type: string

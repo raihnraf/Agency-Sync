@@ -1,159 +1,73 @@
-name: Endpoints
-description: ''
+name: 'Index Management'
+description: |-
+
+  API endpoints for managing Elasticsearch index operations (async)
 endpoints:
   -
     custom: []
     httpMethods:
       - POST
-    uri: api/v1/exports/sync-logs
+    uri: 'api/v1/tenants/{tenantId}/reindex'
     metadata:
       custom: []
-      groupName: Endpoints
-      groupDescription: ''
+      groupName: 'Index Management'
+      groupDescription: |-
+
+        API endpoints for managing Elasticsearch index operations (async)
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'Start async reindex of all tenant products.'
+      description: "Triggers an asynchronous reindex job for the tenant's product catalog."
       authenticated: true
       deprecated: false
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
+    urlParameters:
+      tenantId:
+        custom: []
+        name: tenantId
+        description: 'Tenant UUID.'
+        required: true
+        example: 123e4567-e89b-12d3-a456-426614174000
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      tenantId: 123e4567-e89b-12d3-a456-426614174000
     queryParameters: []
     cleanQueryParameters: []
-    bodyParameters:
-      filters:
-        custom: []
-        name: filters
-        description: ''
-        required: false
-        example: null
-        type: object
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      filters.start_date:
-        custom: []
-        name: filters.start_date
-        description: 'Must be a valid date.'
-        required: false
-        example: '2026-03-14T21:42:15'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      filters.end_date:
-        custom: []
-        name: filters.end_date
-        description: 'Must be a valid date.'
-        required: false
-        example: '2026-03-14T21:42:15'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      filters.tenant_id:
-        custom: []
-        name: filters.tenant_id
-        description: 'Must be a valid UUID. The <code>id</code> of an existing record in the tenants table.'
-        required: false
-        example: 66529e01-d113-3473-8d6f-9e11e09332ea
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      filters.status:
-        custom: []
-        name: filters.status
-        description: ''
-        required: false
-        example: running
-        type: string
-        enumValues:
-          - completed
-          - failed
-          - partially_failed
-          - running
-          - pending
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      format:
-        custom: []
-        name: format
-        description: ''
-        required: true
-        example: xlsx
-        type: string
-        enumValues:
-          - csv
-          - xlsx
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    cleanBodyParameters:
-      filters:
-        start_date: '2026-03-14T21:42:15'
-        end_date: '2026-03-14T21:42:15'
-        tenant_id: 66529e01-d113-3473-8d6f-9e11e09332ea
-        status: running
-      format: xlsx
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
-    responses: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
-    controller: null
-    method: null
-    route: null
-  -
-    custom: []
-    httpMethods:
-      - POST
-    uri: api/v1/exports/products
-    metadata:
-      custom: []
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: true
-      deprecated: false
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      tenant_id:
+    responses:
+      -
         custom: []
-        name: tenant_id
-        description: 'Must be a valid UUID. The <code>id</code> of an existing record in the tenants table.'
-        required: true
-        example: 66529e01-d113-3473-8d6f-9e11e09332ea
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    cleanBodyParameters:
-      tenant_id: 66529e01-d113-3473-8d6f-9e11e09332ea
-    fileParameters: []
-    responses: []
+        status: 202
+        content: |-
+          {
+            "data": {
+              "job_id": "uuid",
+              "status": "pending",
+              "message": "Reindexing started",
+              "tenant_id": "uuid"
+            },
+            "meta": {}
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Tenant not found or access denied"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -166,15 +80,17 @@ endpoints:
     custom: []
     httpMethods:
       - GET
-    uri: 'api/v1/exports/{uuid}'
+    uri: 'api/v1/jobs/{jobId}/status'
     metadata:
       custom: []
-      groupName: Endpoints
-      groupDescription: ''
+      groupName: 'Index Management'
+      groupDescription: |-
+
+        API endpoints for managing Elasticsearch index operations (async)
       subgroup: ''
       subgroupDescription: ''
-      title: ''
-      description: ''
+      title: 'Get job status.'
+      description: 'Returns the current status and progress of an index job.'
       authenticated: true
       deprecated: false
     headers:
@@ -182,19 +98,19 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      uuid:
+      jobId:
         custom: []
-        name: uuid
-        description: ''
+        name: jobId
+        description: 'Job UUID.'
         required: true
-        example: 66529e01-d113-3473-8d6f-9e11e09332ea
+        example: 123e4567-e89b-12d3-a456-426614174000
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      uuid: 66529e01-d113-3473-8d6f-9e11e09332ea
+      jobId: 123e4567-e89b-12d3-a456-426614174000
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -203,14 +119,269 @@ endpoints:
     responses:
       -
         custom: []
-        status: 401
-        content: '{"message":"Unauthenticated."}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
-    responseFields: []
+        status: 200
+        content: |-
+          {
+            "data": {
+              "job_id": "uuid",
+              "status": "running",
+              "job_type": "reindex_tenant_products",
+              "payload": {
+                "tenant_id": "uuid",
+                "tenant_name": "My Store",
+                "requested_by": "uuid"
+              },
+              "error_message": null,
+              "created_at": "2026-03-15T10:00:00Z",
+              "started_at": "2026-03-15T10:00:05Z",
+              "completed_at": null
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Job not found"
+          }
+        headers: []
+        description: ''
+    responseFields:
+      data.job_id:
+        custom: []
+        name: data.job_id
+        description: 'Job UUID'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.status:
+        custom: []
+        name: data.status
+        description: 'Job status (pending, running, completed, failed)'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.job_type:
+        custom: []
+        name: data.job_type
+        description: 'Job type identifier'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.progress:
+        custom: []
+        name: data.progress
+        description: 'Progress percentage (0-100)'
+        required: false
+        example: null
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.started_at:
+        custom: []
+        name: data.started_at
+        description: 'timestamp Job start time'
+        required: false
+        example: null
+        type: ''
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.completed_at:
+        custom: []
+        name: data.completed_at
+        description: 'timestamp Job completion time'
+        required: false
+        example: null
+        type: ''
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.error_message:
+        custom: []
+        name: data.error_message
+        description: 'Error message (null if success)'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 3V5EgbkvZcDPa166h8fd4ae'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/tenants/{tenantId}/jobs'
+    metadata:
+      custom: []
+      groupName: 'Index Management'
+      groupDescription: |-
+
+        API endpoints for managing Elasticsearch index operations (async)
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List recent jobs for a tenant.'
+      description: 'Returns a list of recent index operations for the specified tenant.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      tenantId:
+        custom: []
+        name: tenantId
+        description: 'Tenant UUID.'
+        required: true
+        example: 123e4567-e89b-12d3-a456-426614174000
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      tenantId: 123e4567-e89b-12d3-a456-426614174000
+    queryParameters:
+      status:
+        custom: []
+        name: status
+        description: 'optional Filter by status (pending, running, completed, failed).'
+        required: false
+        example: completed
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      page:
+        custom: []
+        name: page
+        description: 'Page number (default: 1).'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      status: completed
+      page: 1
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": {
+              "jobs": [
+                {
+                  "job_id": "uuid",
+                  "status": "completed",
+                  "job_type": "reindex_tenant_products",
+                  "created_at": "2026-03-15T10:00:00Z",
+                  "completed_at": "2026-03-15T10:05:00Z"
+                }
+              ]
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Tenant not found or access denied"
+          }
+        headers: []
+        description: ''
+    responseFields:
+      'data.jobs{0}.job_id':
+        custom: []
+        name: 'data.jobs{0}.job_id'
+        description: 'Job UUID'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data.jobs{0}.status':
+        custom: []
+        name: 'data.jobs{0}.status'
+        description: 'Job status'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data.jobs{0}.job_type':
+        custom: []
+        name: 'data.jobs{0}.job_type'
+        description: 'Job type'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data.jobs{0}.created_at':
+        custom: []
+        name: 'data.jobs{0}.created_at'
+        description: 'timestamp Job creation time'
+        required: false
+        example: null
+        type: ''
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'data.jobs{0}.completed_at':
+        custom: []
+        name: 'data.jobs{0}.completed_at'
+        description: 'timestamp Job completion time'
+        required: false
+        example: null
+        type: ''
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
     auth:
       - headers
       - Authorization
