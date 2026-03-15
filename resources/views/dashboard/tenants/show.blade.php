@@ -3,7 +3,7 @@
 @section('title', 'Client Store Details - AgencySync Dashboard')
 
 @section('content')
-<div x-data="tenantDetail({{ $tenantId }})" x-init="fetchTenant()" class="space-y-6" data-tenant-id="{{ $tenantId }}">
+<div x-data="tenantDetail('{{ $tenantId }}')" x-init="fetchTenant()" class="space-y-6" data-tenant-id="{{ $tenantId }}">
     <!-- Page Header -->
     <div class="flex justify-between items-center">
         <div>
@@ -213,7 +213,7 @@
                     <div class="sm:col-span-1">
                         <dt class="text-sm font-medium text-gray-500">Products</dt>
                         <dd class="mt-1 text-sm text-gray-900">
-                            <span x-text="syncStatus.indexed_products || 0"></span>
+                            <span x-text="syncStatus.processed_products || 0"></span>
                             <span x-show="syncStatus.total_products" x-cloak>
                                 / <span x-text="syncStatus.total_products"></span>
                             </span>
@@ -228,7 +228,7 @@
                              :style="`width: ${syncProgress}%`"></div>
                     </div>
                     <p class="mt-1 text-xs text-gray-500">
-                        <span x-text="syncStatus.indexed_products || 0"></span> of <span x-text="syncStatus.total_products || 0"></span> products indexed
+                        <span x-text="syncStatus.processed_products || 0"></span> of <span x-text="syncStatus.total_products || 0"></span> products processed
                     </p>
                 </div>
 

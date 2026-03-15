@@ -29,7 +29,7 @@ function tenantList() {
             } finally {
                 this.loading = false;
             }
-        }
+        },
 
         async fetchAllSyncStatus() {
             for (let tenant of this.tenants) {
@@ -274,7 +274,7 @@ function tenantDetail(tenantId) {
             if (!this.syncStatus || !this.syncStatus.total_products) {
                 return 0;
             }
-            return Math.round((this.syncStatus.indexed_products / this.syncStatus.total_products) * 100);
+            return Math.round((this.syncStatus.processed_products / this.syncStatus.total_products) * 100);
         },
 
         get syncDuration() {
@@ -743,11 +743,6 @@ function errorLog() {
         init() {
             this.fetchTenants();
             this.fetchLogs();
-        }
-
-            if (diffMins < 60) return `${diffMins}m ago`;
-            if (diffHours < 24) return `${diffHours}h ago`;
-            return `${diffDays}d ago`;
         }
     };
 }
