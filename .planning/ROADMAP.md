@@ -52,10 +52,11 @@
 7. Polling intervals cleaned up on page navigation (prevents memory leaks)
 8. All test files have real assertions (GREEN phase)
 
-**Plans:** 4 plans
+**Plans:** 5 plans
 
 - [ ] 15-00-PLAN.md — Wave 0: Create test stubs for dashboard integrations (AUTH-04, SYNC-06, UI-06)
 - [ ] 15-01-PLAN.md — Verify dashboard route protection (AUTH-04)
 - [ ] 15-02-PLAN.md — Create sync status polling endpoint (SYNC-06)
-- [ ] 15-03-PLAN.md — Implement tenant list sync status polling (UI-06)
+- [ ] 15-03-PLAN.md — Implement tenant list sync status polling (UI-06) - JavaScript + Blade template
+- [ ] 15-04-PLAN.md — Test and verify tenant list polling (UI-06) - Tests + Human verification
 
