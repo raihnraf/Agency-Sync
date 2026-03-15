@@ -42,7 +42,7 @@
 | 10 | 2/2 | ✅ Complete | 2026-03-14 |
 | 11 | 3/3 | ✅ Complete | 2026-03-14 |
 | 12 | 4/4 | ✅ Complete | 2026-03-15 |
-| 13 | 4/4 | Complete   | 2026-03-15 |
+| 13 | 4/5 | 🔄 Gap Closure | 2026-03-15 |
 
 ---
 
@@ -65,7 +65,13 @@
 6. Technical debt documented and resolved
 7. Portfolio-ready: demonstrates software engineering discipline and refactoring skills
 
-**Plans:** 4/4 plans complete
+**Plans:** 4/5 plans complete, 1 gap closure plan
+
+- [x] 13-00-PLAN.md — Wave 0: Create test stubs for refactoring (REFACTOR-01, REFACTOR-02, REFACTOR-03) ✅
+- [x] 13-01-PLAN.md — Move sync-log routes from web.php to api.php with Sanctum authentication (REFACTOR-01) ✅
+- [x] 13-02-PLAN.md — API Resource Collections for pagination responses (REFACTOR-02) ✅
+- [x] 13-03-PLAN.md — Frontend integration with Resource Collections (REFACTOR-03) ✅
+- [ ] 13-04-PLAN.md — Gap closure: Convert SanctumAuthTest placeholders to real assertions (REFACTOR-01) 🔄
 
 ---
 | 13 | 0/3 | 🔄 Planning | - |
