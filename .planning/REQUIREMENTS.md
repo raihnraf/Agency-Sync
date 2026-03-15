@@ -191,7 +191,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-01 | Phase 2 | Complete |
 | AUTH-02 | Phase 2 | Complete |
 | AUTH-03 | Phase 2 | Complete |
-| AUTH-04 | Phase 15 | Pending (Gap Closure) |
+| AUTH-04 | Phase 18 | Pending (Gap Closure) |
 | TENANT-01 | Phase 3 | Complete |
 | TENANT-02 | Phase 3 | Complete |
 | TENANT-03 | Phase 3 | Complete |
@@ -204,7 +204,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SYNC-03 | Phase 6 | Complete |
 | SYNC-04 | Phase 4 | Complete |
 | SYNC-05 | Phase 6 | Complete |
-| SYNC-06 | Phase 15 | Pending (Gap Closure) |
+| SYNC-06 | Phase 18 | Pending (Gap Closure) |
 | SYNC-07 | Phase 6 | Complete |
 | SYNC-08 | Phase 6 | Complete |
 | SYNC-09 | Phase 6 | Complete |
@@ -227,7 +227,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-03 | Phase 7 | Complete |
 | UI-04 | Phase 7 | Complete |
 | UI-05 | Phase 14 | Complete |
-| UI-06 | Phase 15 | Pending (Gap Closure) |
+| UI-06 | Phase 18 | Pending (Gap Closure) |
 | UI-07 | Phase 14 | Complete |
 | UI-08 | Phase 7 | Complete |
 | UI-09 | Phase 7 | Complete |
