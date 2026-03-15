@@ -30,6 +30,44 @@ function tenantList() {
                 this.loading = false;
             }
         }
+
+        async fetchAllSyncStatus() {
+            for (let tenant of this.tenants) {
+                try {
+                    const response = await fetch(`/api/v1/sync-logs?tenant_id=${tenant.id}&per_page=1`, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.data && data.data.length > 0) {
+                            tenant.syncStatus = data.data[0];
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error fetching sync status for tenant ${tenant.id}:`, error);
+                }
+            }
+        },
+
+        formatSyncTime(timestamp) {
+            if (!timestamp) return 'Unknown';
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            return `${diffDays}d ago`;
+        }
     };
 }
 
@@ -705,6 +743,11 @@ function errorLog() {
         init() {
             this.fetchTenants();
             this.fetchLogs();
+        }
+
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            return `${diffDays}d ago`;
         }
     };
 }

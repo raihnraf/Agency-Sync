@@ -3,7 +3,7 @@
 @section('title', 'Client Stores - AgencySync Dashboard')
 
 @section('content')
-<div x-data="tenantList()" x-init="fetchTenants()" class="space-y-6">
+<div x-data="tenantList()" x-init="fetchTenants(); fetchAllSyncStatus()" class="space-y-6">
     <!-- Page Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -95,6 +95,29 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
                                     </svg>
                                     <span x-text="tenant.platform_url" class="truncate"></span>
+                                </div>
+                                <!-- Sync Status -->
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <svg class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                    </svg>
+                                    <div x-show="tenant.syncStatus">
+                                        <span class="text-xs text-gray-500" x-text="formatSyncTime(tenant.syncStatus.started_at)"></span>
+                                        <div class="flex items-center gap-2 mt-1">
+                                            <span class="px-2 py-1 text-xs rounded-full"
+                                                  :class="{
+                                                    'bg-green-100 text-green-800': tenant.syncStatus.status === 'completed',
+                                                    'bg-blue-100 text-blue-800': tenant.syncStatus.status === 'running',
+                                                    'bg-red-100 text-red-800': tenant.syncStatus.status === 'failed',
+                                                    'bg-yellow-100 text-yellow-800': tenant.syncStatus.status === 'pending'
+                                                  }"
+                                                  x-text="tenant.syncStatus.status"></span>
+                                            <span class="text-xs text-gray-600" x-text="tenant.syncStatus.products_processed + ' products'"></span>
+                                        </div>
+                                    </div>
+                                    <div x-show="!tenant.syncStatus" class="text-xs text-gray-400">
+                                        No sync history
+                                    </div>
                                 </div>
                             </div>
                         </div>
