@@ -147,7 +147,7 @@ function tenantDetail(tenantId) {
 
         async fetchSyncStatus() {
             try {
-                const response = await fetch(`/api/v1/tenants/${tenantId}/sync-logs?per_page=1`, {
+                const response = await fetch(`/api/v1/sync-logs?tenant_id=${tenantId}&per_page=1`, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
