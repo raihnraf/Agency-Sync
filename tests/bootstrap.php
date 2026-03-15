@@ -68,17 +68,97 @@ function createTestIndex(string $indexName): void
 
 /**
  * Delete test index from Elasticsearch
- * 
+ *
  * @param string $indexName
  * @return void
  */
 function deleteTestIndex(string $indexName): void
 {
     $client = createElasticsearchClientForTests();
-    
+
     try {
         $client->indices()->delete(['index' => $indexName]);
     } catch (\Exception $e) {
         // Index may not exist, ignore
     }
+}
+
+/**
+ * Shared test fixtures for audit log tests
+ *
+ * Provides common setup helpers for SyncLogDetailsTest, StackTraceCaptureTest,
+ * SuccessSyncDetailsTest, and other audit log related tests.
+ */
+
+/**
+ * Create a test user with authentication token
+ *
+ * @return \App\Models\User
+ */
+function createTestUserWithToken(): \App\Models\User
+{
+    $user = \App\Models\User::factory()->create();
+    $user->createToken('test-token');
+    return $user;
+}
+
+/**
+ * Create a test tenant with platform credentials
+ *
+ * @param array $overrides
+ * @return \App\Models\Tenant
+ */
+function createTestTenant(array $overrides = []): \App\Models\Tenant
+{
+    return \App\Models\Tenant::factory()->create($overrides);
+}
+
+/**
+ * Create a test sync log with various states
+ *
+ * @param array $overrides
+ * @return \App\Models\SyncLog
+ */
+function createTestSyncLog(array $overrides = []): \App\Models\SyncLog
+{
+    return \App\Models\SyncLog::factory()->create($overrides);
+}
+
+/**
+ * Create a failed sync log with error details
+ *
+ * @param array $errorDetails
+ * @return \App\Models\SyncLog
+ */
+function createFailedSyncLog(array $errorDetails = []): \App\Models\SyncLog
+{
+    return \App\Models\SyncLog::factory()->failed()->create([
+        'error_details' => array_merge([
+            'type' => 'api_error',
+            'message' => 'Test error message',
+            'code' => 500,
+        ], $errorDetails)
+    ]);
+}
+
+/**
+ * Create a successful sync log with products summary
+ *
+ * @param array $summary
+ * @return \App\Models\SyncLog
+ */
+function createSuccessSyncLog(array $summary = []): \App\Models\SyncLog
+{
+    return \App\Models\SyncLog::factory()->create([
+        'status' => 'completed',
+        'metadata' => array_merge([
+            'products_summary' => [
+                'total' => 100,
+                'processed' => 95,
+                'failed' => 5,
+                'indexed' => 90,
+            ],
+            'duration' => 45.2,
+        ], $summary)
+    ]);
 }
