@@ -42,13 +42,17 @@ export function syncStatus(tenantId) {
             this.syncSuccess = false;
 
             try {
-                const response = await fetch(`/api/v1/tenants/${this.tenantId}/sync`, {
+                const response = await fetch('/api/v1/sync/dispatch', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
-                    }
+                    },
+                    body: JSON.stringify({
+                        tenant_id: this.tenantId,
+                        data: {}
+                    })
                 });
 
                 if (!response.ok) {
