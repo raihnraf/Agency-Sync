@@ -90,8 +90,36 @@ class FetchShopifyProductsJob extends TenantAwareJob
 
             // Note: SyncLog status will be updated by the final job in the chain
         } catch (Exception $e) {
-            $syncLog->markAsFailed($e->getMessage());
+            // Capture stack trace
+            $stackTrace = array_map(function ($frame) {
+                return [
+                    'file' => $frame['file'] ?? 'unknown',
+                    'line' => $frame['line'] ?? 0,
+                    'function' => $frame['function'] ?? 'unknown',
+                    'class' => $frame['class'] ?? null,
+                    'type' => $frame['type'] ?? null,
+                ];
+            }, $e->getTrace());
 
+            // Build error details
+            $errorDetails = [
+                'type' => 'internal_error',
+                'exception_class' => get_class($e),
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'stack_trace' => $stackTrace,
+                'timestamp' => now()->toIso8601String(),
+            ];
+
+            // Store in sync log
+            $syncLog->update([
+                'error_message' => $e->getMessage(),
+                'metadata' => array_merge($syncLog->metadata ?? [], ['error_details' => $errorDetails])
+            ]);
+
+            // Existing logging
             Log::error('Shopify product sync failed', [
                 'sync_log_id' => $this->syncLogId,
                 'tenant_id' => $this->tenantId,
