@@ -1,5 +1,9 @@
 @extends('layouts.dashboard')
 
+@push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+@endpush
+
 @section('title', 'Error Log - AgencySync Dashboard')
 
 @section('content')
@@ -128,11 +132,18 @@
                             </div>
                         </div>
 
-                        <!-- Status Badge -->
-                        <div class="flex-shrink-0">
+                        <!-- Status Badge & View Details Button -->
+                        <div class="flex items-center gap-3 flex-shrink-0">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                 Failed
                             </span>
+
+                            <!-- View Details Button -->
+                            <button @click="viewDetails(log.id)"
+                                    class="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
+                                    data-testid="view-details-button">
+                                View Details
+                            </button>
                         </div>
                     </div>
                 </li>
@@ -178,5 +189,89 @@
             </div>
         </div>
     </div>
+
+    <!-- Error Details Modal -->
+    <div x-show="showModal"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 z-50 overflow-y-auto"
+         style="display: none;"
+         id="error-modal">
+        <!-- Backdrop -->
+        <div x-show="showModal"
+             @click="closeModal()"
+             class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+        <!-- Modal Panel -->
+        <div class="flex min-h-full items-center justify-center p-4">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+                <!-- Header -->
+                <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-lg font-medium text-gray-900">Error Details</h3>
+                    <button @click="closeModal()"
+                            class="text-gray-400 hover:text-gray-500">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Content -->
+                <div class="px-4 py-4 overflow-y-auto max-h-[calc(90vh-120px)]">
+                    <template x-if="selectedLog">
+                        <div class="space-y-4">
+                            <!-- Error Summary -->
+                            <div class="bg-red-50 border border-red-200 rounded-md p-4">
+                                <p class="text-sm font-medium text-red-800" x-text="selectedLog.error_message"></p>
+                            </div>
+
+                            <!-- Error Details JSON -->
+                            <template x-if="selectedLog.error_details">
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-900 mb-2">Error Details</h4>
+                                    <pre class="bg-gray-900 rounded-md p-4 overflow-x-auto"><code class="language-json" x-text="JSON.stringify(selectedLog.error_details, null, 2)"></code></pre>
+                                </div>
+                            </template>
+
+                            <!-- Products Summary -->
+                            <template x-if="selectedLog.products_summary">
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-900 mb-2">Products Summary</h4>
+                                    <div class="bg-gray-50 rounded-md p-4">
+                                        <div class="grid grid-cols-2 gap-4 text-sm">
+                                            <div><span class="font-medium">Total:</span> <span x-text="selectedLog.products_summary.total"></span></div>
+                                            <div><span class="font-medium">Processed:</span> <span x-text="selectedLog.products_summary.processed"></span></div>
+                                            <div><span class="font-medium">Failed:</span> <span x-text="selectedLog.products_summary.failed"></span></div>
+                                            <div><span class="font-medium">Indexed:</span> <span x-text="selectedLog.products_summary.indexed"></span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- Timing Information -->
+                            <template x-if="selectedLog.duration_seconds">
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-900 mb-2">Timing</h4>
+                                    <div class="bg-gray-50 rounded-md p-4 text-sm">
+                                        <div><span class="font-medium">Started:</span> <span x-text="formatDateTime(selectedLog.started_at)"></span></div>
+                                        <div><span class="font-medium">Completed:</span> <span x-text="formatDateTime(selectedLog.completed_at)"></span></div>
+                                        <div><span class="font-medium">Duration:</span> <span x-text="selectedLog.duration_seconds + 's'"></span></div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+@endpush
 @endsection
