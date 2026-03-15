@@ -15,7 +15,7 @@
     </div>
 
     <!-- Product Catalog Export Section -->
-    <div class="bg-white shadow rounded-lg p-6 mb-6" x-data="exportProductsComponent()">
+    <div class="bg-white shadow rounded-lg p-6 mb-6" x-data="exportProductsComponent()" x-init="init()">
         <div class="flex items-center justify-between">
             <div>
                 <h3 class="text-lg font-medium text-gray-900">Export Catalog</h3>

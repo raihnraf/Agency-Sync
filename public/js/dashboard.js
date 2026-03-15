@@ -790,14 +790,18 @@ function exportProductsComponent() {
         loading: false,
         downloadUrl: null,
         jobUuid: null,
+        tenantId: null,
+
+        init() {
+            this.tenantId = document.querySelector('[data-tenant-id]')?.dataset.tenantId;
+        },
 
         async exportProducts() {
             this.loading = true;
             this.downloadUrl = null;
 
             try {
-                const tenantId = document.querySelector('[data-tenant-id]')?.dataset.tenantId;
-                if (!tenantId) throw new Error('Tenant ID not found');
+                if (!this.tenantId) throw new Error('Tenant ID not found');
 
                 const response = await fetch('/api/v1/exports/products', {
                     method: 'POST',
@@ -806,7 +810,7 @@ function exportProductsComponent() {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
                     body: JSON.stringify({
-                        tenant_id: tenantId
+                        tenant_id: this.tenantId
                     })
                 });
 
