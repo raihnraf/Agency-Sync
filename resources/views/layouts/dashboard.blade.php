@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="AgencySync Dashboard - Manage your e-commerce client stores">
     <title>@yield('title', 'AgencySync Dashboard')</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Skip to main content link for keyboard users -->
     <style>
