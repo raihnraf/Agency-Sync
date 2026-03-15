@@ -67,7 +67,7 @@
 
     <!-- Custom dashboard styles -->
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
-    <script defer src="{{ asset("js/dashboard.js") }}"></script>
+    <script src="{{ asset("js/dashboard.js") }}"></script>
 
     @stack('styles')
 </head>
