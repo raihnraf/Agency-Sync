@@ -12,7 +12,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **AUTH-01**: Agency admin can create account with email and password
 - [x] **AUTH-02**: Agency admin can log in and session persists across requests
 - [x] **AUTH-03**: Agency admin can log out from any page
-- [ ] **AUTH-04**: API endpoints are protected with authentication middleware (Gap: Dashboard web routes lack auth - Phase 15)
+- [x] **AUTH-04**: API endpoints are protected with authentication middleware (Gap: Dashboard web routes lack auth - Phase 15)
 
 ### Client/Tenant Management
 
