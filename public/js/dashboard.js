@@ -14,7 +14,9 @@ function tenantList() {
                     headers: {
                         'Accept': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
-                    }
+                    },
+                    credentials: 'same-origin'
+
                 });
 
                 if (!response.ok) {
@@ -39,7 +41,8 @@ function tenantList() {
                         headers: {
                             'Accept': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
-                        }
+                        },
+                        credentials: 'same-origin'
                     });
 
                     if (response.ok) {
@@ -104,6 +107,7 @@ function tenantCreate() {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
                     },
+                    credentials: 'same-origin',
                     body: JSON.stringify(this.form)
                 });
 
@@ -163,7 +167,9 @@ function tenantDetail(tenantId) {
                     headers: {
                         'Accept': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
-                    }
+                    },
+                    credentials: 'same-origin'
+
                 });
 
                 if (!response.ok) {
@@ -190,7 +196,9 @@ function tenantDetail(tenantId) {
                     headers: {
                         'Accept': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
-                    }
+                    },
+                    credentials: 'same-origin'
+
                 });
 
                 if (!response.ok) {
@@ -223,6 +231,7 @@ function tenantDetail(tenantId) {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
                     },
+                    credentials: 'same-origin',
                     body: JSON.stringify({
                         tenant_id: this.tenantId,
                         data: {}
@@ -308,7 +317,9 @@ function tenantDetail(tenantId) {
                     headers: {
                         'Accept': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
-                    }
+                    },
+                    credentials: 'same-origin'
+
                 });
 
                 if (!response.ok) {
@@ -390,7 +401,9 @@ function tenantEdit(tenantId) {
                     headers: {
                         'Accept': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
-                    }
+                    },
+                    credentials: 'same-origin'
+
                 });
 
                 if (!response.ok) {
@@ -441,6 +454,7 @@ function tenantEdit(tenantId) {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
                     },
+                    credentials: 'same-origin',
                     body: JSON.stringify(payload)
                 });
 
@@ -511,7 +525,9 @@ function productSearch(tenantId, tenantName) {
                     headers: {
                         'Accept': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
-                    }
+                    },
+                    credentials: 'same-origin'
+
                 });
 
                 if (!response.ok) {
@@ -616,7 +632,9 @@ function errorLog() {
                     headers: {
                         'Accept': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
-                    }
+                    },
+                    credentials: 'same-origin'
+
                 });
 
                 if (!response.ok) {
@@ -642,7 +660,9 @@ function errorLog() {
                     headers: {
                         'Accept': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
-                    }
+                    },
+                    credentials: 'same-origin'
+
                 });
 
                 if (!response.ok) {
@@ -664,7 +684,9 @@ function errorLog() {
                     headers: {
                         'Accept': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
-                    }
+                    },
+                    credentials: 'same-origin'
+
                 });
 
                 if (!response.ok) throw new Error('Failed to fetch error details');
@@ -778,6 +800,7 @@ function exportSyncLogsComponent() {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
+                    credentials: 'same-origin',
                     body: JSON.stringify({
                         filters: filters,
                         format: 'csv'
@@ -847,6 +870,7 @@ function exportProductsComponent() {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
+                    credentials: 'same-origin',
                     body: JSON.stringify({
                         tenant_id: this.tenantId
                     })
