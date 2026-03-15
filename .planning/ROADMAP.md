@@ -132,7 +132,10 @@
 8. DOITSUYA criteria met: "Improving performance, stability, and maintainability" with debugging focus
 9. Portfolio-ready: demonstrates production-ready error handling and debugging mindset
 
-**Plans:** TBD
+**Plans:** 2 plans
+
+- [ ] 12-01-PLAN.md — API endpoint and resource for detailed sync log error information (AUDIT-01, AUDIT-02, AUDIT-03, AUDIT-04, AUDIT-05)
+- [ ] 12-02-PLAN.md — Enhanced error capture in sync jobs and "View Details" modal UI (AUDIT-01, AUDIT-02, AUDIT-03, AUDIT-04, AUDIT-05)
 
 ---
 
