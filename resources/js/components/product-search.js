@@ -30,7 +30,7 @@ export function productSearch(tenantId) {
             this.error = null;
 
             try {
-                const response = await fetch(`/api/v1/tenants/${this.tenantId}/products?query=${encodeURIComponent(this.searchQuery)}&page=${this.currentPage}`, {
+                const response = await fetch(`/api/v1/tenants/${this.tenantId}/search?query=${encodeURIComponent(this.searchQuery)}&page=${this.currentPage}`, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
