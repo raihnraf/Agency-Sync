@@ -167,7 +167,7 @@
     </div>
 
     <!-- Dashboard JavaScript -->
-    <script src="{{ asset('js/dashboard.js') }}"></script>
+    <script defer src="{{ asset('js/dashboard.js') }}"></script>
     @stack('scripts')
 </body>
 </html>

@@ -3,7 +3,7 @@
 @section('title', 'Client Stores - AgencySync Dashboard')
 
 @section('content')
-<div x-data="tenantList()" x-init="fetchTenants(); fetchAllSyncStatus()" class="space-y-6">
+<div x-data="tenantList()" x-init="await fetchTenants(); await fetchAllSyncStatus()" class="space-y-6">
     <!-- Page Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
