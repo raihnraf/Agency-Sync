@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 12
-current_plan: Not started
-status: completed
-last_updated: "2026-03-15T12:22:21.353Z"
+current_phase: 13
+current_plan: 01
+status: executing
+last_updated: "2026-03-15T12:24:10.726Z"
 progress:
   total_phases: 2
   completed_phases: 1
   total_plans: 8
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # AgencySync State
@@ -38,16 +38,22 @@ E-commerce agencies can reliably manage and synchronize product catalogs across 
 
 ## Current Position
 
-**Current Phase:** 12
-**Current Plan:** Not started
-**Status:** Milestone complete
-**Progress Bar:** [████████░] 87% (47/54 plans complete, Phase 12 Plan 01 done)
+**Current Phase:** 13
+**Current Plan:** 01
+**Status:** In progress
+**Progress Bar:** [████████░] 87% (47/54 plans complete, Phase 13 Plan 01 in progress)
 
 **Phase Goal:**
-Deep dive audit logs with structured error payloads and stack traces for production debugging
+Technical debt refactoring - eliminate route duplication, implement API Resource Collections, standardize response formats
 
 **Latest Accomplishment:**
-🎉 PLAN 12-01 COMPLETE - Sync Log Details API Endpoint
+🎉 PLAN 13-01 COMPLETE - API Route Migration to Sanctum Authentication
+- Removed duplicate sync-log routes from web.php (lines 47-52)
+- Routes now exist only in api.php with proper Sanctum middleware
+- Session-based authentication no longer works for API routes (security improvement)
+- 5 SanctumAuthTest tests verify authentication requirements
+- Zero frontend impact - fetch() calls already use correct URLs
+- 2 tasks completed in 8 minutes
 - GET /api/v1/sync-logs/{id}/details endpoint returning comprehensive sync log data
 - SyncLogDetailsResource with error detail extraction from metadata field
 - Tenant authorization with generic 404 responses preventing enumeration
@@ -99,6 +105,13 @@ Deep dive audit logs with structured error payloads and stack traces for product
 - Cache warming command for deployment hooks
 
 ## Performance Metrics
+
+**Phase 13-01 Execution:**
+- Duration: 3 minutes
+- Started: 2026-03-15T12:20:41Z
+- Completed: 2026-03-15T12:23:37Z
+- Tasks: 2 (2 auto)
+- Files: 2 files created/modified (routes/web.php, tests/Feature/SanctumAuthTest.php)
 
 **Phase 11-03 Execution:**
 - Duration: 30 minutes
@@ -379,6 +392,12 @@ Deep dive audit logs with structured error payloads and stack traces for product
 - [Phase 12-01]: Error details extracted from metadata JSON field with null coalescing for flexibility
 - [Phase 12-01]: Duration calculation with null safety for incomplete sync logs using Carbon diff
 - [Phase 12-01]: API Resource pattern with static $wrap = null for clean JSON responses without data wrapper
+- [Phase 13-01]: Sync-log routes exist only in api.php with Sanctum middleware (removed from web.php)
+- [Phase 13-01]: Session-based authentication no longer works for API routes (security improvement)
+- [Phase 13-01]: Frontend fetch() calls already use correct URL (/api/v1/sync-logs) - no changes needed
+- [Phase 13-01]: All API endpoints must be in routes/api.php with appropriate Sanctum middleware
+- [Phase 13-01]: Web routes in routes/web.php for dashboard/health/profile only (session auth)
+- [Phase 13-01]: Test coverage verifies both authentication requirements and route location
 - [Phase 13]: TDD Wave 0 with placeholder assertions - assertTrue(true) for Nyquist compliance
 - [Phase 13]: Test organization by requirement - three files covering REFACTOR-01, REFACTOR-02, REFACTOR-03
 - [Phase 13]: Feature tests use RefreshDatabase trait for clean state between tests
@@ -430,7 +449,7 @@ None currently.
 
 ## Session Continuity
 
-**Last Session:** 2026-03-15T12:22:21.350Z
+**Last Session:** 2026-03-15T12:24:10.724Z
 **Current Session:** 2026-03-14T20:07:03.000Z
 **Next Action:** Execute Plan 10-01 (Deployment Script Creation)
 
