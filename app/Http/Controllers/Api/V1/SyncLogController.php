@@ -42,6 +42,6 @@ class SyncLogController extends Controller
         $logs = $query->orderBy('started_at', 'desc')
             ->paginate($request->input('per_page', 15));
 
-        return new SyncLogCollection($logs);
+        return response()->json(new SyncLogCollection($logs));
     }
 }
