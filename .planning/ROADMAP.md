@@ -80,11 +80,11 @@
 3. Sync status displays correctly in tenant list view (visible UI bug fixed)
 4. Simple refresh mechanism or fixed API endpoint (no complex real-time polling needed)
 
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
-- [ ] 18-01-PLAN.md — Fix sync status API route mismatch in dashboard.js line 150 (SYNC-06, UI-06)
-- [ ] 18-02-PLAN.md — Verify dashboard route authentication middleware (AUTH-04)
-- [ ] 18-03-PLAN.md — Add sync status display to tenant list view (UI-06)
+- [x] 18-01-PLAN.md — Fix sync status API route mismatch in dashboard.js line 150 (SYNC-06, UI-06) ✅
+- [x] 18-02-PLAN.md — Verify dashboard route authentication middleware (AUTH-04) ✅
+- [x] 18-03-PLAN.md — Add sync status display to tenant list view (UI-06) ✅
 
 **Notes:**
 - Focus on visible fixes only (what recruiters see in demo)
