@@ -77,4 +77,26 @@ class TenantController extends Controller
             "data" => $tenants
         ]);
     }
+
+    /**
+     * Return JSON detail of single tenant for AJAX calls (session authenticated).
+     */
+    public function showJson(Request $request, string $id)
+    {
+        $tenant = $request->user()
+            ->tenants()
+            ->where("id", $id)
+            ->firstOrFail();
+
+        return response()->json([
+            "data" => [
+                "id" => $tenant->id,
+                "name" => $tenant->name,
+                "platform_type" => $tenant->platform_type->value,
+                "platform_url" => $tenant->platform_url,
+                "status" => $tenant->status->value,
+                "created_at" => $tenant->created_at->toISOString(),
+            ]
+        ]);
+    }
 }
