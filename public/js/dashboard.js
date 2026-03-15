@@ -186,7 +186,7 @@ function tenantDetail(tenantId) {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
                     },
                     body: JSON.stringify({
-                        tenant_id: tenantId,
+                        tenant_id: this.tenantId,
                         data: {}
                     })
                 });
