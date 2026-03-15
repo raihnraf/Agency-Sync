@@ -24,8 +24,8 @@ class TenantResource extends JsonResource
             'settings' => $this->settings ?? [],
             'last_sync_at' => $this->last_sync_at?->toISOString(),
             'sync_status' => $this->sync_status,
-            'created_at' => $this->when(isset($this->created_at), fn() => $this->created_at->toISOString()),
-            'updated_at' => $this->when(isset($this->updated_at), fn() => $this->updated_at->toISOString()),
+            'created_at' => $this->created_at->toISOString(),
+            'updated_at' => $this->updated_at->toISOString(),
         ];
     }
 

@@ -1635,10 +1635,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"filters\": {
-        \"start_date\": \"2026-03-14T21:42:15\",
-        \"end_date\": \"2026-03-14T21:42:15\",
+        \"start_date\": \"2026-03-14T21:59:58\",
+        \"end_date\": \"2026-03-14T21:59:58\",
         \"tenant_id\": \"66529e01-d113-3473-8d6f-9e11e09332ea\",
-        \"status\": \"running\"
+        \"status\": \"completed\"
     },
     \"format\": \"xlsx\"
 }"
@@ -1658,10 +1658,10 @@ const headers = {
 
 let body = {
     "filters": {
-        "start_date": "2026-03-14T21:42:15",
-        "end_date": "2026-03-14T21:42:15",
+        "start_date": "2026-03-14T21:59:58",
+        "end_date": "2026-03-14T21:59:58",
         "tenant_id": "66529e01-d113-3473-8d6f-9e11e09332ea",
-        "status": "running"
+        "status": "completed"
     },
     "format": "xlsx"
 };
@@ -1777,10 +1777,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="filters.start_date"                data-endpoint="POSTapi-v1-exports-sync-logs"
-               value="2026-03-14T21:42:15"
+               value="2026-03-14T21:59:58"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-03-14T21:42:15</code></p>
+<p>Must be a valid date. Example: <code>2026-03-14T21:59:58</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>end_date</code></b>&nbsp;&nbsp;
@@ -1789,10 +1789,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="filters.end_date"                data-endpoint="POSTapi-v1-exports-sync-logs"
-               value="2026-03-14T21:42:15"
+               value="2026-03-14T21:59:58"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2026-03-14T21:42:15</code></p>
+<p>Must be a valid date. Example: <code>2026-03-14T21:59:58</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>tenant_id</code></b>&nbsp;&nbsp;
@@ -1813,10 +1813,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="filters.status"                data-endpoint="POSTapi-v1-exports-sync-logs"
-               value="running"
+               value="completed"
                data-component="body">
     <br>
-<p>Example: <code>running</code></p>
+<p>Example: <code>completed</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>completed</code></li> <li><code>failed</code></li> <li><code>partially_failed</code></li> <li><code>running</code></li> <li><code>pending</code></li></ul>
                     </div>

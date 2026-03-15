@@ -28,7 +28,35 @@ class EndpointCoverageTest extends TestCase
      */
     public function test_all_api_routes_documented(): void
     {
-        $this->assertTrue(true); // RED phase placeholder
+        // Ensure documentation is generated
+        if (!file_exists(public_path('docs/index.html'))) {
+            \Illuminate\Support\Facades\Artisan::call('scribe:generate');
+        }
+
+        $content = file_get_contents(public_path('docs/index.html'));
+
+        // Get all API routes
+        $apiRoutes = collect(Route::getRoutes())->filter(function ($route) {
+            return str_starts_with($route->uri(), 'api/');
+        });
+
+        // Assert we have API routes
+        $this->assertGreaterThan(0, $apiRoutes->count(), 'No API routes found');
+
+        // Assert key endpoints are documented
+        $keyEndpoints = [
+            'api/v1/register',
+            'api/v1/login',
+            'api/v1/logout',
+            'api/v1/me',
+            'api/v1/tenants',
+            'api/v1/sync/dispatch',
+            'api/v1/exports/products',
+        ];
+
+        foreach ($keyEndpoints as $endpoint) {
+            $this->assertStringContainsString($endpoint, $content, "Endpoint {$endpoint} not found in documentation");
+        }
     }
 
     /**
@@ -42,21 +70,52 @@ class EndpointCoverageTest extends TestCase
      */
     public function test_endpoints_grouped_by_controller(): void
     {
-        $this->assertTrue(true); // RED phase placeholder
+        // Ensure documentation is generated
+        if (!file_exists(public_path('docs/index.html'))) {
+            \Illuminate\Support\Facades\Artisan::call('scribe:generate');
+        }
+
+        $content = file_get_contents(public_path('docs/index.html'));
+
+        // Assert all endpoint groups are present
+        $groups = [
+            'Authentication',
+            'Tenant Management',
+            'Catalog Synchronization',
+            'Product Search',
+            'Index Management',
+        ];
+
+        foreach ($groups as $group) {
+            $this->assertStringContainsString($group, $content, "Group '{$group}' not found in documentation");
+        }
     }
 
     /**
      * Test: Authenticated endpoints show authentication badge
      *
      * When: Viewing authenticated endpoints in documentation
-     * Then: "Authenticated" badge is displayed
+     * Then: "requires authentication" badge is displayed
      * And: Authentication requirement is clearly indicated
      *
      * @return void
      */
     public function test_authenticated_endpoints_show_badge(): void
     {
-        $this->assertTrue(true); // RED phase placeholder
+        // Ensure documentation is generated
+        if (!file_exists(public_path('docs/index.html'))) {
+            \Illuminate\Support\Facades\Artisan::call('scribe:generate');
+        }
+
+        $content = file_get_contents(public_path('docs/index.html'));
+
+        // Scribe uses "requires authentication" badge (not "Authenticated")
+        $authCount = substr_count($content, 'requires authentication');
+        $this->assertGreaterThan(3, $authCount, 'Expected more authenticated endpoints to be marked');
+
+        // Assert authentication-related text appears
+        $this->assertStringContainsString('Authorization', $content);
+        $this->assertStringContainsString('Bearer', $content);
     }
 
     /**
@@ -70,6 +129,17 @@ class EndpointCoverageTest extends TestCase
      */
     public function test_tenant_scoped_endpoints_document_header(): void
     {
-        $this->assertTrue(true); // RED phase placeholder
+        // Ensure documentation is generated
+        if (!file_exists(public_path('docs/index.html'))) {
+            \Illuminate\Support\Facades\Artisan::call('scribe:generate');
+        }
+
+        $content = file_get_contents(public_path('docs/index.html'));
+
+        // Assert X-Tenant-ID header is documented
+        $this->assertStringContainsString('X-Tenant-ID', $content, 'X-Tenant-ID header not documented');
+
+        // Assert tenant-related endpoints exist
+        $this->assertStringContainsString('tenantId', $content, 'Tenant ID parameter not documented');
     }
 }

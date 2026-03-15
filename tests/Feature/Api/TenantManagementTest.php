@@ -98,11 +98,11 @@ class TenantManagementTest extends TestCase
         $response = $this->getJson('/api/v1/tenants');
 
         $response->assertStatus(200)
-            ->assertJsonPath('data.data.0.id', $tenant1->id)
-            ->assertJsonPath('data.data.1.id', $tenant2->id)
-            ->assertJsonMissingPath('data.data.2');
+            ->assertJsonPath('data.0.id', $tenant1->id)
+            ->assertJsonPath('data.1.id', $tenant2->id)
+            ->assertJsonMissingPath('data.2');
 
-        $this->assertEquals(2, count($response->json('data.data')));
+        $this->assertEquals(2, count($response->json('data')));
     }
 
     public function test_show_tenant_returns_tenant_data()

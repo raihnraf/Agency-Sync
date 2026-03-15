@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\IndexController;
 use App\Http\Controllers\Api\V1\ProductSearchController;
+use App\Http\Controllers\Api\V1\SyncLogController;
 use App\Http\Controllers\Api\V1\SyncLogDetailsController;
 use App\Http\Controllers\Api\V1\TenantController;
 use App\Http\Controllers\Api\V1\SyncController;
@@ -26,7 +27,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/login', [AuthController::class, 'login']);
     });
 
-    // Protected routes with auth, token expiration, and rate limiting
+    // Protected routes with Sanctum authentication
     Route::middleware(['auth:sanctum', 'token.expire'])->group(function () {
         Route::middleware('throttle:api-write')->group(function () {
             Route::post('/logout', [AuthController::class, 'logout']);
@@ -66,8 +67,9 @@ Route::prefix('v1')->group(function () {
             });
         });
 
-        // Sync log details routes
+        // Sync log routes
         Route::middleware('throttle:api-read')->group(function () {
+            Route::get('/sync-logs', [SyncLogController::class, 'index']);
             Route::get('/sync-logs/{id}/details', [SyncLogDetailsController::class, 'show']);
         });
 
