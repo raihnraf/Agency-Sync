@@ -265,11 +265,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | APIDOCS-03 | Phase 11 | Complete |
 | APIDOCS-04 | Phase 11 | Complete |
 | APIDOCS-05 | Phase 11 | Complete |
-| AUDIT-01 | Phase 12 | Pending |
-| AUDIT-02 | Phase 12 | Pending |
-| AUDIT-03 | Phase 12 | Pending |
-| AUDIT-04 | Phase 12 | Pending |
-| AUDIT-05 | Phase 12 | Pending |
+| AUDIT-01 | Phase 12 | Complete |
+| AUDIT-02 | Phase 12 | Complete |
+| AUDIT-03 | Phase 12 | Complete |
+| AUDIT-04 | Phase 12 | Complete |
+| AUDIT-05 | Phase 12 | Complete |
 
 **Coverage:**
 - v1 requirements: 70 total
