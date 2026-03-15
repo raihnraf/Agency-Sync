@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
+use App\Models\Tenant;
 use App\Models\SyncLog;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -12,7 +14,12 @@ class SuccessSyncDetailsTest extends TestCase
 
     public function test_success_sync_includes_products_summary()
     {
+        $user = User::factory()->create();
+        $tenant = Tenant::factory()->create();
+        $user->tenants()->attach($tenant->id, ['role' => 'admin', 'joined_at' => now()]);
+
         $syncLog = SyncLog::factory()->create([
+            'tenant_id' => $tenant->id,
             'status' => 'completed',
             'total_products' => 100,
             'processed_products' => 95,
@@ -20,7 +27,8 @@ class SuccessSyncDetailsTest extends TestCase
             'indexed_products' => 90,
         ]);
 
-        $response = $this->getJson("/api/v1/sync-logs/{$syncLog->id}/details");
+        $response = $this->actingAs($user)
+            ->getJson("/api/v1/sync-logs/{$syncLog->id}/details");
 
         $response->assertStatus(200)
             ->assertJsonPath('data.products_summary.total', 100)
@@ -31,7 +39,12 @@ class SuccessSyncDetailsTest extends TestCase
 
     public function test_products_summary_includes_total_processed_failed_indexed()
     {
+        $user = User::factory()->create();
+        $tenant = Tenant::factory()->create();
+        $user->tenants()->attach($tenant->id, ['role' => 'admin', 'joined_at' => now()]);
+
         $syncLog = SyncLog::factory()->create([
+            'tenant_id' => $tenant->id,
             'status' => 'completed',
             'total_products' => 250,
             'processed_products' => 240,
@@ -39,7 +52,8 @@ class SuccessSyncDetailsTest extends TestCase
             'indexed_products' => 235,
         ]);
 
-        $response = $this->getJson("/api/v1/sync-logs/{$syncLog->id}/details");
+        $response = $this->actingAs($user)
+            ->getJson("/api/v1/sync-logs/{$syncLog->id}/details");
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -56,29 +70,41 @@ class SuccessSyncDetailsTest extends TestCase
 
     public function test_success_sync_includes_timing_information()
     {
+        $user = User::factory()->create();
+        $tenant = Tenant::factory()->create();
+        $user->tenants()->attach($tenant->id, ['role' => 'admin', 'joined_at' => now()]);
+
         $syncLog = SyncLog::factory()->create([
+            'tenant_id' => $tenant->id,
             'status' => 'completed',
             'started_at' => '2026-03-15T07:00:00Z',
             'completed_at' => '2026-03-15T07:05:30Z',
         ]);
 
-        $response = $this->getJson("/api/v1/sync-logs/{$syncLog->id}/details");
+        $response = $this->actingAs($user)
+            ->getJson("/api/v1/sync-logs/{$syncLog->id}/details");
 
         $response->assertStatus(200)
-            ->assertJsonPath('data.started_at', '2026-03-15T07:00:00+00:00')
-            ->assertJsonPath('data.completed_at', '2026-03-15T07:05:30+00:00')
+            ->assertJsonPath('data.started_at', '2026-03-15T07:00:00.000000Z')
+            ->assertJsonPath('data.completed_at', '2026-03-15T07:05:30.000000Z')
             ->assertJsonPath('data.duration_seconds', 330);
     }
 
     public function test_success_sync_calculates_duration_correctly()
     {
+        $user = User::factory()->create();
+        $tenant = Tenant::factory()->create();
+        $user->tenants()->attach($tenant->id, ['role' => 'admin', 'joined_at' => now()]);
+
         $syncLog = SyncLog::factory()->create([
+            'tenant_id' => $tenant->id,
             'status' => 'completed',
             'started_at' => '2026-03-15T07:00:00Z',
             'completed_at' => '2026-03-15T07:02:45Z', // 2 minutes 45 seconds = 165 seconds
         ]);
 
-        $response = $this->getJson("/api/v1/sync-logs/{$syncLog->id}/details");
+        $response = $this->actingAs($user)
+            ->getJson("/api/v1/sync-logs/{$syncLog->id}/details");
 
         $response->assertStatus(200)
             ->assertJsonPath('data.duration_seconds', 165);

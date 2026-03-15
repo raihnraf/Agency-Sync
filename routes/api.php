@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\IndexController;
 use App\Http\Controllers\Api\V1\ProductSearchController;
+use App\Http\Controllers\Api\V1\SyncLogDetailsController;
 use App\Http\Controllers\Api\V1\TenantController;
 use App\Http\Controllers\Api\V1\SyncController;
 use App\Http\Controllers\ExportController;
@@ -63,6 +64,11 @@ Route::prefix('v1')->group(function () {
             Route::middleware(['throttle:api-read', 'tenant', 'tenant.scope'])->group(function () {
                 Route::get('/history', [SyncController::class, 'history']);
             });
+        });
+
+        // Sync log details routes
+        Route::middleware('throttle:api-read')->group(function () {
+            Route::get('/sync-logs/{id}/details', [SyncLogDetailsController::class, 'show']);
         });
 
         // Product search routes
