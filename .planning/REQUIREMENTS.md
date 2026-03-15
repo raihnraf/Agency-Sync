@@ -12,7 +12,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **AUTH-01**: Agency admin can create account with email and password
 - [x] **AUTH-02**: Agency admin can log in and session persists across requests
 - [x] **AUTH-03**: Agency admin can log out from any page
-- [x] **AUTH-04**: API endpoints are protected with authentication middleware
+- [ ] **AUTH-04**: API endpoints are protected with authentication middleware (Gap: Dashboard web routes lack auth - Phase 15)
 
 ### Client/Tenant Management
 
@@ -20,31 +20,31 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **TENANT-02**: Agency admin can view list of all client stores
 - [x] **TENANT-03**: Agency admin can update client store details (name, status, platform URL)
 - [x] **TENANT-04**: Agency admin can delete client store
-- [x] **TENANT-05**: System stores API credentials encrypted in database (Shopify API key, Shopware credentials)
+- [ ] **TENANT-05**: System stores API credentials encrypted in database (Shopify API key, Shopware credentials) (Gap: Stub validator - Phase 16)
 - [x] **TENANT-06**: Database uses tenant_id discriminator for multi-tenant data isolation
 - [x] **TENANT-07**: Queries automatically scope to current tenant via global scopes
 
 ### Catalog Synchronization
 
-- [ ] **SYNC-01**: Agency admin can trigger manual catalog sync for a specific client store
-- [ ] **SYNC-02**: Sync operation runs asynchronously in background queue (non-blocking HTTP request)
-- [ ] **SYNC-03**: System validates product data before storing (required fields, data types)
-- [ ] **SYNC-04**: System implements retry logic with exponential backoff for failed API calls
-- [ ] **SYNC-05**: System logs all sync operations (start time, end time, status, error messages)
-- [x] **SYNC-06**: Agency admin can view sync status for each client store (pending, running, completed, failed)
-- [ ] **SYNC-07**: System fetches product data from Shopify API (products, variants, inventory)
-- [ ] **SYNC-08**: System fetches product data from Shopware API (products, variants, inventory)
+- [ ] **SYNC-01**: Agency admin can trigger manual catalog sync for a specific client store (Gap: Broken flow - Phase 14)
+- [x] **SYNC-02**: Sync operation runs asynchronously in background queue (non-blocking HTTP request)
+- [x] **SYNC-03**: System validates product data before storing (required fields, data types)
+- [x] **SYNC-04**: System implements retry logic with exponential backoff for failed API calls
+- [x] **SYNC-05**: System logs all sync operations (start time, end time, status, error messages)
+- [ ] **SYNC-06**: Agency admin can view sync status for each client store (pending, running, completed, failed) (Gap: Polling not wired - Phase 15)
+- [x] **SYNC-07**: System fetches product data from Shopify API (products, variants, inventory)
+- [x] **SYNC-08**: System fetches product data from Shopware API (products, variants, inventory)
 - [x] **SYNC-09**: System stores product data in MySQL with tenant_id association
 
 ### Product Search
 
-- [ ] **SEARCH-01**: Agency admin can search products within a single client's catalog
-- [ ] **SEARCH-02**: Search returns results in sub-second time (< 500ms for typical queries)
-- [ ] **SEARCH-03**: Search supports fuzzy matching (tolerates typos, partial matches)
-- [ ] **SEARCH-04**: Search results are paginated (20 products per page)
-- [ ] **SEARCH-05**: System indexes product data in Elasticsearch for fast search
-- [ ] **SEARCH-06**: Elasticsearch index is scoped per tenant (tenant_id filter)
-- [ ] **SEARCH-07**: Search results only include products from selected client store (tenant isolation)
+- [ ] **SEARCH-01**: Agency admin can search products within a single client's catalog (Gap: Broken flow - Phase 14)
+- [x] **SEARCH-02**: Search returns results in sub-second time (< 500ms for typical queries)
+- [x] **SEARCH-03**: Search supports fuzzy matching (tolerates typos, partial matches)
+- [x] **SEARCH-04**: Search results are paginated (20 products per page)
+- [x] **SEARCH-05**: System indexes product data in Elasticsearch for fast search
+- [x] **SEARCH-06**: Elasticsearch index is scoped per tenant (tenant_id filter)
+- [ ] **SEARCH-07**: Search results only include products from selected client store (tenant isolation) (Gap: Broken flow - Phase 14)
 
 ### Background Jobs
 
@@ -58,17 +58,17 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Admin Dashboard
 
-- [ ] **UI-01**: Agency admin can view client store list with status indicators
-- [ ] **UI-02**: Agency admin can create new client store via form (name, platform, API credentials)
+- [x] **UI-01**: Agency admin can view client store list with status indicators
+- [x] **UI-02**: Agency admin can create new client store via form (name, platform, API credentials)
 - [x] **UI-03**: Agency admin can edit client store details
 - [x] **UI-04**: Agency admin can delete client store with confirmation
-- [ ] **UI-05**: Agency admin can trigger sync operation for each client store
-- [ ] **UI-06**: Agency admin can view last sync status for each client store (time, status, product count)
-- [ ] **UI-07**: Agency admin can search products within a client's catalog
-- [ ] **UI-08**: Agency admin can view error log with filtering by client store and date
-- [ ] **UI-09**: Dashboard uses Blade templates with Alpine.js for interactivity
-- [ ] **UI-10**: Dashboard uses TailwindCSS for styling
-- [ ] **UI-11**: Dashboard is responsive for mobile and tablet viewing
+- [ ] **UI-05**: Agency admin can trigger sync operation for each client store (Gap: Broken flow - Phase 14)
+- [ ] **UI-06**: Agency admin can view last sync status for each client store (time, status, product count) (Gap: Polling not wired - Phase 15)
+- [ ] **UI-07**: Agency admin can search products within a client's catalog (Gap: Broken flow - Phase 14)
+- [x] **UI-08**: Agency admin can view error log with filtering by client store and date
+- [x] **UI-09**: Dashboard uses Blade templates with Alpine.js for interactivity
+- [x] **UI-10**: Dashboard uses TailwindCSS for styling
+- [x] **UI-11**: Dashboard is responsive for mobile and tablet viewing
 
 ### Infrastructure
 
@@ -191,30 +191,30 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-01 | Phase 2 | Complete |
 | AUTH-02 | Phase 2 | Complete |
 | AUTH-03 | Phase 2 | Complete |
-| AUTH-04 | Phase 2 | Complete |
+| AUTH-04 | Phase 15 | Pending (Gap Closure) |
 | TENANT-01 | Phase 3 | Complete |
 | TENANT-02 | Phase 3 | Complete |
 | TENANT-03 | Phase 3 | Complete |
 | TENANT-04 | Phase 3 | Complete |
-| TENANT-05 | Phase 3 | Complete |
+| TENANT-05 | Phase 16 | Pending (Gap Closure) |
 | TENANT-06 | Phase 3 | Complete |
 | TENANT-07 | Phase 3 | Complete |
-| SYNC-01 | Phase 6 | Complete |
+| SYNC-01 | Phase 14 | Pending (Gap Closure) |
 | SYNC-02 | Phase 4 | Complete |
 | SYNC-03 | Phase 6 | Complete |
 | SYNC-04 | Phase 4 | Complete |
 | SYNC-05 | Phase 6 | Complete |
-| SYNC-06 | Phase 6 | Complete |
+| SYNC-06 | Phase 15 | Pending (Gap Closure) |
 | SYNC-07 | Phase 6 | Complete |
 | SYNC-08 | Phase 6 | Complete |
 | SYNC-09 | Phase 6 | Complete |
-| SEARCH-01 | Phase 5 | Complete |
+| SEARCH-01 | Phase 14 | Pending (Gap Closure) |
 | SEARCH-02 | Phase 5 | Complete |
 | SEARCH-03 | Phase 5 | Complete |
 | SEARCH-04 | Phase 5 | Complete |
 | SEARCH-05 | Phase 5 | Complete |
 | SEARCH-06 | Phase 5 | Complete |
-| SEARCH-07 | Phase 5 | Complete |
+| SEARCH-07 | Phase 14 | Pending (Gap Closure) |
 | QUEUE-01 | Phase 4 | Complete |
 | QUEUE-02 | Phase 4 | Complete |
 | QUEUE-03 | Phase 4 | Complete |
@@ -226,9 +226,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-02 | Phase 7 | Complete |
 | UI-03 | Phase 7 | Complete |
 | UI-04 | Phase 7 | Complete |
-| UI-05 | Phase 7 | Complete |
-| UI-06 | Phase 7 | Complete |
-| UI-07 | Phase 7 | Complete |
+| UI-05 | Phase 14 | Pending (Gap Closure) |
+| UI-06 | Phase 15 | Pending (Gap Closure) |
+| UI-07 | Phase 14 | Pending (Gap Closure) |
 | UI-08 | Phase 7 | Complete |
 | UI-09 | Phase 7 | Complete |
 | UI-10 | Phase 7 | Complete |
