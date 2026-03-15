@@ -544,6 +544,11 @@ function errorLog() {
         currentPage: 1,
         totalPages: 1,
 
+        // Modal state
+        selectedLog: null,
+        showModal: false,
+        loadingDetails: false,
+
         async fetchLogs() {
             this.loading = true;
             this.error = null;
@@ -607,6 +612,42 @@ function errorLog() {
             } catch (error) {
                 console.error('Error fetching tenants:', error);
             }
+        },
+
+        async viewDetails(logId) {
+            this.loadingDetails = true;
+
+            try {
+                const response = await fetch(`/api/v1/sync-logs/${logId}/details`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch error details');
+
+                const result = await response.json();
+                this.selectedLog = result.data;
+                this.showModal = true;
+
+                // Apply syntax highlighting after modal opens
+                this.$nextTick(() => {
+                    document.querySelectorAll('#error-modal pre code').forEach((el) => {
+                        hljs.highlightElement(el);
+                    });
+                });
+            } catch (error) {
+                console.error('Error fetching details:', error);
+                alert('Failed to load error details');
+            } finally {
+                this.loadingDetails = false;
+            }
+        },
+
+        closeModal() {
+            this.showModal = false;
+            this.selectedLog = null;
         },
 
         clearFilters() {
