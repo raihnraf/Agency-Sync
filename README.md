@@ -19,14 +19,16 @@ A sophisticated multi-tenant SaaS platform built for digital agencies to manage 
 ### Infrastructure & DevOps
 - **Docker & Docker Compose v2** - Container orchestration with health checks
 - **Nginx** - High-performance reverse proxy
-- **GitHub Actions CI/CD** - Automated testing with 70% coverage enforcement
+- **GitHub Actions CI/CD** - Automated testing with coverage reporting
 - **PHPUnit** - Comprehensive testing suite with 138 test files
 - **Xdebug** - Code coverage analysis and debugging
 
 ### Key Libraries & Tools
 - **Laravel Sanctum** - API authentication and token management
 - **Laravel Queues** - Background job processing with Redis
-- **Maatwebsite Excel** - Import/export functionality (CSV, Excel)
+- **PhpSpreadsheet** - Spreadsheet export functionality (CSV, Excel)
+- **League CSV** - CSV file processing
+- **Elasticsearch** - Full-text search and analytics
 - **Eloquent ORM** - Advanced database relationships and querying
 
 ## ✨ Features
@@ -38,9 +40,9 @@ A sophisticated multi-tenant SaaS platform built for digital agencies to manage 
 - **Tenant Metrics Caching** - Performance optimization with Redis
 
 ### Product Catalog Management
-- **Bulk Product Import** - CSV/Excel import with validation
-- **Product Synchronization** - Automated updates from external sources
-- **Catalog Export** - Generate product feeds in multiple formats
+- **Product Synchronization** - Automated sync from Shopify & Shopware
+- **Catalog Export** - Generate product feeds in CSV/Excel formats
+- **Background Job Processing** - Async export operations
 - **Real-time Inventory Tracking** - Stock management across tenants
 
 ### API & Integrations
@@ -50,15 +52,15 @@ A sophisticated multi-tenant SaaS platform built for digital agencies to manage 
 - **Health Check Endpoints** - System monitoring and deployment verification
 
 ### Data Processing
-- **CSV/XML/JSON Processing** - Handle multiple data formats
+- **CSV/Excel Export** - Background jobs for large data exports
+- **JSON API Responses** - RESTful JSON data handling
 - **Background Job Processing** - Queue-based async operations
-- **Automated Workflows** - Scheduled tasks and data flows
-- **Export Scheduling** - Automated report generation
+- **Automated Workflows** - Platform sync jobs (Shopify, Shopware)
 
 ### Operations & Monitoring
 - **Comprehensive Logging** - Detailed application logs
 - **Cache Management** - Multi-layer caching strategy (Redis, application)
-- **Deployment Automation** - SSH-based deployment with zero-downtime
+- **Deployment Automation** - SSH-based deployment with health checks
 - **Database Migrations** - Version-controlled schema changes
 
 ## 🏗️ Architecture Highlights
@@ -124,8 +126,8 @@ A sophisticated multi-tenant SaaS platform built for digital agencies to manage 
 
 ### CI/CD Pipeline
 - **Automated Testing** - Tests run on every push to main
-- **Code Quality Checks** - Coverage thresholds enforced
-- **Automated Deployment** - Zero-downtime deployments via SSH
+- **Code Coverage Reporting** - Coverage reports generated with Xdebug
+- **Deployment Automation** - SSH-based deployment with health checks
 - **Health Checks** - Post-deployment verification
 
 ### Manual Deployment
@@ -134,12 +136,13 @@ A sophisticated multi-tenant SaaS platform built for digital agencies to manage 
 ./deploy.sh
 
 # The deployment script:
-# 1. Pulls latest code from git
-# 2. Installs composer dependencies (production)
-# 3. Runs database migrations
+# 1. Creates backup of current version
+# 2. Pulls latest code from git
+# 3. Installs composer dependencies (production)
 # 4. Clears Laravel caches (config, routes, views)
-# 5. Restarts Docker containers
-# 6. Verifies application health
+# 5. Runs database migrations
+# 6. Restarts Docker containers
+# 7. Verifies application health with health check endpoint
 ```
 
 ## 📦 Installation
