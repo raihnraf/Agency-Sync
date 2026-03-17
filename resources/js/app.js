@@ -1,4 +1,5 @@
 import './bootstrap';
+import './components/tenant-create';
 
 import Alpine from 'alpinejs';
 

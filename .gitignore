@@ -24,3 +24,21 @@ yarn-error.log
 /.vscode
 /.zed
 deploy.sh
+
+# Debug and test files
+test_debug.php
+test_debug2.php
+create_test_log.php
+tmp_*.txt
+
+# Internal planning and documentation
+.planning/
+.scribe/
+
+# Git backups
+.git.backup*/
+
+# Additional environment files
+.env.docker
+.env.dusk.testing
+.env.testing
